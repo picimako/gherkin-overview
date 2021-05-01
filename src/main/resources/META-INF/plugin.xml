@@ -1,0 +1,34 @@
+<idea-plugin require-restart="true">
+    <id>gherkin-overview</id>
+    <name>Gherkin Overview</name>
+    <vendor url="https://github.com/picimako/gherkin-overview">Tamás Balog</vendor>
+    <version>0.1.0</version>
+    <resource-bundle>messages.GherkinBundle</resource-bundle>
+
+    <!-- https://jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html -->
+    <idea-version since-build="211"/>
+
+    <description>Adds Gherkin tag overview for test automation projects</description>
+
+    <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
+    <depends>gherkin</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+
+        <!-- Tool window -->
+        <toolWindow id="Gherkin Tags" anchor="left" doNotActivateOnStart="true"
+                    icon="AllIcons.Gutter.ExtAnnotation"
+                    factoryClass="com.picimako.gherkin.toolwindow.GherkinTagToolWindowFactory"/>
+
+        <!-- Settings -->
+        <projectConfigurable parentId="tools"
+                             instance="com.picimako.gherkin.settings.GherkinOverviewProjectConfigurable"
+                             id="GherkinOverviewConfigurable"
+                             displayName="Gherkin Overview" nonDefaultProject="true"/>
+        <projectService serviceImplementation="com.picimako.gherkin.settings.GherkinOverviewProjectState"/>
+        <applicationService serviceImplementation="com.picimako.gherkin.settings.GherkinOverviewApplicationState"/>
+    </extensions>
+</idea-plugin>

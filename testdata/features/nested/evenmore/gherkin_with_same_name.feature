@@ -1,0 +1,2 @@
+@samename
+Feature: Same name

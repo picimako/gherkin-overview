@@ -1,0 +1,48 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.intellij' version '0.6.5'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.13.1'
+    testCompile group: 'org.assertj', name: 'assertj-core', version: '3.19.0'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.8.0'
+}
+
+apply plugin: 'java'
+apply plugin: 'org.jetbrains.intellij'
+
+// See https://github.com/JetBrains/gradle-intellij-plugin/
+intellij {
+    version '2021.1'
+    plugins = ['java',
+               'gherkin:211.6693.7', //https://plugins.jetbrains.com/plugin/13374-intellilang
+               //1. The gherkin plugin depends on IntelliLang.
+               //2. Adding it also makes it possible to load .feature files into the in-memory editor during unit testing.
+               'IntelliLang'] //https://plugins.jetbrains.com/plugin/9164-gherkin/versions
+    pluginName 'Gherkin Overview'
+    updateSinceUntilBuild false
+    type 'IC'
+}
+
+wrapper {
+    gradleVersion '6.6.1'
+}
+
+patchPluginXml {
+    changeNotes(file(gherkinOverviewChangelog).text)
+    pluginDescription(file(gherkinOverviewPluginDescription).text)
+}
+
+//test {
+    //    systemProperty '<absolute path to locally cloned intellij-community GitHub repository>'
+//}
+
+//runIde {
+    //https://jetbrains.org/intellij/sdk/docs/products/dev_alternate_products.html#configuring-pluginxml
+//    ideDirectory '<absolute path to IJ installation>'
+//}
