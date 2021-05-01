@@ -26,7 +26,6 @@ intellij {
                'IntelliLang'] //https://plugins.jetbrains.com/plugin/9164-gherkin/versions
     pluginName 'Gherkin Overview'
     updateSinceUntilBuild false
-    type 'IC'
 }
 
 wrapper {
