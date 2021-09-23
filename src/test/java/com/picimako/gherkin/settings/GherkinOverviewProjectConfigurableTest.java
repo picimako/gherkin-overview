@@ -22,14 +22,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.testFramework.ServiceContainerUtil;
+
 import com.picimako.gherkin.MediumBasePlatformTestCase;
 import com.picimako.gherkin.toolwindow.TagCategoryRegistry;
 
 /**
  * Unit test for {@link GherkinOverviewProjectConfigurable}.
  * <p>
- * TODO: fix tests due to lack of application level service cleanup
+ * TODO: fix tests due to lack of application level service cleanup. Test methods in this class executed individually
+ *  pass.
  */
 public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTestCase {
 

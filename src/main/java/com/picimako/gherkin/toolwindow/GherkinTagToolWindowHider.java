@@ -33,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
 public class GherkinTagToolWindowHider extends JBPanelWithEmptyText {
 
     private static final BiPredicate<ModelDataRoot, Project> IS_TAG_PRESENT_IN_PROJECT =
-        (modelRoot, project) -> GherkinTagsToolWindowSettings.getInstance(project).layout == LayoutType.NO_GROUPING
+        (modelRoot, proj) -> GherkinTagsToolWindowSettings.getInstance(proj).layout == LayoutType.NO_GROUPING
             ? modelRoot.getCategories().stream().anyMatch(Category::hasTag)
             : modelRoot.getContentRootsByLayout().stream().flatMap(root -> root.getCategories().stream()).anyMatch(Category::hasTag);
     private final Project project;

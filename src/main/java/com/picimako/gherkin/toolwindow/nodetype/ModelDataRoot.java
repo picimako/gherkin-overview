@@ -124,7 +124,7 @@ public class ModelDataRoot extends AbstractNodeType implements CategoriesHolder 
         if (gherkinFile.getVirtualFile().isValid()) {
             return contentRootForFile == null
                 ? getContentRoot(getRootless(), "Rootless")  //if file doesn't belong to any content root
-                : getContentRoot(getContentRoot(contentRootForFile.getName()), contentRootForFile.getName()); //if has content root added with name;
+                : getContentRoot(getContentRoot(contentRootForFile.getName()), contentRootForFile.getName()); //if has content root added with name
         }
 
         //If Gherkin file is not valid, thus has just been deleted

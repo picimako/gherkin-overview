@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.intellij.openapi.components.Service;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.picimako.gherkin.settings.CategoryAndTags;
 import com.picimako.gherkin.settings.GherkinOverviewApplicationState;
@@ -79,7 +78,7 @@ public final class TagCategoryRegistry {
      * Initial capacity is adjusted slightly above the default mapping count coming from the {@code default_app_level_mappings.properties}
      * default mappings.
      */
-    private final Map<String, String> TAG_TO_CATEGORY = new HashMap<>(64);
+    private final Map<String, String> tagToCategory = new HashMap<>(64);
 
     /**
      * Here the registry gets initialized with the values from the application and project level mappings. By doing this
@@ -101,7 +100,7 @@ public final class TagCategoryRegistry {
      * Removes all mappings from this registry.
      */
     public void clearMappings() {
-        TAG_TO_CATEGORY.clear();
+        tagToCategory.clear();
     }
 
     /**
@@ -112,7 +111,7 @@ public final class TagCategoryRegistry {
     public void putMappingsFrom(@NotNull List<CategoryAndTags> categoryAndTags) {
         for (var cat : categoryAndTags) {
             for (String tag : cat.getTags().split(TAG_DELIMITER)) {
-                TAG_TO_CATEGORY.put(tag.trim(), cat.getCategory());
+                tagToCategory.put(tag.trim(), cat.getCategory());
             }
         }
     }
@@ -127,19 +126,19 @@ public final class TagCategoryRegistry {
      */
     @Nullable
     public String categoryOf(String tagName) {
-        return Optional.ofNullable(TAG_TO_CATEGORY.get(tagName)).orElseGet(() -> regexBasedCategoryOf(tagName));
+        return Optional.ofNullable(tagToCategory.get(tagName)).orElseGet(() -> regexBasedCategoryOf(tagName));
     }
 
     @Nullable
     private String regexBasedCategoryOf(String tagName) {
-        return TAG_TO_CATEGORY.keySet().stream()
+        return tagToCategory.keySet().stream()
             .filter(key -> key.startsWith("#") && tagName.matches(key.substring(1)))
-            .map(TAG_TO_CATEGORY::get)
+            .map(tagToCategory::get)
             .findFirst()
             .orElse(null);
     }
 
     public static TagCategoryRegistry getInstance(Project project) {
-        return ServiceManager.getService(project, TagCategoryRegistry.class);
+        return project.getService(TagCategoryRegistry.class);
     }
 }

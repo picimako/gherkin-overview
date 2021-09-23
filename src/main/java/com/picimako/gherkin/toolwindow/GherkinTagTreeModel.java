@@ -67,7 +67,7 @@ public abstract class GherkinTagTreeModel implements TreeModel {
     private final TagCategoryRegistry registry;
     protected ModelDataRoot data;
 
-    public GherkinTagTreeModel(Project project) {
+    protected GherkinTagTreeModel(Project project) {
         registry = TagCategoryRegistry.getInstance(project);
         this.project = project;
     }
@@ -75,7 +75,7 @@ public abstract class GherkinTagTreeModel implements TreeModel {
     /**
      * Using this, an already built model data can be reused. For example when the layout changes in the tool window.
      */
-    public GherkinTagTreeModel(ModelDataRoot data, Project project) {
+    protected GherkinTagTreeModel(ModelDataRoot data, Project project) {
         this(project);
         this.data = data;
     }
@@ -168,6 +168,7 @@ public abstract class GherkinTagTreeModel implements TreeModel {
             }
 
             //If a tag is not present in the file but present in the tree, then remove mapping
+            //keySet() is used instead of entrySet() to have better readability of what's happening here
             for (String tagName : tagsGherkinFileIsBoundTo.keySet()) {
                 if (!tagNamesFromGherkinFile.contains(tagName)) {
                     Tag tag = tagsGherkinFileIsBoundTo.get(tagName);

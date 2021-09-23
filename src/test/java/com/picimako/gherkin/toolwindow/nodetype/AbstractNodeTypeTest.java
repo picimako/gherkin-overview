@@ -19,7 +19,7 @@ package com.picimako.gherkin.toolwindow.nodetype;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.testFramework.LightPlatform4TestCase;
-import com.intellij.testFramework.ServiceContainerUtil;
+
 import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
 import com.picimako.gherkin.toolwindow.StatisticsType;
 import org.junit.Test;

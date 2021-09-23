@@ -142,12 +142,12 @@ public class ModelDataRootTest extends MediumBasePlatformTestCase {
 
     //findContentRootOrRootless
 
-    public void testCreatesAndGetsRootless() {
-        //TODO: how to and where to add file to not be in a project?
+    public void _testCreatesAndGetsRootless() {
+        //TODO: How to and where to add file to not be in a project?
     }
 
-    public void testGetsAlreadyCreatedRootless() {
-        //TODO: how to and where to add file to not be in a project?
+    public void _testGetsAlreadyCreatedRootless() {
+        //TODO: How to and where to add file to not be in a project?
     }
 
     public void testCreatesAndGetsModuleForName() {

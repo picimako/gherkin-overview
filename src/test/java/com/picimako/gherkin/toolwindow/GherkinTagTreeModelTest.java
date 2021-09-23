@@ -283,7 +283,7 @@ public class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
     }
 
     public void testUpdatesDisplayNamesOfFeatureFilesForFilesWithSameNameUnderATag() {
-        PsiFile nested = myFixture.configureByFile("nested/gherkin_with_same_name.feature");
+        myFixture.configureByFile("nested/gherkin_with_same_name.feature");
         PsiFile evenmoremore = myFixture.configureByFile("nested/evenmore/evenmoremore/gherkin_with_same_name.feature");
 
         GherkinTagTreeModel model = new ContentRootBasedGherkinTagTreeModel(getProject());

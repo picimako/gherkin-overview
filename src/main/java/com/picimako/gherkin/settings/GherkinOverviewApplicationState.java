@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.util.xmlb.XmlSerializerUtil;
@@ -58,7 +58,7 @@ public class GherkinOverviewApplicationState implements PersistentStateComponent
     public List<CategoryAndTags> mappings = loadDefaultApplicationLevelMappings();
 
     public static GherkinOverviewApplicationState getInstance() {
-        return ServiceManager.getService(GherkinOverviewApplicationState.class);
+        return ApplicationManager.getApplication().getService(GherkinOverviewApplicationState.class);
     }
 
     @Override

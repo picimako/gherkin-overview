@@ -123,6 +123,7 @@ final class CollectGherkinTagsPanelBuilder {
 
             @Override
             public void setValue(CategoryAndTags categoryAndTag, @NlsContexts.ListItem String value) {
+                //TODO: add reason why it is empty
             }
 
             @Override
@@ -144,6 +145,7 @@ final class CollectGherkinTagsPanelBuilder {
 
             @Override
             public void setValue(CategoryAndTags categoryAndTag, @NlsContexts.ListItem String value) {
+                //TODO: add reason why it is empty
             }
 
             @Override

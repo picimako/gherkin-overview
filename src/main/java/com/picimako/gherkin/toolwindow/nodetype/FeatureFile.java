@@ -20,7 +20,7 @@ import java.util.Objects;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
-import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.picimako.gherkin.resources.GherkinBundle;
 import com.picimako.gherkin.toolwindow.TagOccurrencesRegistry;
@@ -88,7 +88,7 @@ public class FeatureFile extends AbstractNodeType {
      * </ul>
      */
     void setDisplayNameWithPath() {
-        String relativePath = VfsUtil.getRelativePath(file.getParent(), ProjectUtil.guessProjectDir(project));
+        String relativePath = VfsUtilCore.getRelativePath(file.getParent(), ProjectUtil.guessProjectDir(project));
         displayName = relativePath != null
             ? file.getName() + " [" + (relativePath.isEmpty() ? "/" : relativePath) + "]"
             : file.getName();

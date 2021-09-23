@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.intellij.openapi.components.Service;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
@@ -117,6 +116,6 @@ public final class TagOccurrencesRegistry {
     }
 
     public static TagOccurrencesRegistry getInstance(Project project) {
-        return ServiceManager.getService(project, TagOccurrencesRegistry.class);
+        return project.getService(TagOccurrencesRegistry.class);
     }
 }
