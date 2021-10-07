@@ -45,7 +45,7 @@ public class GherkinOverviewApplicationState implements PersistentStateComponent
 
     /**
      * Contains the application level category to tags mappings.
-     * By default it is initialized with a default set of category-tags mappings.
+     * By default, it is initialized with a default set of category-tags mappings.
      * <p>
      * Although multiple instances of this class are instantiated by the IntelliJ platform, for some reason, it is the
      * first that is actually returned when requesting an instance of this service.

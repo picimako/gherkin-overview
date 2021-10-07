@@ -45,7 +45,7 @@ import org.jetbrains.annotations.Nullable;
  * tablet -> Device
  * desktop -> Device
  * </pre>
- * This service is initialized when the tool window's {@link GherkinTagTreeModel} is being first built and it requests
+ * This service is initialized when the tool window's {@link GherkinTagTreeModel} is being first built, and it requests
  * a mapping by calling {@link #categoryOf(String)}.
  * <p>
  * During initialization, tag names are trimmed to allow storing them in the app and project level

@@ -217,9 +217,8 @@ public abstract class GherkinTagTreeModel implements TreeModel, Disposable {
             }
 
             //If a tag is already mapped, then re-calculate the tags' occurrence count in the currently changed Gherkin file for each contained tag
-            tagNamesFromBDDFile.forEach(tagName -> {
-                contentRoot.findTag(tagName).ifPresent(tag -> tag.getFeatureFiles().forEach(file -> service.updateOccurrenceCounts(file.getFile())));
-            });
+            tagNamesFromBDDFile.forEach(tagName -> 
+                contentRoot.findTag(tagName).ifPresent(tag -> tag.getFeatureFiles().forEach(file -> service.updateOccurrenceCounts(file.getFile()))));
 
             //Update the display names of file with the same name as the changed file
             tagsBddFileIsBoundTo.values().forEach(tag -> tag.updateDisplayNames(bddFile.getVirtualFile()));

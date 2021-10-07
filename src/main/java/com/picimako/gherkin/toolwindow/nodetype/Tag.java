@@ -75,7 +75,7 @@ public class Tag extends AbstractNodeType {
      * Adds the provided file to this tag if it isn't already added.
      * <p>
      * If, after adding the file, there are multiple files with its name, linked to this tag, than their display names
-     * are updated to contain to contain the Feature keywords or the relative paths from the project root in their
+     * are updated to contain the Feature keywords or the relative paths from the project root in their
      * display names.
      *
      * @param file the file to add

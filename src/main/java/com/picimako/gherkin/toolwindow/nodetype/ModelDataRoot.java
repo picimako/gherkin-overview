@@ -43,6 +43,9 @@ import com.picimako.gherkin.toolwindow.ProjectBDDTypeService;
  */
 public class ModelDataRoot extends AbstractNodeType implements CategoriesHolder {
 
+    private static final String OTHER_CATEGORY_NAME = "Other";
+    private static final String ROOTLESS_CONTENT_ROOT_NAME = "Rootless";
+
     /**
      * Stores model data for the overall project.
      * <p>
@@ -156,7 +159,7 @@ public class ModelDataRoot extends AbstractNodeType implements CategoriesHolder 
     }
 
     private Optional<ContentRoot> getRootless() {
-        return getContentRoot("Rootless");
+        return getContentRoot(ROOTLESS_CONTENT_ROOT_NAME);
     }
 
     /**
@@ -203,7 +206,7 @@ public class ModelDataRoot extends AbstractNodeType implements CategoriesHolder 
      */
     @Override
     public @NotNull Category getOther() {
-        return findCategory("Other").get();
+        return findCategory(OTHER_CATEGORY_NAME).get();
     }
 
     //sort
