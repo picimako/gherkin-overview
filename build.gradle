@@ -38,6 +38,10 @@ patchPluginXml {
     pluginDescription = provider {file(gherkinOverviewPluginDescription).text}
 }
 
+//runPluginVerifier {
+//    ideVersions = ['IC-2021.1', 'IC-2021.2', 'IC-2021.2.2', 'IC-2021.3']
+//}
+
 //test {
     //    systemProperty '<absolute path to locally cloned intellij-community GitHub repository>'
 //}
