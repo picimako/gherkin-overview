@@ -16,16 +16,19 @@
 
 package com.picimako.gherkin.toolwindow;
 
+import static com.picimako.gherkin.GherkinUtil.isGherkinFile;
 import static com.picimako.gherkin.toolwindow.nodetype.NodeType.asContentRoot;
 
 import javax.swing.*;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
+import com.github.kumaraman21.intellijbehave.language.JBehaveIcons;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.treeView.NodeRenderer;
 import com.intellij.openapi.util.NlsSafe;
 import com.intellij.util.PlatformIcons;
+
 import com.picimako.gherkin.toolwindow.nodetype.Category;
 import com.picimako.gherkin.toolwindow.nodetype.ContentRoot;
 import com.picimako.gherkin.toolwindow.nodetype.FeatureFile;
@@ -65,7 +68,7 @@ public class GherkinTagTree extends JTree {
             } else if (value instanceof Tag) {
                 setIcon(AllIcons.Gutter.ExtAnnotation);
             } else if (value instanceof FeatureFile) {
-                setIcon(CucumberIcons.Cucumber);
+                setIcon(isGherkinFile(((FeatureFile) value).getFile()) ? CucumberIcons.Cucumber : JBehaveIcons.JB);
             }
         }
     }

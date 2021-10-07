@@ -90,7 +90,7 @@ public class ContentRoot extends AbstractNodeType implements CategoriesHolder {
      * Gets the category dedicated for unmapped tags.
      */
     @Override
-    public Category getOther() {
+    public @NotNull Category getOther() {
         return other;
     }
 

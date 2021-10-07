@@ -1,0 +1,3 @@
+Meta:
+@samename
+@Suite smoke

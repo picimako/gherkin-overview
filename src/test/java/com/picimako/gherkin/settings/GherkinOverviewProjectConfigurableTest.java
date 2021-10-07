@@ -34,13 +34,18 @@ import com.picimako.gherkin.toolwindow.TagCategoryRegistry;
  */
 public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTestCase {
 
+    private GherkinOverviewProjectConfigurable configurable;
+
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        configurable = new GherkinOverviewProjectConfigurable(getProject());
+        configurable.createComponent();
+    }
+
     //createComponent
 
     public void testCreateComponent() {
-        var configurable = new GherkinOverviewProjectConfigurable(getProject());
-
-        configurable.createComponent();
-
         var component = configurable.getComponent();
         assertThat(component.isUseProjectLevelMappings()).isFalse();
 
@@ -55,32 +60,22 @@ public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTe
     //isModified
 
     public void testNotModified() {
-        var configurable = new GherkinOverviewProjectConfigurable(getProject());
-        configurable.createComponent();
-
         assertThat(configurable.isModified()).isFalse();
     }
 
     public void testModifiedUseProjectLevelMappings() {
-        var configurable = new GherkinOverviewProjectConfigurable(getProject());
-        configurable.createComponent();
         configurable.getComponent().setUseProjectLevelMappings(true);
 
         assertThat(configurable.isModified()).isTrue();
     }
 
     public void testModifiedApplicationLevelMappings() {
-        var configurable = new GherkinOverviewProjectConfigurable(getProject());
-        configurable.createComponent();
         configurable.getComponent().setApplicationLevelMappings(List.of(new CategoryAndTags("Breakpoint", "small,medium")));
 
         assertThat(configurable.isModified()).isTrue();
     }
 
     public void testModifiedProjectLevelMappings() {
-        var configurable = new GherkinOverviewProjectConfigurable(getProject());
-        configurable.createComponent();
-
         configurable.getComponent().setProjectLevelMappings(List.of(new CategoryAndTags("Breakpoint", "small,medium")));
         assertThat(configurable.isModified()).isTrue();
     }
@@ -88,8 +83,6 @@ public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTe
     //apply
 
     public void testAppliesSettingsWithoutProjectLevelMappings() throws ConfigurationException {
-        var configurable = new GherkinOverviewProjectConfigurable(getProject());
-        configurable.createComponent();
         CategoryAndTags breakpoint = new CategoryAndTags("Breakpoint", "small,medium");
         CategoryAndTags media = new CategoryAndTags("Media", "image");
         configurable.getComponent().setApplicationLevelMappings(List.of(breakpoint));
@@ -111,8 +104,6 @@ public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTe
     }
 
     public void testAppliesSettingsWithProjectLevelMappings() throws ConfigurationException {
-        var configurable = new GherkinOverviewProjectConfigurable(getProject());
-        configurable.createComponent();
         CategoryAndTags breakpoint = new CategoryAndTags("Breakpoint", "small,medium");
         CategoryAndTags media = new CategoryAndTags("Media", "image");
         configurable.getComponent().setApplicationLevelMappings(List.of(breakpoint));
@@ -137,8 +128,6 @@ public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTe
     //reset
 
     public void testResetsSettings() {
-        var configurable = new GherkinOverviewProjectConfigurable(getProject());
-        configurable.createComponent();
         configurable.getComponent().setUseProjectLevelMappings(true);
         CategoryAndTags breakpoint = new CategoryAndTags("Breakpoint", "small,medium");
         configurable.getComponent().setApplicationLevelMappings(List.of(breakpoint));
@@ -151,6 +140,5 @@ public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTe
             softly -> softly.assertThat(configurable.getComponent().getApplicationLevelMappings()).doesNotContain(breakpoint),
             softly -> softly.assertThat(configurable.getComponent().getProjectLevelMappings()).isEmpty()
         );
-
     }
 }

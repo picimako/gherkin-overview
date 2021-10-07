@@ -16,6 +16,7 @@
 
 package com.picimako.gherkin.toolwindow.nodetype;
 
+import static com.picimako.gherkin.GherkinUtil.isGherkinFile;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 
@@ -26,11 +27,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.SmartList;
-import com.picimako.gherkin.resources.GherkinBundle;
-import com.picimako.gherkin.toolwindow.TagOccurrencesRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.plugins.cucumber.psi.GherkinFile;
+
+import com.picimako.gherkin.resources.GherkinBundle;
+import com.picimako.gherkin.toolwindow.TagOccurrencesRegistry;
 
 /**
  * Represents a Gherkin Tag in the tool window.
@@ -62,11 +64,11 @@ public class Tag extends AbstractNodeType {
     /**
      * Gets whether the argument virtual file is assigned to this tag.
      *
-     * @param gherkinFile the gherkin file
+     * @param bddFile the Gherkin or Story file
      * @return true if the file is assigned, false otherwise
      */
-    public boolean contains(VirtualFile gherkinFile) {
-        return featureFiles.stream().anyMatch(featureFile -> Objects.equals(featureFile.getFile(), gherkinFile));
+    public boolean contains(VirtualFile bddFile) {
+        return featureFiles.stream().anyMatch(featureFile -> Objects.equals(featureFile.getFile(), bddFile));
     }
 
     /**
@@ -95,15 +97,15 @@ public class Tag extends AbstractNodeType {
     public void updateDisplayNames(@NotNull VirtualFile file) {
         List<FeatureFile> featureFilesWithTheSameName;
         if (featureFiles.size() > 1 && (featureFilesWithTheSameName = getFeatureFilesWithTheNameOf(file)).size() > 1) {
-            updateDisplayNamesOf(featureFilesWithTheSameName);
+            updateDisplayNamesOf(featureFilesWithTheSameName, file);
         }
     }
 
     /**
      * Removes the provided file from the underlying set of linked files.
      * <p>
-     * When a Gherkin file is removed, and with that name only one file remains under this tag, then the remaining
-     * Gherkin file's display name is restored to the file's name from the relative path.
+     * When a Gherkin or Story file is removed, and with that name only one file remains under this tag, then the remaining
+     * file's display name is restored to the file's name from the relative path.
      * <p>
      * If more than one file remains with that name they are examined and updated to contain the Feature keywords
      * or the relative paths from the project root in their display names.
@@ -120,29 +122,41 @@ public class Tag extends AbstractNodeType {
             if (featureFilesWithTheSameName.size() == 1) {
                 featureFilesWithTheSameName.get(0).resetDisplayName();
             } else if (featureFilesWithTheSameName.size() > 1) {
-                updateDisplayNamesOf(featureFilesWithTheSameName);
+                updateDisplayNamesOf(featureFilesWithTheSameName, file);
             }
         }
     }
 
     /**
+     * Updates the display names of feature files after a change.
+     * <p>
+     * <b>Gherkin files</b>
+     * <p>
      * If all files with the same name have different top level Feature keyword names, then those values are used
      * besides the filenames to identify which file is which, otherwise instead of using the Feature names, the
      * files' relative path from the project root are set as identifiers.
+     * <p>
+     * <b>JBehave Story files</b>
+     * <p>
+     * Since Story files don't have a unique keyword like the Feature in Gherkin, only the path-based distinction is applied.
      */
-    private void updateDisplayNamesOf(List<FeatureFile> featureFilesWithTheSameName) {
-        var distinctFeatureNames = featureFilesWithTheSameName.stream()
-            .map(featureFile -> PsiManager.getInstance(project).findFile(featureFile.getFile()))
-            .filter(Objects::nonNull)
-            .map(psiFile -> ((GherkinFile) psiFile).getFeatures())
-            .filter(features -> features.length > 0)
-            .map(features -> features[0].getFeatureName()) //regardless of the number of Feature keywords in the file, it always takes the first one if there is at least one
-            .distinct()
-            .collect(toList());
+    private void updateDisplayNamesOf(List<FeatureFile> featureFilesWithTheSameName, @NotNull VirtualFile file) {
+        if (isGherkinFile(file)) {
+            var distinctFeatureNames = featureFilesWithTheSameName.stream()
+                .map(featureFile -> PsiManager.getInstance(project).findFile(featureFile.getFile()))
+                .filter(Objects::nonNull)
+                .map(psiFile -> ((GherkinFile) psiFile).getFeatures())
+                .filter(features -> features.length > 0)
+                .map(features -> features[0].getFeatureName()) //regardless of the number of Feature keywords in the file, it always takes the first one if there is at least one
+                .distinct()
+                .collect(toList());
 
-        if (distinctFeatureNames.size() == featureFilesWithTheSameName.size()) {
-            for (int i = 0; i < distinctFeatureNames.size(); i++) {
-                featureFilesWithTheSameName.get(i).setDisplayNameWithFeatureName(distinctFeatureNames.get(i));
+            if (distinctFeatureNames.size() == featureFilesWithTheSameName.size()) {
+                for (int i = 0; i < distinctFeatureNames.size(); i++) {
+                    featureFilesWithTheSameName.get(i).setDisplayNameWithFeatureName(distinctFeatureNames.get(i));
+                }
+            } else {
+                featureFilesWithTheSameName.forEach(FeatureFile::setDisplayNameWithPath);
             }
         } else {
             featureFilesWithTheSameName.forEach(FeatureFile::setDisplayNameWithPath);
@@ -154,7 +168,7 @@ public class Tag extends AbstractNodeType {
     }
 
     /**
-     * Sorts the Gherkin files by their filenames if there is more than one Gherkin file in this tag.
+     * Sorts the BDD files by their filenames if there is more than one BDD file in this tag.
      */
     @Override
     public void sort() {

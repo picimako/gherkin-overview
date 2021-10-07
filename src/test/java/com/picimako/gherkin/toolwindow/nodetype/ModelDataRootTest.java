@@ -24,9 +24,11 @@ import java.util.List;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
+
 import com.picimako.gherkin.MediumBasePlatformTestCase;
 import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
 import com.picimako.gherkin.toolwindow.LayoutType;
+import com.picimako.gherkin.toolwindow.ProjectBDDTypeService;
 import com.picimako.gherkin.toolwindow.StatisticsType;
 import com.picimako.gherkin.toolwindow.TagOccurrencesRegistry;
 
@@ -109,6 +111,42 @@ public class ModelDataRootTest extends MediumBasePlatformTestCase {
         assertThat(modelDataRoot.getContentRoots()).hasSize(1);
     }
 
+    //updateDisplayName
+
+    public void testUpdatesDisplayNameForTagsOnly() {
+        GherkinTagsToolWindowSettings.getInstance(getProject()).layout = LayoutType.GROUP_BY_MODULES;
+        ModelDataRoot modelDataRoot = new ModelDataRoot(getProject());
+
+        ProjectBDDTypeService service = getProject().getService(ProjectBDDTypeService.class);
+        service.isProjectContainGherkinFile = true;
+
+        modelDataRoot.updateDisplayName();
+        assertThat(modelDataRoot.displayName).isEqualTo("Gherkin Tags");
+    }
+
+    public void testUpdatesDisplayNameForMetasOnly() {
+        GherkinTagsToolWindowSettings.getInstance(getProject()).layout = LayoutType.GROUP_BY_MODULES;
+        ModelDataRoot modelDataRoot = new ModelDataRoot(getProject());
+
+        ProjectBDDTypeService service = getProject().getService(ProjectBDDTypeService.class);
+        service.isProjectContainJBehaveStoryFile = true;
+
+        modelDataRoot.updateDisplayName();
+        assertThat(modelDataRoot.displayName).isEqualTo("Story Metas");
+    }
+
+    public void testUpdatesDisplayNameForTagsAndMetas() {
+        GherkinTagsToolWindowSettings.getInstance(getProject()).layout = LayoutType.GROUP_BY_MODULES;
+        ModelDataRoot modelDataRoot = new ModelDataRoot(getProject());
+
+        ProjectBDDTypeService service = getProject().getService(ProjectBDDTypeService.class);
+        service.isProjectContainJBehaveStoryFile = true;
+        service.isProjectContainGherkinFile = true;
+
+        modelDataRoot.updateDisplayName();
+        assertThat(modelDataRoot.displayName).isEqualTo("Tags and Metas");
+    }
+
     //getContentRootsByLayout
 
     public void testReturnsModules() {
@@ -134,7 +172,7 @@ public class ModelDataRootTest extends MediumBasePlatformTestCase {
             .add(ContentRoot.createModule("module2", getProject()))
             .add(root2);
 
-        //TODO: the layout type will have to be changed when there is a third layout available
+        //NOTE: the layout type will have to be changed when there is a third layout available
         GherkinTagsToolWindowSettings.getInstance(getProject()).layout = LayoutType.NO_GROUPING;
 
         assertThat(modelDataRoot.getContentRootsByLayout()).containsExactly(root1, root2);

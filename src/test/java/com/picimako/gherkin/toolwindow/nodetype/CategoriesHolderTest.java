@@ -24,6 +24,8 @@ import java.util.List;
 import com.intellij.openapi.project.Project;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
+import org.jetbrains.annotations.NotNull;
+
 import com.picimako.gherkin.toolwindow.TagOccurrencesRegistry;
 
 /**
@@ -100,7 +102,7 @@ public class CategoriesHolderTest extends BasePlatformTestCase {
         }
 
         @Override
-        public Category getOther() {
+        public @NotNull Category getOther() {
             return other;
         }
 

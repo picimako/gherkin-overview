@@ -10,7 +10,13 @@ It collects all .feature files from an open project, regardless of what BDD fram
 
 ## Preconditions
 
-Before installing this plugin, make sure to install the plugin called **Gherkin** as well, if it's not already installed.
+Before installing this plugin, make sure to install the plugin called **Gherkin** as well, if it's not already installed (it is most probably bundled with the IDE).
+
+To work with JBehave Story files, the [**JBehave Support**](https://plugins.jetbrains.com/plugin/7268-jbehave-support) plugin must be installed.
+
+## Support for different BDD syntax
+
+For common Gherkin files, this readme provides information, while for JBehave Stories you can head over to the [JBehave Story support](docs/jbehave-stories.md) document. 
 
 ## Gherkin Tags tool window
 

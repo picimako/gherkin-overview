@@ -22,10 +22,12 @@ import javax.swing.*;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.components.JBPanelWithEmptyText;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.TestOnly;
+
 import com.picimako.gherkin.resources.GherkinBundle;
 import com.picimako.gherkin.toolwindow.nodetype.Category;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * A wrapper panel that shows a pre-defined text when there is no Gherkin tag defined in a project.
@@ -38,11 +40,16 @@ public class GherkinTagToolWindowHider extends JBPanelWithEmptyText {
             : modelRoot.getContentRootsByLayout().stream().flatMap(root -> root.getCategories().stream()).anyMatch(Category::hasTag);
     private final Project project;
 
-    public GherkinTagToolWindowHider(@NotNull JComponent gherkinTagOverview, @NotNull Project project) {
+    public GherkinTagToolWindowHider(@NotNull JComponent gherkinTagOverview, @NotNull Project project, String hiderMessage) {
         super(new BorderLayout());
         this.project = project;
-        getEmptyText().setText(GherkinBundle.toolWindow("no.tag.in.project"));
+        getEmptyText().setText(hiderMessage);
         add(gherkinTagOverview, BorderLayout.CENTER);
+    }
+
+    @TestOnly
+    public GherkinTagToolWindowHider(@NotNull JComponent gherkinTagOverview, @NotNull Project project) {
+        this(gherkinTagOverview, project, GherkinBundle.toolWindow("no.tag.in.project"));
     }
 
     /**

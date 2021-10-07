@@ -26,12 +26,13 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
-import com.picimako.gherkin.toolwindow.StatisticsType;
-import com.picimako.gherkin.toolwindow.TagOccurrencesRegistry;
 import org.jetbrains.plugins.cucumber.psi.GherkinElementFactory;
 import org.jetbrains.plugins.cucumber.psi.GherkinFeature;
 import org.jetbrains.plugins.cucumber.psi.GherkinFile;
+
+import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
+import com.picimako.gherkin.toolwindow.StatisticsType;
+import com.picimako.gherkin.toolwindow.TagOccurrencesRegistry;
 
 /**
  * Unit test for {@link Tag}.
@@ -150,6 +151,25 @@ public class TagTest extends BasePlatformTestCase {
         assertSoftly(
             softly -> softly.assertThat(featureFiles.get(0).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested]"),
             softly -> softly.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested/evenmore/evenmoremore]")
+        );
+    }
+
+    public void testUpdatesDisplayNameWithPathForMoreThanTwoStoryFilesInATagWithTheSameName() {
+        PsiFile nested = myFixture.configureByFile("nested/story_with_same_name.story");
+
+        Tag tag = new Tag("smoke", nested.getVirtualFile(), getProject());
+
+        List<FeatureFile> featureFiles = tag.getFeatureFiles();
+        assertThat(featureFiles.get(0).getDisplayName()).isEqualTo("story_with_same_name.story");
+
+        PsiFile evenmoremore = myFixture.configureByFile("nested/evenmore/evenmoremore/story_with_same_name.story");
+        tag.add(evenmoremore.getVirtualFile());
+
+        tag.updateDisplayNames(evenmoremore.getVirtualFile());
+
+        assertSoftly(
+            softly -> softly.assertThat(featureFiles.get(0).getDisplayName()).isEqualTo("story_with_same_name.story [nested]"),
+            softly -> softly.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("story_with_same_name.story [nested/evenmore/evenmoremore]")
         );
     }
 

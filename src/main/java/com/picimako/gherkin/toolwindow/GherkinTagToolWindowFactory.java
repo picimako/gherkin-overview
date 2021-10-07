@@ -26,6 +26,9 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import org.jetbrains.annotations.NotNull;
 
+import com.picimako.gherkin.BDDUtil;
+import com.picimako.gherkin.resources.GherkinBundle;
+
 /**
  * Creates the contents of the Gherkin tag tool window.
  * <p>
@@ -47,13 +50,13 @@ public class GherkinTagToolWindowFactory implements ToolWindowFactory {
         //Registering in StartupManager to make sure that the indices are completely available to collect Gherkin files from the project
         StartupManager.getInstance(project).runWhenProjectIsInitialized(() -> {
             GherkinTagOverviewPanel overviewPanel = new GherkinTagOverviewPanel(project);
-            GherkinTagToolWindowHider hider = new GherkinTagToolWindowHider(overviewPanel, project);
 
             toolWindow.setTitleActions(singletonList(new ToolWindowAppearanceActionGroupCreator(
                 () -> overviewPanel.getTree().updateUI(),
                 () -> overviewPanel.updateModel()
             ).create()));
 
+            GherkinTagToolWindowHider hider = new GherkinTagToolWindowHider(overviewPanel, project, getHiderMessage());
             ContentManager contentManager = toolWindow.getContentManager();
             Content content = contentManager.getFactory().createContent(hider, null, true);
             contentManager.addContent(content);
@@ -62,8 +65,14 @@ public class GherkinTagToolWindowFactory implements ToolWindowFactory {
         });
     }
 
+    @NotNull
+    private String getHiderMessage() {
+        return BDDUtil.isStoryLanguageSupported() ? GherkinBundle.toolWindow("no.tag.or.meta.in.project") : GherkinBundle.toolWindow("no.tag.in.project");
+    }
+
     @Override
     public boolean isApplicable(@NotNull Project project) {
         return !project.isDefault();
     }
+
 }

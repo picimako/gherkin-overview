@@ -14,11 +14,12 @@
          on how to target different products -->
     <depends>com.intellij.modules.platform</depends>
     <depends>gherkin</depends>
+    <depends optional="true" config-file="gherkin-overview-withJBehave.xml">jbehave-support-plugin</depends>
 
     <extensions defaultExtensionNs="com.intellij">
 
         <!-- Tool window -->
-        <toolWindow id="Gherkin Tags" anchor="left" doNotActivateOnStart="true"
+        <toolWindow id="gherkin.overview.tool.window.id" anchor="left" doNotActivateOnStart="true"
                     icon="AllIcons.Gutter.ExtAnnotation"
                     factoryClass="com.picimako.gherkin.toolwindow.GherkinTagToolWindowFactory"/>
 
@@ -29,5 +30,11 @@
                              displayName="Gherkin Overview" nonDefaultProject="true"/>
         <projectService serviceImplementation="com.picimako.gherkin.settings.GherkinOverviewProjectState"/>
         <applicationService serviceImplementation="com.picimako.gherkin.settings.GherkinOverviewApplicationState"/>
+
+        <projectService serviceInterface="com.picimako.gherkin.JBehaveStoryService"
+                        serviceImplementation="com.picimako.gherkin.NoopJBehaveStoryService"/>
+
+        <!-- Services via @Service annotation -->
+        <!-- <projectService serviceImplementation="com.picimako.gherkin.toolwindow.ProjectBDDTypeService"/>-->
     </extensions>
 </idea-plugin>

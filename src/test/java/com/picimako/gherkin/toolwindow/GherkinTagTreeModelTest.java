@@ -17,7 +17,7 @@
 package com.picimako.gherkin.toolwindow;
 
 import static com.picimako.gherkin.SoftAsserts.assertSoftly;
-import static com.picimako.gherkin.toolwindow.GherkinTagTestSupport.getFirstGherkinTagForName;
+import static com.picimako.gherkin.toolwindow.BDDTestSupport.getFirstGherkinTagForName;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toMap;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,17 +36,18 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
+import org.assertj.core.api.SoftAssertions;
+import org.jetbrains.plugins.cucumber.psi.GherkinElementFactory;
+import org.jetbrains.plugins.cucumber.psi.GherkinFeature;
+import org.jetbrains.plugins.cucumber.psi.GherkinFile;
+import org.jetbrains.plugins.cucumber.psi.GherkinTag;
+
 import com.picimako.gherkin.MediumBasePlatformTestCase;
 import com.picimako.gherkin.settings.CategoryAndTags;
 import com.picimako.gherkin.toolwindow.nodetype.Category;
 import com.picimako.gherkin.toolwindow.nodetype.ContentRoot;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 import com.picimako.gherkin.toolwindow.nodetype.Tag;
-import org.assertj.core.api.SoftAssertions;
-import org.jetbrains.plugins.cucumber.psi.GherkinElementFactory;
-import org.jetbrains.plugins.cucumber.psi.GherkinFeature;
-import org.jetbrains.plugins.cucumber.psi.GherkinFile;
-import org.jetbrains.plugins.cucumber.psi.GherkinTag;
 
 /**
  * Unit test for {@link GherkinTagTreeModel}.

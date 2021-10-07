@@ -16,8 +16,10 @@
 
 package com.picimako.gherkin.settings;
 
+import static com.picimako.gherkin.BDDUtil.isStoryLanguageSupported;
 import static com.picimako.gherkin.GherkinUtil.collectGherkinFilesFromProject;
-import static com.picimako.gherkin.GherkinUtil.tagNameFrom;
+import static com.picimako.gherkin.toolwindow.TagNameUtil.metaNameFrom;
+import static com.picimako.gherkin.toolwindow.TagNameUtil.tagNameFrom;
 import static java.util.stream.Collectors.toList;
 
 import java.awt.*;
@@ -40,11 +42,13 @@ import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ElementProducer;
 import com.intellij.util.ui.FormBuilder;
 import com.intellij.util.ui.ListTableModel;
-import com.picimako.gherkin.resources.GherkinBundle;
-import com.picimako.gherkin.toolwindow.TagCategoryRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.cucumber.psi.GherkinTag;
+
+import com.picimako.gherkin.JBehaveStoryService;
+import com.picimako.gherkin.resources.GherkinBundle;
+import com.picimako.gherkin.toolwindow.TagCategoryRegistry;
 
 /**
  * Builds a panel in which tags and their mappings to categories can be collected from the current project.
@@ -115,7 +119,7 @@ final class CollectGherkinTagsPanelBuilder {
     }
 
     private TableView<CategoryAndTags> buildTableView() {
-        final ColumnInfo<CategoryAndTags, String> categoryColumn = new ColumnInfo<>(GherkinBundle.settings("table.column.tags")) {
+        final ColumnInfo<CategoryAndTags, String> tagsColumn = new ColumnInfo<>(GherkinBundle.settings("table.column.tags")) {
             @Override
             public @Nullable String valueOf(CategoryAndTags categoryAndTags) {
                 return categoryAndTags.getTags();
@@ -123,7 +127,7 @@ final class CollectGherkinTagsPanelBuilder {
 
             @Override
             public void setValue(CategoryAndTags categoryAndTag, @NlsContexts.ListItem String value) {
-                //TODO: add reason why it is empty
+                //No-op because the cell values in this table are not meant to be persisted
             }
 
             @Override
@@ -137,7 +141,7 @@ final class CollectGherkinTagsPanelBuilder {
             }
         };
 
-        final ColumnInfo<CategoryAndTags, String> tagsColumn = new ColumnInfo<>(GherkinBundle.settings("table.column.mapped.category")) {
+        final ColumnInfo<CategoryAndTags, String> mappedCategoryColumn = new ColumnInfo<>(GherkinBundle.settings("table.column.mapped.category")) {
             @Override
             public String valueOf(CategoryAndTags categoryAndTag) {
                 return categoryAndTag.getCategory();
@@ -145,7 +149,7 @@ final class CollectGherkinTagsPanelBuilder {
 
             @Override
             public void setValue(CategoryAndTags categoryAndTag, @NlsContexts.ListItem String value) {
-                //TODO: add reason why it is empty
+                //No-op because the cell values in this table are not meant to be persisted
             }
 
             @Override
@@ -154,13 +158,14 @@ final class CollectGherkinTagsPanelBuilder {
             }
         };
 
-        return new TableView<>(tableModel = new ListTableModel<>(categoryColumn, tagsColumn));
+        return new TableView<>(tableModel = new ListTableModel<>(tagsColumn, mappedCategoryColumn));
     }
 
     private List<CategoryAndTags> collectMappingsFromProject() {
         var registry = TagCategoryRegistry.getInstance(project);
         final MultiMap<String, String> rawMappings = MultiMap.createOrderedSet();
 
+        //This doesn't wait to be in Smart mode because this panel allows the collection of tags only when in Smart mode
         collectGherkinFilesFromProject(project).stream()
             .flatMap(file -> PsiTreeUtil.findChildrenOfType(file, GherkinTag.class).stream())
             .forEach(gherkinTag -> {
@@ -168,9 +173,26 @@ final class CollectGherkinTagsPanelBuilder {
                 rawMappings.putValue(registry.categoryOf(tagName), tagName);
             });
 
-        rawMappings.keySet().forEach(category -> Collections.sort((List<String>) rawMappings.get(category)));
-        return rawMappings.entrySet().stream()
-            .map(entry -> new CategoryAndTags(entry.getKey(), String.join(",", entry.getValue())))
-            .collect(toList());
+        if (isStoryLanguageSupported()) {
+            //This doesn't wait to be in Smart mode because this panel allows the collection of tags only when in Smart mode
+            JBehaveStoryService storyService = project.getService(JBehaveStoryService.class);
+            storyService.collectStoryFilesFromProject().stream()
+                .map(storyService::collectMetasFromFile)
+                .flatMap(metas -> metas.entrySet().stream())
+                .forEach(meta -> {
+                    String metaName = metaNameFrom(meta.getKey(), meta.getValue());
+                    rawMappings.putValue(registry.categoryOf(metaName), metaName);
+                });
+        }
+
+        if (!rawMappings.isEmpty()) {
+            //Sort the list of tags alphabetically for each category
+            rawMappings.keySet().forEach(category -> Collections.sort((List<String>) rawMappings.get(category)));
+            //Join the list tags by comma for each category
+            return rawMappings.entrySet().stream()
+                .map(entry -> new CategoryAndTags(entry.getKey(), String.join(",", entry.getValue())))
+                .collect(toList());
+        }
+        return Collections.emptyList();
     }
 }

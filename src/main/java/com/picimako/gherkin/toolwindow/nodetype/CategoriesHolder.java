@@ -36,6 +36,7 @@ public interface CategoriesHolder {
      * @param name the category name to find
      * @return the category, or empty Optional
      */
+    @NotNull
     default Optional<Category> findCategory(@Nullable String name) {
         return getCategories().stream().filter(category -> category.hasName(name)).findFirst();
     }
@@ -43,6 +44,7 @@ public interface CategoriesHolder {
     /**
      * Gets the dedicated catch-all category called "Other".
      */
+    @NotNull
     Category getOther();
 
     /**
@@ -81,6 +83,7 @@ public interface CategoriesHolder {
      *
      * @param tagName the tag's name to search for
      */
+    @NotNull
     default Optional<Tag> findTag(String tagName) {
         return getCategories().stream().flatMap(category -> category.getTags().stream()).filter(tag -> tag.hasName(tagName)).findFirst();
     }
