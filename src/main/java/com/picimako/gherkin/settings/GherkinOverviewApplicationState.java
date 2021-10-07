@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.util.xmlb.XmlSerializerUtil;
@@ -45,7 +45,7 @@ public class GherkinOverviewApplicationState implements PersistentStateComponent
 
     /**
      * Contains the application level category to tags mappings.
-     * By default it is initialized with a default set of category-tags mappings.
+     * By default, it is initialized with a default set of category-tags mappings.
      * <p>
      * Although multiple instances of this class are instantiated by the IntelliJ platform, for some reason, it is the
      * first that is actually returned when requesting an instance of this service.
@@ -58,7 +58,7 @@ public class GherkinOverviewApplicationState implements PersistentStateComponent
     public List<CategoryAndTags> mappings = loadDefaultApplicationLevelMappings();
 
     public static GherkinOverviewApplicationState getInstance() {
-        return ServiceManager.getService(GherkinOverviewApplicationState.class);
+        return ApplicationManager.getApplication().getService(GherkinOverviewApplicationState.class);
     }
 
     @Override

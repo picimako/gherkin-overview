@@ -18,7 +18,6 @@ package com.picimako.gherkin.toolwindow;
 
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.Service;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.project.Project;
@@ -53,7 +52,7 @@ public final class GherkinTagsToolWindowSettings implements PersistentStateCompo
     public LayoutType layout = LayoutType.NO_GROUPING;
 
     public static GherkinTagsToolWindowSettings getInstance(@NotNull Project project) {
-        return ServiceManager.getService(project, GherkinTagsToolWindowSettings.class);
+        return project.getService(GherkinTagsToolWindowSettings.class);
     }
 
     @Override

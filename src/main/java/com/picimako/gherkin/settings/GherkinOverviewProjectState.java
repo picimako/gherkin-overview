@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.project.Project;
@@ -55,7 +54,7 @@ public class GherkinOverviewProjectState implements PersistentStateComponent<Ghe
     public List<CategoryAndTags> mappings = new ArrayList<>();
 
     public static GherkinOverviewProjectState getInstance(Project project) {
-        return ServiceManager.getService(project, GherkinOverviewProjectState.class);
+        return project.getService(GherkinOverviewProjectState.class);
     }
 
     @Override

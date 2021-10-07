@@ -120,4 +120,10 @@ public class Category extends AbstractNodeType {
     public static Category createOther(Project project) {
         return new Category("Other", project);
     }
+
+    @Override
+    public void dispose() {
+        tags.forEach(Tag::dispose);
+        tags.clear();
+    }
 }

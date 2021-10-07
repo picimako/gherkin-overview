@@ -18,14 +18,15 @@ package com.picimako.gherkin.toolwindow;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import org.jetbrains.plugins.cucumber.psi.GherkinTag;
 
 /**
- * Unit test for {@link GherkinTagTestSupport}.
+ * Unit test for {@link BDDTestSupport}.
  */
-public class GherkinTagTestSupportTest extends BasePlatformTestCase {
+public class BDDTestSupportTest extends BasePlatformTestCase {
 
     @Override
     protected String getTestDataPath() {
@@ -35,16 +36,33 @@ public class GherkinTagTestSupportTest extends BasePlatformTestCase {
     public void testShouldReturnFirstGherkinTagForName() {
         PsiFile psiFile = myFixture.configureByFile("the_gherkin.feature");
 
-        GherkinTag tag = GherkinTagTestSupport.getFirstGherkinTagForName(psiFile, "@regression");
+        GherkinTag tag = BDDTestSupport.getFirstGherkinTagForName(psiFile, "@regression");
 
         assertThat(tag).isNotNull();
         assertThat(tag.getName()).isEqualTo("@regression");
     }
 
+    public void testShouldReturnFirstMetaKeyForName() {
+        PsiFile psiFile = myFixture.configureByFile("Story.story");
+
+        PsiElement metaKey = BDDTestSupport.getFirstMetaKeyForName(psiFile, "@Disabled");
+
+        assertThat(metaKey).isNotNull();
+        assertThat(metaKey.getText()).isEqualTo("@Disabled");
+    }
+
     public void testShouldReturnNoGherkinTagIfFileDoesntContainTagForName() {
         PsiFile psiFile = myFixture.configureByFile("the_gherkin.feature");
 
-        GherkinTag tag = GherkinTagTestSupport.getFirstGherkinTagForName(psiFile, "@nonexistent");
+        GherkinTag tag = BDDTestSupport.getFirstGherkinTagForName(psiFile, "@nonexistent");
+
+        assertThat(tag).isNull();
+    }
+
+    public void testShouldReturnNoMetaKeyIfFileDoesntContainMetaKeyForName() {
+        PsiFile psiFile = myFixture.configureByFile("Story.story");
+
+        PsiElement tag = BDDTestSupport.getFirstMetaKeyForName(psiFile, "@nonexistent");
 
         assertThat(tag).isNull();
     }

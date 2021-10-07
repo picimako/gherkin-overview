@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '0.6.5'
+    id 'org.jetbrains.intellij' version '1.1.4'
 }
 
 repositories {
@@ -8,8 +8,8 @@ repositories {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.13.1'
-    testCompile group: 'org.assertj', name: 'assertj-core', version: '3.19.0'
+    testImplementation group: 'junit', name: 'junit', version: '4.13.1'
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.19.0'
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.8.0'
 }
 
@@ -18,24 +18,29 @@ apply plugin: 'org.jetbrains.intellij'
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-    version '2021.1'
+    version = '2021.1'
     plugins = ['java',
-               'gherkin:211.6693.7', //https://plugins.jetbrains.com/plugin/13374-intellilang
+               'gherkin:211.6693.111', //https://plugins.jetbrains.com/plugin/9164-gherkin/versions
                //1. The gherkin plugin depends on IntelliLang.
                //2. Adding it also makes it possible to load .feature files into the in-memory editor during unit testing.
-               'IntelliLang'] //https://plugins.jetbrains.com/plugin/9164-gherkin/versions
-    pluginName 'Gherkin Overview'
-    updateSinceUntilBuild false
+               'IntelliLang', //https://plugins.jetbrains.com/plugin/13374-intellilang
+                'jbehave-support-plugin:1.54a'] //https://plugins.jetbrains.com/plugin/7268-jbehave-support
+    pluginName = 'Gherkin Overview'
+    updateSinceUntilBuild = false
 }
 
 wrapper {
-    gradleVersion '6.6.1'
+    gradleVersion '7.1.1'
 }
 
 patchPluginXml {
-    changeNotes(file(gherkinOverviewChangelog).text)
-    pluginDescription(file(gherkinOverviewPluginDescription).text)
+    changeNotes = provider {file(gherkinOverviewChangelog).text}
+    pluginDescription = provider {file(gherkinOverviewPluginDescription).text}
 }
+
+//runPluginVerifier {
+//    ideVersions = ['IC-2021.1', 'IC-2021.2', 'IC-2021.2.2', 'IC-2021.3']
+//}
 
 //test {
     //    systemProperty '<absolute path to locally cloned intellij-community GitHub repository>'

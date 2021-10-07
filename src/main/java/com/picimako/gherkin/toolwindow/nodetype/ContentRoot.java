@@ -90,7 +90,7 @@ public class ContentRoot extends AbstractNodeType implements CategoriesHolder {
      * Gets the category dedicated for unmapped tags.
      */
     @Override
-    public Category getOther() {
+    public @NotNull Category getOther() {
         return other;
     }
 
@@ -134,6 +134,12 @@ public class ContentRoot extends AbstractNodeType implements CategoriesHolder {
     @TestOnly
     public static ContentRoot createModule(@NotNull String displayName, @NotNull Project project) {
         return new ContentRoot(displayName, Type.MODULE, project);
+    }
+
+    @Override
+    public void dispose() {
+        categories.forEach(Category::dispose);
+        categories.clear();
     }
 
     /**

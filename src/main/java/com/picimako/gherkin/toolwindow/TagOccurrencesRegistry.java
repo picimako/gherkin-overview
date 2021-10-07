@@ -16,13 +16,12 @@
 
 package com.picimako.gherkin.toolwindow;
 
-import static com.picimako.gherkin.GherkinUtil.tagNameFrom;
+import static com.picimako.gherkin.toolwindow.TagNameUtil.determineTagOrMetaName;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import com.intellij.openapi.components.Service;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
@@ -31,10 +30,9 @@ import com.intellij.psi.util.PsiTreeUtil;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
-import org.jetbrains.plugins.cucumber.psi.GherkinTag;
 
 /**
- * Stores the tag occurrence counts mapped to Gherkin files' paths and tag names stored in those files.
+ * Stores the tag occurrence counts mapped to Gherkin and Story files' paths and tag names stored in those files.
  * <p>
  * The aim of this project service is to provide a central place and potentially easier logic to query the tag
  * occurrences in contrast to storing this information in the {@link com.picimako.gherkin.toolwindow.nodetype.FeatureFile}s.
@@ -43,21 +41,21 @@ import org.jetbrains.plugins.cucumber.psi.GherkinTag;
 @Service
 public final class TagOccurrencesRegistry {
 
+    private final Project project;
     /**
      * FeatureFile path -> &lt;tag name, count>
      */
     private Map<String, Map<String, MutableInt>> tagOccurrences;
-    private final Project project;
 
     public TagOccurrencesRegistry(Project project) {
         this.project = project;
     }
 
     /**
-     * Initializes the map according to the number of Gherkin files in the project to minimize the allocation size.
+     * Initializes the map according to the number of Gherkin and Story files in the project to minimize the allocation size.
      */
-    public void init(int gherkinFileCount) {
-        tagOccurrences = new HashMap<>(gherkinFileCount);
+    public void init(int bddFileCount) {
+        tagOccurrences = new HashMap<>(bddFileCount);
     }
 
     /**
@@ -65,7 +63,7 @@ public final class TagOccurrencesRegistry {
      */
     public void calculateOccurrenceCounts(@NotNull VirtualFile file) {
         if (!tagOccurrences.containsKey(file.getPath())) {
-            tagOccurrences.put(file.getPath(), new HashMap<>()); //TODO: this may be optimized by reducing the initial capacity
+            tagOccurrences.put(file.getPath(), new HashMap<>());
             calculateCounts(file);
         }
     }
@@ -82,14 +80,19 @@ public final class TagOccurrencesRegistry {
         PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
         if (psiFile != null) {
             var counts = tagOccurrences.get(file.getPath());
-            PsiTreeUtil.processElements(psiFile, GherkinTag.class, element -> {
-                String tagName = tagNameFrom(element);
-                if (counts.containsKey(tagName)) {
-                    counts.get(tagName).increment();
-                } else {
-                    counts.put(tagName, new MutableInt(1));
+
+            PsiTreeUtil.processElements(psiFile, element -> {
+                if (!element.equals(psiFile)) { //the file itself is definitely not a tag/meta, so can be skipped 
+                    String tagOrMetaName = determineTagOrMetaName(element);
+                    if (tagOrMetaName != null) {
+                        if (counts.containsKey(tagOrMetaName)) {
+                            counts.get(tagOrMetaName).increment();
+                        } else {
+                            counts.put(tagOrMetaName, new MutableInt(1));
+                        }
+                    }
                 }
-                return true;
+                return true; //continue execution, so that all tags/metas are counted
             });
         }
     }
@@ -117,6 +120,6 @@ public final class TagOccurrencesRegistry {
     }
 
     public static TagOccurrencesRegistry getInstance(Project project) {
-        return ServiceManager.getService(project, TagOccurrencesRegistry.class);
+        return project.getService(TagOccurrencesRegistry.class);
     }
 }

@@ -37,4 +37,8 @@ final class FileOpener {
         fileEditorManager.openFile(file, true, fileEditorManager.isFileOpen(file));
         fileEditorManager.setSelectedEditor(file, "text-editor");
     }
+
+    private FileOpener() {
+        //Utility class
+    }
 }

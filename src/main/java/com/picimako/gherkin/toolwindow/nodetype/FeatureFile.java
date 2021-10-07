@@ -18,13 +18,15 @@ package com.picimako.gherkin.toolwindow.nodetype;
 
 import java.util.Objects;
 
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
-import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.jetbrains.annotations.NotNull;
+
 import com.picimako.gherkin.resources.GherkinBundle;
 import com.picimako.gherkin.toolwindow.TagOccurrencesRegistry;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a Gherkin file with the .feature extension.
@@ -49,12 +51,19 @@ public class FeatureFile extends AbstractNodeType {
         return file;
     }
 
+    @NotNull
     public String getPath() {
         return file.getPath();
     }
 
+    @NotNull
     public String getName() {
         return file.getName();
+    }
+
+    @NotNull
+    public FileType getFileType() {
+        return file.getFileType();
     }
 
     public boolean hasFileName(String name) {
@@ -88,7 +97,7 @@ public class FeatureFile extends AbstractNodeType {
      * </ul>
      */
     void setDisplayNameWithPath() {
-        String relativePath = VfsUtil.getRelativePath(file.getParent(), ProjectUtil.guessProjectDir(project));
+        String relativePath = VfsUtilCore.getRelativePath(file.getParent(), ProjectUtil.guessProjectDir(project));
         displayName = relativePath != null
             ? file.getName() + " [" + (relativePath.isEmpty() ? "/" : relativePath) + "]"
             : file.getName();

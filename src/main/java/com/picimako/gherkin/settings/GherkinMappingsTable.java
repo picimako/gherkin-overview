@@ -109,7 +109,7 @@ public class GherkinMappingsTable extends ListTableWithButtons<CategoryAndTags> 
     /**
      * A base {@link ColumnInfo} implementation for Category-Tag mapping tables.
      */
-    private static abstract class BaseCategoryTagsColumnInfo extends ElementsColumnInfoBase<CategoryAndTags> {
+    private abstract static class BaseCategoryTagsColumnInfo extends ElementsColumnInfoBase<CategoryAndTags> {
         protected BaseCategoryTagsColumnInfo(@NlsContexts.ColumnName String name) {
             super(name);
         }

@@ -23,13 +23,14 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiManager;
 import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.ui.components.JBScrollPane;
+
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 
 /**
  * A custom panel to display the Gherkin tags and associated data.
  * <p>
  * The underlying tree component is also extended with action listeners, so that e.g. hitting Enter or double-clicking on
- * Gherkin file nodes open the selected Gherkin file.
+ * Gherkin and Story file nodes open the selected file.
  */
 public class GherkinTagOverviewPanel extends JPanel {
 
@@ -69,6 +70,18 @@ public class GherkinTagOverviewPanel extends JPanel {
             model.buildModel();
         }
         tree.setModel(model);
+    }
+
+    /**
+     * Used when either the application or project-level mappings are changed in the Settings.
+     *
+     * @see com.picimako.gherkin.settings.GherkinOverviewProjectConfigurable
+     */
+    public void rebuildModel() {
+        model.dispose();
+        model.buildModel();
+        tree.setModel(model);
+        tree.updateUI();
     }
 
     private void buildGUI() {

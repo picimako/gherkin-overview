@@ -30,15 +30,21 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.SmartList;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import com.picimako.gherkin.resources.GherkinBundle;
 import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
 import com.picimako.gherkin.toolwindow.LayoutType;
-import org.jetbrains.annotations.Nullable;
+import com.picimako.gherkin.toolwindow.ProjectBDDTypeService;
 
 /**
  * Represents the root element of the tree in the Gherkin Tags tool window.
  */
 public class ModelDataRoot extends AbstractNodeType implements CategoriesHolder {
+
+    private static final String OTHER_CATEGORY_NAME = "Other";
+    private static final String ROOTLESS_CONTENT_ROOT_NAME = "Rootless";
 
     /**
      * Stores model data for the overall project.
@@ -57,6 +63,21 @@ public class ModelDataRoot extends AbstractNodeType implements CategoriesHolder 
     public ModelDataRoot(Project project) {
         super("Gherkin Tags", project);
         initData();
+    }
+
+    /**
+     * Updates the display name of the tree's root element to reflect the contents of the project in terms of
+     * the types of BDD files it contains.
+     */
+    public void updateDisplayName() {
+        ProjectBDDTypeService service = project.getService(ProjectBDDTypeService.class);
+        if (service.hasOnlyJBehaveStoryFiles()) {
+            displayName = GherkinBundle.toolWindow("root.name.metas");
+        } else if (service.hasBothGherkinAndStoryFiles()) {
+            displayName = GherkinBundle.toolWindow("root.name.tags.and.metas");
+        } else {
+            displayName = GherkinBundle.toolWindow("root.name.tags");
+        }
     }
 
     /**
@@ -115,21 +136,21 @@ public class ModelDataRoot extends AbstractNodeType implements CategoriesHolder 
      * If the provided file is not valid anymore, it means it has just been deleted, thus the logic is slightly
      * different to locate the ContentRoot it was linked to.
      *
-     * @param gherkinFile the file to find the content root of
+     * @param bddFile the file to find the content root of
      * @return the content root the file is/was linked to, or the catch-all content root
      */
     @Nullable
-    public ContentRoot findContentRootOrRootless(PsiFile gherkinFile) {
-        Module contentRootForFile = ModuleUtilCore.findModuleForFile(gherkinFile);
-        if (gherkinFile.getVirtualFile().isValid()) {
+    public ContentRoot findContentRootOrRootless(PsiFile bddFile) {
+        Module contentRootForFile = ModuleUtilCore.findModuleForFile(bddFile);
+        if (bddFile.getVirtualFile().isValid()) {
             return contentRootForFile == null
                 ? getContentRoot(getRootless(), "Rootless")  //if file doesn't belong to any content root
-                : getContentRoot(getContentRoot(contentRootForFile.getName()), contentRootForFile.getName()); //if has content root added with name;
+                : getContentRoot(getContentRoot(contentRootForFile.getName()), contentRootForFile.getName()); //if has content root added with name
         }
 
-        //If Gherkin file is not valid, thus has just been deleted
+        //If Gherkin or Story file is not valid, thus has just been deleted
         for (ContentRoot contentRoot : contentRoots) {
-            if (contentRoot.hasFileMapped(gherkinFile.getVirtualFile())) {
+            if (contentRoot.hasFileMapped(bddFile.getVirtualFile())) {
                 return contentRoot;
             }
         }
@@ -138,7 +159,7 @@ public class ModelDataRoot extends AbstractNodeType implements CategoriesHolder 
     }
 
     private Optional<ContentRoot> getRootless() {
-        return getContentRoot("Rootless");
+        return getContentRoot(ROOTLESS_CONTENT_ROOT_NAME);
     }
 
     /**
@@ -184,8 +205,8 @@ public class ModelDataRoot extends AbstractNodeType implements CategoriesHolder 
      * get() is called on the Optional because the category Other should be available.
      */
     @Override
-    public Category getOther() {
-        return findCategory("Other").get();
+    public @NotNull Category getOther() {
+        return findCategory(OTHER_CATEGORY_NAME).get();
     }
 
     //sort
@@ -210,8 +231,8 @@ public class ModelDataRoot extends AbstractNodeType implements CategoriesHolder 
     @Override
     public String toString() {
         return getToString(
-            () -> GherkinBundle.toolWindow("statistics.root.simplified", displayName, tagCount(), gherkinFileCount()),
-            () -> GherkinBundle.toolWindow("statistics.root.detailed", displayName, tagCount(), gherkinFileCount()));
+            () -> GherkinBundle.toolWindow("statistics.root.simplified", displayName, tagCount(), bddFileCount()),
+            () -> GherkinBundle.toolWindow("statistics.root.detailed", displayName, tagCount(), bddFileCount()));
     }
 
     /**
@@ -229,7 +250,7 @@ public class ModelDataRoot extends AbstractNodeType implements CategoriesHolder 
     /**
      * Counts the distinct number of Gherkin files stored in this model.
      */
-    private long gherkinFileCount() {
+    private long bddFileCount() {
         return (isProjectDataInitialized()
             ? categories.stream()
             : contentRoots.stream().flatMap(contentRoot -> contentRoot.getCategories().stream()))
@@ -237,5 +258,17 @@ public class ModelDataRoot extends AbstractNodeType implements CategoriesHolder 
             .flatMap(tag -> tag.getFeatureFiles().stream())
             .distinct()
             .count();
+    }
+
+    @Override
+    public void dispose() {
+        if (categories != null) {
+            categories.forEach(Category::dispose);
+            categories.clear();
+        }
+        if (contentRoots != null) {
+            contentRoots.forEach(ContentRoot::dispose);
+            contentRoots.clear();
+        }
     }
 }

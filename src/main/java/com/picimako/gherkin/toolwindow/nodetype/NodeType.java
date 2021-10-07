@@ -16,10 +16,12 @@
 
 package com.picimako.gherkin.toolwindow.nodetype;
 
+import com.intellij.openapi.Disposable;
+
 /**
  * Node type for the elements of the Gherkin tree.
  */
-public interface NodeType extends Sortable {
+public interface NodeType extends Sortable, Disposable {
 
     /**
      * Returns the argument object as a {@link ContentRoot}.
@@ -40,5 +42,9 @@ public interface NodeType extends Sortable {
      */
     static Tag asTag(Object node) {
         return (Tag) node;
+    }
+
+    @Override
+    default void dispose() {
     }
 }

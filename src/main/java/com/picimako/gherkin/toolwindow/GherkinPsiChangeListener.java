@@ -16,21 +16,25 @@
 
 package com.picimako.gherkin.toolwindow;
 
+import static com.picimako.gherkin.toolwindow.GherkinTagToolWindowUtil.getGherkinTagsToolWindow;
+import static com.picimako.gherkin.toolwindow.GherkinTagToolWindowUtil.getToolWindowHider;
+
+import com.github.kumaraman21.intellijbehave.parser.StoryFile;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiTreeChangeAdapter;
 import com.intellij.psi.PsiTreeChangeEvent;
-import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.cucumber.psi.GherkinFile;
-import org.jetbrains.plugins.cucumber.psi.GherkinFileType;
+
+import com.picimako.gherkin.BDDUtil;
+import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 
 /**
  * Handles PSI changes in Gherkin files.
  * <p>
- * If a Gherkin file changes, this listener updates the calls updates on the model data and UI of the Gherkin tag tool window
+ * If a Gherkin/Story file changes, this listener updates the calls updates on the model data and UI of the Gherkin tag tool window
  * according to the changes in the file.
  */
 public class GherkinPsiChangeListener extends PsiTreeChangeAdapter {
@@ -74,22 +78,29 @@ public class GherkinPsiChangeListener extends PsiTreeChangeAdapter {
     }
 
     /**
-     * When the file still exists the update call is made for the file itself, while when it is null, meaning
+     * When the file still exists, the update call is made for the file itself, while when it is null, meaning
      * it has been deleted, the update call happens to the child of the event, which stores the file that has
      * been deleted.
      */
     private void updateGherkinTree(PsiTreeChangeEvent event) {
         PsiFile file = event.getFile();
         //file is null when the file has just been deleted
-        if (file != null && file.getFileType() == GherkinFileType.INSTANCE) {
+        if (file != null && BDDUtil.isABDDFile(file)) {
             updateModelAndToolWindow(file);
-        } else if (file == null && event.getChild() instanceof GherkinFile) {
-            updateModelAndToolWindow((GherkinFile) event.getChild());
+        } else if (file == null) {
+            if (event.getChild() instanceof GherkinFile) {
+                updateModelAndToolWindow((GherkinFile) event.getChild());
+            } else if (event.getChild() instanceof StoryFile) {
+                updateModelAndToolWindow((StoryFile) event.getChild());
+            }
         }
     }
 
+    /**
+     * Model is updated only if the Gherkin tag tool window is actually available.
+     */
     private void updateModelAndToolWindow(PsiFile file) {
-        ToolWindow gherkinTagsToolWindow = ToolWindowManager.getInstance(project).getToolWindow("Gherkin Tags");
+        ToolWindow gherkinTagsToolWindow = getGherkinTagsToolWindow(project);
         if (gherkinTagsToolWindow != null) {
             ((GherkinTagTreeModel) tree.getModel()).updateModelForFile(file);
 
@@ -97,11 +108,7 @@ public class GherkinPsiChangeListener extends PsiTreeChangeAdapter {
             modelRoot.sort();
             tree.updateUI();
 
-            ((GherkinTagToolWindowHider) gherkinTagsToolWindow
-                .getContentManager()
-                .getContent(0) //This works as long as "Gherkin Tags" is the first content in the tool window
-                .getComponent()
-            ).setContentVisibilityBasedOn(modelRoot);
+            getToolWindowHider(gherkinTagsToolWindow).setContentVisibilityBasedOn(modelRoot);
         }
     }
 }

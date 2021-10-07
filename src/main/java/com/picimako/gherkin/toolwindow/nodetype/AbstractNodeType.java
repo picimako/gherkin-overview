@@ -23,7 +23,9 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 import com.intellij.openapi.project.Project;
+
 import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
+
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -58,6 +60,7 @@ public abstract class AbstractNodeType implements NodeType {
             case DETAILED:
                 toString = detailed.get();
                 break;
+            default:
         }
         return toString;
     }
