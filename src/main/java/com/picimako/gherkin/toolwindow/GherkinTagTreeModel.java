@@ -29,6 +29,7 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
@@ -65,7 +66,7 @@ import com.picimako.gherkin.toolwindow.nodetype.Tag;
  * @see GherkinTagTree
  * @see GherkinPsiChangeListener
  */
-public abstract class GherkinTagTreeModel implements TreeModel {
+public abstract class GherkinTagTreeModel implements TreeModel, Disposable {
 
     private final Project project;
     private final TagCategoryRegistry registry;
@@ -89,6 +90,12 @@ public abstract class GherkinTagTreeModel implements TreeModel {
     @Override
     public Object getRoot() {
         return data;
+    }
+
+    @Override
+    public void dispose() {
+        data.dispose();
+        data = null;
     }
 
     /**

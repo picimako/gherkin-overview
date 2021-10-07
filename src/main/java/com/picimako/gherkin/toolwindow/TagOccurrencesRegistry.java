@@ -41,11 +41,11 @@ import org.jetbrains.annotations.TestOnly;
 @Service
 public final class TagOccurrencesRegistry {
 
+    private final Project project;
     /**
      * FeatureFile path -> &lt;tag name, count>
      */
     private Map<String, Map<String, MutableInt>> tagOccurrences;
-    private final Project project;
 
     public TagOccurrencesRegistry(Project project) {
         this.project = project;
@@ -63,7 +63,7 @@ public final class TagOccurrencesRegistry {
      */
     public void calculateOccurrenceCounts(@NotNull VirtualFile file) {
         if (!tagOccurrences.containsKey(file.getPath())) {
-            tagOccurrences.put(file.getPath(), new HashMap<>()); //TODO: this may be optimized by reducing the initial capacity
+            tagOccurrences.put(file.getPath(), new HashMap<>());
             calculateCounts(file);
         }
     }

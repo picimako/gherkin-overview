@@ -28,14 +28,14 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.treeView.NodeRenderer;
 import com.intellij.openapi.util.NlsSafe;
 import com.intellij.util.PlatformIcons;
+import icons.CucumberIcons;
+import org.jetbrains.annotations.NotNull;
 
 import com.picimako.gherkin.toolwindow.nodetype.Category;
 import com.picimako.gherkin.toolwindow.nodetype.ContentRoot;
 import com.picimako.gherkin.toolwindow.nodetype.FeatureFile;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 import com.picimako.gherkin.toolwindow.nodetype.Tag;
-import icons.CucumberIcons;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * A custom JTree implementation for rendering the elements of the Gherkin tag tree.

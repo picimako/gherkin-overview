@@ -136,6 +136,12 @@ public class ContentRoot extends AbstractNodeType implements CategoriesHolder {
         return new ContentRoot(displayName, Type.MODULE, project);
     }
 
+    @Override
+    public void dispose() {
+        categories.forEach(Category::dispose);
+        categories.clear();
+    }
+
     /**
      * The type of the content root.
      */

@@ -16,12 +16,12 @@
 
 package com.picimako.gherkin.toolwindow;
 
+import static com.picimako.gherkin.toolwindow.GherkinTagToolWindowUtil.getGherkinTagsToolWindow;
+import static com.picimako.gherkin.toolwindow.GherkinTagToolWindowUtil.getToolWindowHider;
+
 import com.github.kumaraman21.intellijbehave.parser.StoryFile;
-import com.intellij.codeInsight.daemon.HighlightDisplayKey;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiTreeChangeAdapter;
 import com.intellij.psi.PsiTreeChangeEvent;
@@ -34,13 +34,11 @@ import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 /**
  * Handles PSI changes in Gherkin files.
  * <p>
- * If a Gherkin file changes, this listener updates the calls updates on the model data and UI of the Gherkin tag tool window
+ * If a Gherkin/Story file changes, this listener updates the calls updates on the model data and UI of the Gherkin tag tool window
  * according to the changes in the file.
  */
 public class GherkinPsiChangeListener extends PsiTreeChangeAdapter {
 
-    private static final Logger LOG = Logger.getInstance(HighlightDisplayKey.class);
-    private static final String TOOL_WINDOW_ID = "gherkin.overview.tool.window.id";
     private final GherkinTagTree tree;
     private final Project project;
 
@@ -98,21 +96,19 @@ public class GherkinPsiChangeListener extends PsiTreeChangeAdapter {
         }
     }
 
+    /**
+     * Model is updated only if the Gherkin tag tool window is actually available.
+     */
     private void updateModelAndToolWindow(PsiFile file) {
-        ToolWindow gherkinTagsToolWindow = ToolWindowManager.getInstance(project).getToolWindow(TOOL_WINDOW_ID);
-        LOG.assertTrue(gherkinTagsToolWindow != null, "There is no tool window registered with the id: [" + TOOL_WINDOW_ID + "]");
+        ToolWindow gherkinTagsToolWindow = getGherkinTagsToolWindow(project);
+        if (gherkinTagsToolWindow != null) {
+            ((GherkinTagTreeModel) tree.getModel()).updateModelForFile(file);
 
-        ((GherkinTagTreeModel) tree.getModel()).updateModelForFile(file);
+            ModelDataRoot modelRoot = (ModelDataRoot) tree.getModel().getRoot();
+            modelRoot.sort();
+            tree.updateUI();
 
-        ModelDataRoot modelRoot = (ModelDataRoot) tree.getModel().getRoot();
-        modelRoot.sort();
-        tree.updateUI();
-
-        ((GherkinTagToolWindowHider) gherkinTagsToolWindow
-            .getContentManager()
-            //This works as long as the one with "gherkin.overview.tool.window.id" id is the first content in the tool window
-            .getContent(0)
-            .getComponent()
-        ).setContentVisibilityBasedOn(modelRoot);
+            getToolWindowHider(gherkinTagsToolWindow).setContentVisibilityBasedOn(modelRoot);
+        }
     }
 }

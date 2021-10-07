@@ -16,26 +16,19 @@
 
 package com.picimako.gherkin.toolwindow;
 
+import static com.picimako.gherkin.ToolWindowTestSupport.registerToolWindow;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import javax.swing.*;
-
 import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.wm.RegisterToolWindowTask;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowAnchor;
-import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.PsiTreeChangeEventImpl;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-import com.intellij.ui.content.Content;
 
-import com.picimako.gherkin.resources.GherkinBundle;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 
 /**
@@ -49,7 +42,7 @@ public class GherkinPsiChangeListenerTest extends BasePlatformTestCase {
     }
 
     public void testUpdatesModelForGherkinFile() {
-        registerToolWindow();
+        registerToolWindow(getProject());
         PsiFile gherkinFile = myFixture.configureByFile("the_gherkin.feature");
         GherkinTagTree tree = mock(GherkinTagTree.class);
         GherkinTagTreeModel model = mock(ContentRootBasedGherkinTagTreeModel.class);
@@ -65,7 +58,7 @@ public class GherkinPsiChangeListenerTest extends BasePlatformTestCase {
     }
 
     public void testUpdatesModelForStoryFile() {
-        registerToolWindow();
+        registerToolWindow(getProject());
         PsiFile storyFile = myFixture.configureByText("story.story", "");
         GherkinTagTree tree = mock(GherkinTagTree.class);
         GherkinTagTreeModel model = mock(ContentRootBasedGherkinTagTreeModel.class);
@@ -103,13 +96,13 @@ public class GherkinPsiChangeListenerTest extends BasePlatformTestCase {
 
         assertThatExceptionOfType(Throwable.class)
             .isThrownBy(() -> firePsiEvent(gherkinFile, tree))
-            .withMessageEndingWith("There is no tool window registered with the id: [Tags]");
+            .withMessageEndingWith("There is no tool window registered with the id: [gherkin.overview.tool.window.id]");
 
         verify(tree, never()).getModel();
     }
 
     public void testUpdatesModelForDeletedFile() {
-        registerToolWindow();
+        registerToolWindow(getProject());
         PsiFile gherkinFile = myFixture.configureByFile("the_gherkin.feature");
         PsiFile childFile = myFixture.configureByFile("a_gherkin.feature");
         GherkinTagTree tree = mock(GherkinTagTree.class);
@@ -137,19 +130,5 @@ public class GherkinPsiChangeListenerTest extends BasePlatformTestCase {
         event.setFile(gherkinFile);
 
         listener.childrenChanged(event);
-    }
-
-    private void registerToolWindow() {
-        ToolWindow toolWindow = ToolWindowManager.getInstance(getProject())
-            .registerToolWindow(
-                new RegisterToolWindowTask(GherkinBundle.message("toolwindow.stripe.gherkin.overview.tool.window.id"),
-                    ToolWindowAnchor.LEFT,
-                    new GherkinTagToolWindowHider(new JPanel(), getProject()),
-                    true, true, false, true,
-                    new GherkinTagToolWindowFactory(),
-                    null, null));
-        Content content = toolWindow.getContentManager().getFactory()
-            .createContent(new GherkinTagToolWindowHider(new JPanel(), getProject()), "", true);
-        toolWindow.getContentManager().addContent(content);
     }
 }

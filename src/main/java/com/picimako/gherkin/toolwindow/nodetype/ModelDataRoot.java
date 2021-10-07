@@ -30,14 +30,13 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.SmartList;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.picimako.gherkin.resources.GherkinBundle;
 import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
 import com.picimako.gherkin.toolwindow.LayoutType;
 import com.picimako.gherkin.toolwindow.ProjectBDDTypeService;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents the root element of the tree in the Gherkin Tags tool window.
@@ -256,5 +255,17 @@ public class ModelDataRoot extends AbstractNodeType implements CategoriesHolder 
             .flatMap(tag -> tag.getFeatureFiles().stream())
             .distinct()
             .count();
+    }
+
+    @Override
+    public void dispose() {
+        if (categories != null) {
+            categories.forEach(Category::dispose);
+            categories.clear();
+        }
+        if (contentRoots != null) {
+            contentRoots.forEach(ContentRoot::dispose);
+            contentRoots.clear();
+        }
     }
 }

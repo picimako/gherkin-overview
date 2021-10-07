@@ -23,6 +23,7 @@ import static java.util.stream.Collectors.toMap;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +63,10 @@ public class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
     private GherkinTagTreeModel model;
     private ModelDataRoot root;
 
+    private List<VirtualFile> theGherkinList;
+    private List<VirtualFile> aGherkinList;
+    private List<VirtualFile> mixedFiles;
+
     @Override
     protected String getTestDataPath() {
         return "testdata/features";
@@ -77,6 +82,10 @@ public class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
         model = new ContentRootBasedGherkinTagTreeModel(getProject());
         model.buildModel();
         root = (ModelDataRoot) model.getRoot();
+
+        theGherkinList = Collections.singletonList(theGherkin);
+        aGherkinList = Collections.singletonList(aGherkin);
+        mixedFiles = List.of(aGherkin, theGherkin);
     }
 
     public void testShouldNotReInitExistingModelData() {
@@ -103,22 +112,10 @@ public class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
     }
 
     public void testGenerateGherkinFilesIntoTreeModel() {
-        final var expectedTagGherkinFileMappings = new HashMap<String, List<VirtualFile>>();
-        expectedTagGherkinFileMappings.put("chrome", List.of(aGherkin, theGherkin));
-        expectedTagGherkinFileMappings.put("desktop", List.of(theGherkin));
-        expectedTagGherkinFileMappings.put("disabled", List.of(aGherkin));
-        expectedTagGherkinFileMappings.put("e2e", List.of(aGherkin, theGherkin));
-        expectedTagGherkinFileMappings.put("edge", List.of(aGherkin, theGherkin));
-        expectedTagGherkinFileMappings.put("ff", List.of(aGherkin));
-        expectedTagGherkinFileMappings.put("image", List.of(aGherkin, theGherkin));
-        expectedTagGherkinFileMappings.put("mobile", List.of(aGherkin));
-        expectedTagGherkinFileMappings.put("regression", List.of(theGherkin));
-        expectedTagGherkinFileMappings.put("tablet", List.of(theGherkin));
-        expectedTagGherkinFileMappings.put("sitemap", List.of(theGherkin));
-        expectedTagGherkinFileMappings.put("skip", List.of(theGherkin));
-        expectedTagGherkinFileMappings.put("smoke", List.of(aGherkin));
-        expectedTagGherkinFileMappings.put("vimeo", List.of(theGherkin));
-        expectedTagGherkinFileMappings.put("youtube", List.of(theGherkin));
+        final var expectedTagGherkinFileMappings = buildTagToFileMapping(
+            List.of("desktop", "regression", "tablet", "sitemap", "skip", "vimeo", "youtube"),
+            List.of("disabled", "ff", "mobile", "smoke"),
+            List.of("chrome", "e2e", "edge", "image"));
 
         validateTagToGherkinFileMappings(expectedTagGherkinFileMappings, root);
     }
@@ -141,15 +138,8 @@ public class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
             "Excluded", List.of("disabled"),
             "Browser", List.of("edge", "ff", "chrome"));
 
-        final var expectedTagGherkinFileMappingsAfter = new HashMap<String, List<VirtualFile>>();
-        expectedTagGherkinFileMappingsAfter.put("chrome", List.of(aGherkin));
-        expectedTagGherkinFileMappingsAfter.put("disabled", List.of(aGherkin));
-        expectedTagGherkinFileMappingsAfter.put("e2e", List.of(aGherkin));
-        expectedTagGherkinFileMappingsAfter.put("edge", List.of(aGherkin));
-        expectedTagGherkinFileMappingsAfter.put("ff", List.of(aGherkin));
-        expectedTagGherkinFileMappingsAfter.put("image", List.of(aGherkin));
-        expectedTagGherkinFileMappingsAfter.put("mobile", List.of(aGherkin));
-        expectedTagGherkinFileMappingsAfter.put("smoke", List.of(aGherkin));
+        final var expectedTagGherkinFileMappingsAfter = buildTagToFileMapping(List.of(),
+            List.of("chrome", "disabled", "e2e", "edge", "ff", "image", "mobile", "smoke"), List.of());
 
         validateCategories(List.of("Other", "Test Suite", "Device", "Excluded", "Browser"));
         validateCategoryToTagMappings(expectedCategoryTagMappingsAfter, root);
@@ -183,21 +173,10 @@ public class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
             "Browser", List.of("edge", "ff", "chrome"),
             "Analytics and SEO", List.of("sitemap"));
 
-        final var expectedTagGherkinFileMappings = new HashMap<String, List<VirtualFile>>();
-        expectedTagGherkinFileMappings.put("chrome", List.of(aGherkin, theGherkin));
-        expectedTagGherkinFileMappings.put("disabled", List.of(aGherkin));
-        expectedTagGherkinFileMappings.put("e2e", List.of(aGherkin, theGherkin));
-        expectedTagGherkinFileMappings.put("edge", List.of(aGherkin, theGherkin));
-        expectedTagGherkinFileMappings.put("ff", List.of(aGherkin));
-        expectedTagGherkinFileMappings.put("image", List.of(aGherkin, theGherkin));
-        expectedTagGherkinFileMappings.put("mobile", List.of(aGherkin));
-        expectedTagGherkinFileMappings.put("regression", List.of(theGherkin));
-        expectedTagGherkinFileMappings.put("tablet", List.of(theGherkin));
-        expectedTagGherkinFileMappings.put("sitemap", List.of(theGherkin));
-        expectedTagGherkinFileMappings.put("skip", List.of(theGherkin));
-        expectedTagGherkinFileMappings.put("smoke", List.of(aGherkin));
-        expectedTagGherkinFileMappings.put("vimeo", List.of(theGherkin));
-        expectedTagGherkinFileMappings.put("youtube", List.of(theGherkin));
+        final var expectedTagGherkinFileMappings = buildTagToFileMapping(
+            List.of("regression", "tablet", "sitemap", "skip", "vimeo", "youtube"),
+            List.of("disabled", "ff", "mobile", "smoke"),
+            List.of("chrome", "e2e", "edge", "image"));
 
         validateCategories(List.of("Other", "Test Suite", "Device", "Excluded", "Browser", "Analytics and SEO", "Jira"));
         validateCategoryToTagMappings(expectedCategoryTagMappings, root);
@@ -219,20 +198,10 @@ public class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
             "Browser", List.of("edge", "ff", "chrome"),
             "Work in Progress", List.of("WIP"));
 
-        final var expectedTagGherkinFileMappings = new HashMap<String, List<VirtualFile>>();
-        expectedTagGherkinFileMappings.put("chrome", List.of(aGherkin, theGherkin));
-        expectedTagGherkinFileMappings.put("desktop", List.of(theGherkin));
-        expectedTagGherkinFileMappings.put("disabled", List.of(aGherkin));
-        expectedTagGherkinFileMappings.put("e2e", List.of(aGherkin, theGherkin));
-        expectedTagGherkinFileMappings.put("edge", List.of(aGherkin, theGherkin));
-        expectedTagGherkinFileMappings.put("ff", List.of(aGherkin));
-        expectedTagGherkinFileMappings.put("image", List.of(aGherkin, theGherkin));
-        expectedTagGherkinFileMappings.put("mobile", List.of(aGherkin));
-        expectedTagGherkinFileMappings.put("regression", List.of(theGherkin));
-        expectedTagGherkinFileMappings.put("tablet", List.of(theGherkin));
-        expectedTagGherkinFileMappings.put("skip", List.of(theGherkin));
-        expectedTagGherkinFileMappings.put("smoke", List.of(aGherkin));
-        expectedTagGherkinFileMappings.put("vimeo", List.of(theGherkin));
+        final var expectedTagGherkinFileMappings = buildTagToFileMapping(
+            List.of("desktop", "regression", "tablet", "skip", "vimeo"),
+            List.of("disabled", "ff", "mobile", "smoke"),
+            List.of("chrome", "e2e", "edge", "image"));
 
         validateCategories(List.of("Other", "Test Suite", "Device", "Excluded", "Browser", "Work in Progress", "Jira"));
         validateCategoryToTagMappings(expectedCategoryTagMappings, root);
@@ -305,6 +274,17 @@ public class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
             softly -> softly.assertThat(samename.getFeatureFiles().get(0).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested/evenmore/evenmoremore]"),
             softly -> softly.assertThat(samename.getFeatureFiles().get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested]")
         );
+    }
+
+    //Helper methods
+
+    private HashMap<String, List<VirtualFile>> buildTagToFileMapping(List<String> theGherkinCategories, List<String> aGherkinCategories,
+                                                                     List<String> mixedCategories) {
+        final var expectedTagGherkinFileMappings = new HashMap<String, List<VirtualFile>>();
+        theGherkinCategories.forEach(s -> expectedTagGherkinFileMappings.put(s, theGherkinList));
+        aGherkinCategories.forEach(s -> expectedTagGherkinFileMappings.put(s, aGherkinList));
+        mixedCategories.forEach(s -> expectedTagGherkinFileMappings.put(s, mixedFiles));
+        return expectedTagGherkinFileMappings;
     }
 
     private void validateCategories(List<String> categories) {

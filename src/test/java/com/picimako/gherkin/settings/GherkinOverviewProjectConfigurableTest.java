@@ -17,14 +17,22 @@
 package com.picimako.gherkin.settings;
 
 import static com.picimako.gherkin.SoftAsserts.assertSoftly;
+import static com.picimako.gherkin.ToolWindowTestSupport.getToolWindowModel;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.intellij.openapi.options.ConfigurationException;
 
 import com.picimako.gherkin.MediumBasePlatformTestCase;
+import com.picimako.gherkin.ToolWindowTestSupport;
+import com.picimako.gherkin.toolwindow.GherkinTagOverviewPanel;
+import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
+import com.picimako.gherkin.toolwindow.StatisticsType;
 import com.picimako.gherkin.toolwindow.TagCategoryRegistry;
+import com.picimako.gherkin.toolwindow.nodetype.Category;
+import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 
 /**
  * Unit test for {@link GherkinOverviewProjectConfigurable}.
@@ -35,6 +43,11 @@ import com.picimako.gherkin.toolwindow.TagCategoryRegistry;
 public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTestCase {
 
     private GherkinOverviewProjectConfigurable configurable;
+
+    @Override
+    protected String getTestDataPath() {
+        return "testdata/features";
+    }
 
     @Override
     public void setUp() throws Exception {
@@ -59,23 +72,23 @@ public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTe
 
     //isModified
 
-    public void testNotModified() {
+    public void testIsNotModifiedByDefault() {
         assertThat(configurable.isModified()).isFalse();
     }
 
-    public void testModifiedUseProjectLevelMappings() {
+    public void testModifiedWhenUsingProjectLevelMappingsIsEnabled() {
         configurable.getComponent().setUseProjectLevelMappings(true);
 
         assertThat(configurable.isModified()).isTrue();
     }
 
-    public void testModifiedApplicationLevelMappings() {
+    public void testModifiedWhenUsingApplicationLevelMappings() {
         configurable.getComponent().setApplicationLevelMappings(List.of(new CategoryAndTags("Breakpoint", "small,medium")));
 
         assertThat(configurable.isModified()).isTrue();
     }
 
-    public void testModifiedProjectLevelMappings() {
+    public void testModifiedWhenUsingProjectLevelMappings() {
         configurable.getComponent().setProjectLevelMappings(List.of(new CategoryAndTags("Breakpoint", "small,medium")));
         assertThat(configurable.isModified()).isTrue();
     }
@@ -104,6 +117,7 @@ public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTe
     }
 
     public void testAppliesSettingsWithProjectLevelMappings() throws ConfigurationException {
+        ToolWindowTestSupport.registerToolWindow(new GherkinTagOverviewPanel(getProject()), getProject());
         CategoryAndTags breakpoint = new CategoryAndTags("Breakpoint", "small,medium");
         CategoryAndTags media = new CategoryAndTags("Media", "image");
         configurable.getComponent().setApplicationLevelMappings(List.of(breakpoint));
@@ -125,6 +139,45 @@ public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTe
         );
     }
 
+    public void testRebuildsModelIfAppLevelMappingsChanged() throws ConfigurationException {
+        myFixture.configureByFile("the_gherkin.feature");
+        ToolWindowTestSupport.registerToolWindow(new GherkinTagOverviewPanel(getProject()), getProject());
+        GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = StatisticsType.SIMPLIFIED;
+        configurable.getComponent().setApplicationLevelMappings(List.of(new CategoryAndTags("Web Browser", "chrome,edge")));
+
+        validateCategories(getToolWindowModel(getProject()), "Browser", "Web Browser");
+
+        configurable.apply();
+
+        validateCategories(getToolWindowModel(getProject()), "Web Browser", "Browser");
+    }
+
+    public void testRebuildsModelIfProjectLevelMappingsChanged() throws ConfigurationException {
+        myFixture.configureByFile("the_gherkin.feature");
+        ToolWindowTestSupport.registerToolWindow(new GherkinTagOverviewPanel(getProject()), getProject());
+        GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = StatisticsType.SIMPLIFIED;
+        configurable.getComponent().setUseProjectLevelMappings(true);
+        configurable.getComponent().setProjectLevelMappings(List.of(new CategoryAndTags("Web Browser", "chrome,edge")));
+
+        validateCategories(getToolWindowModel(getProject()), "Browser", "Web Browser");
+
+        configurable.apply();
+
+        validateCategories(getToolWindowModel(getProject()), "Web Browser", "Browser");
+    }
+
+    public void testDoesntRebuildModelIfNoMappingHasChanged() throws ConfigurationException {
+        myFixture.configureByFile("the_gherkin.feature");
+        ToolWindowTestSupport.registerToolWindow(new GherkinTagOverviewPanel(getProject()), getProject());
+        GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = StatisticsType.SIMPLIFIED;
+
+        validateCategories(getToolWindowModel(getProject()), "Browser", "Web Browser");
+
+        configurable.apply();
+
+        validateCategories(getToolWindowModel(getProject()), "Browser", "Web Browser");
+    }
+
     //reset
 
     public void testResetsSettings() {
@@ -140,5 +193,14 @@ public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTe
             softly -> softly.assertThat(configurable.getComponent().getApplicationLevelMappings()).doesNotContain(breakpoint),
             softly -> softly.assertThat(configurable.getComponent().getProjectLevelMappings()).isEmpty()
         );
+    }
+    
+    //Helper methods
+
+    private void validateCategories(ModelDataRoot model, String nonEmptyCategoryName, String emptyCategoryName) {
+        Optional<Category> nonEmptyCategory = model.findCategory(nonEmptyCategoryName);
+        assertThat(nonEmptyCategory).isPresent();
+        assertThat(nonEmptyCategory.get().getTags()).hasSize(2);
+        assertThat(model.findCategory(emptyCategoryName)).isEmpty();
     }
 }

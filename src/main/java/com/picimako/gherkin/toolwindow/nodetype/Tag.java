@@ -200,4 +200,9 @@ public class Tag extends AbstractNodeType {
     public List<VirtualFile> getGherkinFiles() {
         return featureFiles.stream().map(FeatureFile::getFile).collect(toList());
     }
+
+    @Override
+    public void dispose() {
+        featureFiles.clear();
+    }
 }

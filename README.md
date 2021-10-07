@@ -16,7 +16,8 @@ To work with JBehave Story files, the [**JBehave Support**](https://plugins.jetb
 
 ## Support for different BDD syntax
 
-For common Gherkin files, this readme provides information, while for JBehave Stories you can head over to the [JBehave Story support](docs/jbehave-stories.md) document. 
+For common Gherkin files, this readme provides information, while for JBehave Stories (introduced in v0.2.0),
+you can head over to the [JBehave Story support](docs/jbehave-stories.md) document. 
 
 ## Gherkin Tags tool window
 
