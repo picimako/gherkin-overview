@@ -37,8 +37,7 @@ import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 /**
  * Unit test for {@link GherkinOverviewProjectConfigurable}.
  * <p>
- * TODO: fix tests due to lack of application level service cleanup. Test methods in this class executed individually
- *  pass.
+ * TODO: fix tests due to lack of application level service cleanup. Test methods executed individually pass.
  */
 public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTestCase {
 
@@ -54,6 +53,13 @@ public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTe
         super.setUp();
         configurable = new GherkinOverviewProjectConfigurable(getProject());
         configurable.createComponent();
+        ToolWindowTestSupport.registerToolWindow(new GherkinTagOverviewPanel(getProject()), getProject());
+    }
+
+    @Override
+    public void tearDown() throws Exception {
+        configurable.disposeUIResources();
+        super.tearDown();
     }
 
     //createComponent
@@ -62,10 +68,11 @@ public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTe
         var component = configurable.getComponent();
         assertThat(component.isUseProjectLevelMappings()).isFalse();
 
-        assertThat(component.getApplicationLevelMappings()).contains(
-            new CategoryAndTags("Device", "desktop,tablet,mobile,iphone,ipad,android,winphone,tab,device"),
-            new CategoryAndTags("Browser", "ie,ie10,ie11,edge,internetexplorer,edge,firefox,ff,chrome,googlechrome,opera,safari,browser")
-        ).doesNotContain(new CategoryAndTags("Breakpoint", "small"));
+        assertThat(component.getApplicationLevelMappings())
+            .contains(
+                new CategoryAndTags("Device", "desktop,tablet,mobile,iphone,ipad,android,winphone,tab,device"),
+                new CategoryAndTags("Browser", "ie,ie10,ie11,edge,internetexplorer,edge,firefox,ff,chrome,googlechrome,opera,safari,browser")
+            ).doesNotContain(new CategoryAndTags("Breakpoint", "small"));
 
         assertThat(component.getProjectLevelMappings()).isEmpty();
     }
@@ -194,7 +201,7 @@ public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTe
             softly -> softly.assertThat(configurable.getComponent().getProjectLevelMappings()).isEmpty()
         );
     }
-    
+
     //Helper methods
 
     private void validateCategories(ModelDataRoot model, String nonEmptyCategoryName, String emptyCategoryName) {

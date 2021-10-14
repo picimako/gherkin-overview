@@ -45,6 +45,7 @@ import org.jetbrains.plugins.cucumber.psi.GherkinTag;
 
 import com.picimako.gherkin.MediumBasePlatformTestCase;
 import com.picimako.gherkin.settings.CategoryAndTags;
+import com.picimako.gherkin.toolwindow.nodetype.AbstractNodeType;
 import com.picimako.gherkin.toolwindow.nodetype.Category;
 import com.picimako.gherkin.toolwindow.nodetype.ContentRoot;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
@@ -260,20 +261,16 @@ public class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
         model.buildModel();
         Tag samename = ((ModelDataRoot) model.getRoot()).getModules().get(0).findTag("samename").get();
 
-        assertSoftly(
-            softly -> softly.assertThat(samename.getFeatureFiles().get(0).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Almost same name]"),
-            softly -> softly.assertThat(samename.getFeatureFiles().get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Same name]")
-        );
+        assertThat(samename.getFeatureFiles()).extracting(AbstractNodeType::getDisplayName)
+            .containsExactlyInAnyOrder("gherkin_with_same_name.feature [Almost same name]", "gherkin_with_same_name.feature [Same name]");
 
         GherkinFeature feature = GherkinElementFactory.createFeatureFromText(getProject(), "Feature: Same name");
         WriteAction.run(() -> CommandProcessor.getInstance().executeCommand(getProject(), () -> ((GherkinFile) evenmoremore).getFeatures()[0].replace(feature), "Replace", "group.id"));
 
         model.updateModelForFile(evenmoremore);
 
-        assertSoftly(
-            softly -> softly.assertThat(samename.getFeatureFiles().get(0).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested/evenmore/evenmoremore]"),
-            softly -> softly.assertThat(samename.getFeatureFiles().get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested]")
-        );
+        assertThat(samename.getFeatureFiles()).extracting(AbstractNodeType::getDisplayName)
+            .containsExactlyInAnyOrder("gherkin_with_same_name.feature [nested/evenmore/evenmoremore]", "gherkin_with_same_name.feature [nested]");
     }
 
     //Helper methods
