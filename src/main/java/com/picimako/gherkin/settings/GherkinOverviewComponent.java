@@ -20,13 +20,19 @@ import java.util.List;
 import javax.swing.*;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.NlsContexts;
+import com.intellij.ui.AnActionButton;
 import com.intellij.ui.ContextHelpLabel;
 import com.intellij.ui.TitledSeparator;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.util.ui.FormBuilder;
-import com.picimako.gherkin.resources.GherkinBundle;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import com.picimako.gherkin.BDDUtil;
+import com.picimako.gherkin.resources.GherkinBundle;
 
 /**
  * Assembles and handles the UI panel for the Settings of this plugin.
@@ -38,7 +44,7 @@ public class GherkinOverviewComponent {
     private final JPanel settingsPanel;
     private final GherkinMappingsTable applicationLevelMappingsTable = new GherkinMappingsTable();
     private final JBCheckBox useProjectLevelMappingsCheckbox = new JBCheckBox(GherkinBundle.settings("use.project.level.mappings"));
-    private final GherkinMappingsTable projectLevelMappingsTable = new GherkinMappingsTable();
+    private final GherkinMappingsTable projectLevelMappingsTable = new GherkinMappingsTable().init();
 
     private final Project project;
 
@@ -58,6 +64,14 @@ public class GherkinOverviewComponent {
      */
     public GherkinOverviewComponent(@Nullable List<CategoryAndTags> appSettingsMappings, List<CategoryAndTags> projectSettingsMappings, Project project) {
         this.project = project;
+        applicationLevelMappingsTable.withExtraActions(() -> {
+            return new AnActionButton[]{
+                //Reset to defaults
+                new ExtraActionButton(GherkinBundle.settings("reset.mappings.name"), GherkinBundle.settings("reset.mappings.description"),
+                    AllIcons.General.Reset,
+                    () -> applicationLevelMappingsTable.setValues(DefaultMappingsLoader.loadDefaultApplicationLevelMappings()))
+            };
+        }).init();
         addProjectLevelMappingListeners();
         populateMappingTableContents(appSettingsMappings, projectSettingsMappings);
         settingsPanel = buildSettingsPanel();
@@ -154,6 +168,22 @@ public class GherkinOverviewComponent {
     public void setApplicationLevelMappings(@Nullable List<CategoryAndTags> mappings) {
         if (mappings != null) {
             applicationLevelMappingsTable.setValues(mappings);
+        }
+    }
+
+    // ---- Extra table actions ----
+
+    public static final class ExtraActionButton extends AnActionButton {
+        private final Runnable action;
+
+        public ExtraActionButton(@NlsContexts.Button String text, @NlsContexts.Tooltip String description, @Nullable Icon icon, Runnable action) {
+            super(text, description, icon);
+            this.action = action;
+        }
+
+        @Override
+        public void actionPerformed(@NotNull AnActionEvent e) {
+            action.run();
         }
     }
 }

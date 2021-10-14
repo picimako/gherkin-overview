@@ -17,17 +17,20 @@
 package com.picimako.gherkin.settings;
 
 import java.awt.*;
+import java.util.function.Supplier;
 import javax.swing.table.TableCellEditor;
 
 import com.intellij.execution.util.ListTableWithButtons;
 import com.intellij.execution.util.StringWithNewLinesCellEditor;
 import com.intellij.openapi.util.NlsContexts;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.ui.AnActionButton;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
-import com.picimako.gherkin.resources.GherkinBundle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import com.picimako.gherkin.resources.GherkinBundle;
 
 /**
  * A custom {@link ListTableWithButtons} implementation to provide a UI for Gherkin Category to Tags mappings.
@@ -37,10 +40,24 @@ import org.jetbrains.annotations.Nullable;
 public class GherkinMappingsTable extends ListTableWithButtons<CategoryAndTags> {
 
     /**
-     * Height of the table is increased to provide more visibility of the inner elements.
+     * Actions in addition to the default Add and Remove.
      */
-    public GherkinMappingsTable() {
+    private ExtraActionsSupplier extraActions = ExtraActionsSupplier.NO_ACTION;
+
+    public GherkinMappingsTable withExtraActions(ExtraActionsSupplier extraActions) {
+        this.extraActions = extraActions;
+        return this;
+    }
+
+    /**
+     * Height of the table is increased to provide more visibility of the inner elements.
+     * <p>
+     * Due to the {@code getComponent()} call that set the extra actions under the hood,
+     * this method must be called after {@code withExtraActions},and must be called whenever this table is instantiated.
+     */
+    public GherkinMappingsTable init() {
         getComponent().setPreferredSize(new Dimension(getComponent().getWidth(), 250));
+        return this;
     }
 
     @Override
@@ -106,6 +123,11 @@ public class GherkinMappingsTable extends ListTableWithButtons<CategoryAndTags> 
         return true;
     }
 
+    @Override
+    protected AnActionButton @NotNull [] createExtraActions() {
+        return extraActions.get();
+    }
+
     /**
      * A base {@link ColumnInfo} implementation for Category-Tag mapping tables.
      */
@@ -130,4 +152,14 @@ public class GherkinMappingsTable extends ListTableWithButtons<CategoryAndTags> 
             return true;
         }
     }
+
+    /**
+     * Provides extra action buttons for the {@link GherkinMappingsTable}.
+     */
+    @FunctionalInterface
+    public interface ExtraActionsSupplier extends Supplier<AnActionButton[]> {
+        AnActionButton[] EMPTY = new AnActionButton[0];
+        ExtraActionsSupplier NO_ACTION = () -> EMPTY;
+    }
+
 }

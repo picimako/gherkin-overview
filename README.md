@@ -117,6 +117,8 @@ The lists of tags that are assigned to given categories can be specified as comm
 tags are stored without the leading @ symbol, so make sure the tag values here are specified without them. This makes
 the UI less cluttered, and it is easier to specify them this way.
 
+If you happen to make a mistake during configuration, there is a **Reset to default** option that resets the application-level mappings to the aforementioned default set.
+
 ### Using project-level mappings
 
 To use the project-level ones, first you have to check the **Use project level category-tag mapping** checkbox.
