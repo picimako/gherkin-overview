@@ -16,11 +16,7 @@
 
 package com.picimako.gherkin.settings;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
@@ -34,12 +30,12 @@ import org.jetbrains.annotations.Nullable;
  * Component for storing the application (IDE) level plugin settings.
  * <p>
  * For the project level settings see {@link GherkinOverviewProjectState}.
- *
+ * 
  * @since 0.1.0
  */
 @State(
-    name = "com.picimako.gherkin.settings.GherkinOverviewApplicationState",
-    storages = {@Storage("GherkinOverviewAppSettings.xml")}
+    name = "Gherkin Overview Application-level Mappings",
+    storages = {@Storage(value = "GherkinOverviewAppSettings.xml", exportable = true)}
 )
 public class GherkinOverviewApplicationState implements PersistentStateComponent<GherkinOverviewApplicationState> {
 
@@ -55,7 +51,7 @@ public class GherkinOverviewApplicationState implements PersistentStateComponent
      *
      * @since 0.1.0
      */
-    public List<CategoryAndTags> mappings = loadDefaultApplicationLevelMappings();
+    public List<CategoryAndTags> mappings = DefaultMappingsLoader.loadDefaultApplicationLevelMappings();
 
     public static GherkinOverviewApplicationState getInstance() {
         return ApplicationManager.getApplication().getService(GherkinOverviewApplicationState.class);
@@ -71,15 +67,4 @@ public class GherkinOverviewApplicationState implements PersistentStateComponent
         XmlSerializerUtil.copyBean(state, this);
     }
 
-    private List<CategoryAndTags> loadDefaultApplicationLevelMappings() {
-        final var categoriesAndTags = new ArrayList<CategoryAndTags>();
-        try (InputStream mappingsResource = GherkinOverviewComponent.class.getResourceAsStream("/mapping/default_app_level_mappings.properties")) {
-            var defaultAppLevelMappings = new Properties();
-            defaultAppLevelMappings.load(mappingsResource);
-            defaultAppLevelMappings.forEach((key, value) -> categoriesAndTags.add(new CategoryAndTags(key.toString(), value.toString())));
-        } catch (IOException ioException) {
-            throw new RuntimeException("Could not load default Gherkin category-tag mappings.", ioException);
-        }
-        return categoriesAndTags;
-    }
 }

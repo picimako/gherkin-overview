@@ -194,6 +194,10 @@ root folder:
     - homepage_smoke.feature [another/folder]
 ```
 
+## Export/Import
+
+Since v0.3.0, application-level category-tags mappings can be exported via the IDE's **Export Settings...** dialog, along with other plugin and IDE settings.
+
 ## Licensing
 
 This project is licensed under the terms of Apache Licence Version 2.0.
