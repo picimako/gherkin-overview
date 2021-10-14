@@ -120,7 +120,7 @@ public class GherkinOverviewComponent {
     }
 
     private ContextHelpLabel contextHelpLabel() {
-        var rootPathsHelpLabel = new ContextHelpLabel("", GherkinBundle.settings("mappings.help.description"));
+        var rootPathsHelpLabel = new ContextHelpLabel("", GherkinBundle.settings(BDDUtil.isStoryLanguageSupported() ? "mappings.help.description.gherkin.and.jbehave" : "mappings.help.description.gherkin"));
         rootPathsHelpLabel.setIcon(AllIcons.General.ContextHelp);
         return rootPathsHelpLabel;
     }
