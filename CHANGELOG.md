@@ -1,5 +1,14 @@
 # Changelog
 
+### 0.3.0-SNAPSHOT
+
+#### NEW
+- Application-level mappings are now exportable via the IDE's **Export Settings...** dialog.
+- Added a **Reset to default** button to the application-level mappings in the plugin Settings.
+
+#### ENHANCEMENT
+- Added an alternate help tooltip text in the plugin settings for the case when JBehave story files are available too.
+
 ### 0.2.0
 
 #### NEW
