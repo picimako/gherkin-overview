@@ -35,8 +35,8 @@ import org.jetbrains.annotations.Nullable;
  * @since 0.1.0
  */
 @State(
-    name = "com.picimako.gherkin.settings.GherkinOverviewProjectState",
-    storages = {@Storage("GherkinOverviewProjectSettings.xml")}
+    name = "Gherkin Overview Project-Level Mappings",
+    storages = {@Storage(value = "GherkinOverviewProjectSettings.xml", exportable = true)}
 )
 public class GherkinOverviewProjectState implements PersistentStateComponent<GherkinOverviewProjectState> {
 
