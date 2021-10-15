@@ -9,6 +9,10 @@
 #### ENHANCEMENT
 - Added an alternate help tooltip text in the plugin settings for the case when JBehave story files are available too.
 
+#### BUGFIX
+- Fixed an issue that the default enabled/disabled state of the project-level mappings component in the plugin settings
+didn't reflect the state of the **Use project level category-tag mapping** checkbox.
+
 ### 0.2.0
 
 #### NEW
