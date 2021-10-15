@@ -72,9 +72,18 @@ public class GherkinOverviewComponent {
                     () -> applicationLevelMappingsTable.setValues(DefaultMappingsLoader.loadDefaultApplicationLevelMappings()))
             };
         }).init();
+        setDefaultComponentStates();
         addProjectLevelMappingListeners();
         populateMappingTableContents(appSettingsMappings, projectSettingsMappings);
         settingsPanel = buildSettingsPanel();
+    }
+
+    private void setDefaultComponentStates() {
+        if (useProjectLevelMappingsCheckbox.isSelected()) {
+            projectLevelMappingsTable.setEnabled();
+        } else {
+            projectLevelMappingsTable.setDisabled();
+        }
     }
 
     /**
