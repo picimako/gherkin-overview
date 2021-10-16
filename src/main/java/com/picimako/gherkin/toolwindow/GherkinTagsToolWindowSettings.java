@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
  * @since 0.1.0
  */
 @State(
-    name = "com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings",
+    name = "Gherkin Overview Tags Tool Window Settings",
     storages = {@Storage("GherkinTagsToolWindowSettings.xml")}
 )
 @Service
