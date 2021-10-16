@@ -154,6 +154,17 @@ public class TagOccurrencesRegistryTest extends BasePlatformTestCase {
 
         assertThat(registry.getCountFor(virtualFile.getPath(), "landing")).isZero();
     }
+    
+    public void testReturnsZeroAsCountForNonMappedFilePath() {
+        PsiFile psiFile = myFixture.configureByFile("Story.story");
+        VirtualFile virtualFile = myFixture.configureByFile("Another story.story").getVirtualFile();
+
+        TagOccurrencesRegistry registry = new TagOccurrencesRegistry(getProject());
+        registry.init(2);
+        registry.calculateOccurrenceCounts(virtualFile);
+
+        assertThat(registry.getCountFor(psiFile.getVirtualFile().getPath(), "landing")).isNotZero();
+    }
 
     //remove
 

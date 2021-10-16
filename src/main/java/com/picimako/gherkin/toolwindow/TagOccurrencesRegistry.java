@@ -20,8 +20,10 @@ import static com.picimako.gherkin.toolwindow.TagNameUtil.determineTagOrMetaName
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import com.intellij.openapi.components.Service;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
@@ -41,6 +43,7 @@ import org.jetbrains.annotations.TestOnly;
 @Service
 public final class TagOccurrencesRegistry {
 
+    private static final Logger LOG = Logger.getInstance(TagOccurrencesRegistry.class);
     private final Project project;
     /**
      * FeatureFile path -> &lt;tag name, count>
@@ -103,8 +106,10 @@ public final class TagOccurrencesRegistry {
      * @return the occurrence count, or 0 if it is not present for the provided data
      */
     public int getCountFor(String path, String tag) {
-        MutableInt mutableInt = tagOccurrences.get(path).get(tag);
-        return mutableInt != null ? mutableInt.intValue() : 0;
+        return Optional.ofNullable(tagOccurrences.get(path))
+            .map(tagToCountForPath -> tagToCountForPath.get(tag))
+            .map(MutableInt::intValue)
+            .orElse(0);
     }
 
     /**
