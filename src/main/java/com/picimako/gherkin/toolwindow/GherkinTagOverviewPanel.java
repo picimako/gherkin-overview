@@ -75,9 +75,11 @@ public class GherkinTagOverviewPanel extends JPanel {
     }
 
     /**
-     * Used when either the application or project-level mappings are changed in the Settings.
+     * Used when either the application or project-level mappings are changed in the Settings,
+     * and when the model has to be rebuilt due to file system changes.
      *
      * @see com.picimako.gherkin.settings.GherkinOverviewProjectConfigurable
+     * @see FileAndFolderChangeListener
      */
     public void rebuildModel() {
         model.dispose();

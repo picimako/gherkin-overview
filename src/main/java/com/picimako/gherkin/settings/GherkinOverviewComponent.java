@@ -35,7 +35,7 @@ import com.picimako.gherkin.BDDUtil;
 import com.picimako.gherkin.resources.GherkinBundle;
 
 /**
- * Assembles and handles the UI panel for the Settings of this plugin.
+ * Assembles and handles the UI panel for the settings of this plugin.
  *
  * @since 0.1.0
  */
@@ -49,15 +49,12 @@ public class GherkinOverviewComponent {
     private final Project project;
 
     /**
-     * Build the Settings panel and populates the mappings tables with the proper data, and sets the UI elements to
-     * their proper statuses.
+     * Builds the Settings panel and populates the mappings tables with the proper data, and sets the UI elements to
+     * their proper states.
      * <p>
      * Since there are default application level mappings (see {@code resources/mapping/default_app_level_mappings.properties}),
      * at first launch they are loaded from the aforementioned properties file, then if the Settings have been saved,
-     * then they will be loaded from the actual IDE settings.
-     * <p>
-     * The {@code toLoadDefaultApplicationLevelMappings} argument is the one that tells this class whether the mapping
-     * Settings have been saved or not, thus whether the default mappings have to be loaded or not.
+     * they will be loaded from the actual IDE settings.
      *
      * @param appSettingsMappings     the application level mappings loaded from the IDE settings
      * @param projectSettingsMappings the project level mappings loaded from the project settings
@@ -87,7 +84,7 @@ public class GherkinOverviewComponent {
     }
 
     /**
-     * When the "Use project level category-tag mapping" checkbox is ticked, then the project level mappings table is
+     * When the "Use project level category-tag mapping" checkbox is ticked, the project-level mappings table is
      * enabled, and when the checkbox is unticked, the table gets disabled as well.
      */
     private void addProjectLevelMappingListeners() {
@@ -106,7 +103,7 @@ public class GherkinOverviewComponent {
     /**
      * Populates the mapping tables with the proper data.
      * <p>
-     * The application level table is populated with the default mapping data based on the
+     * The application-level table is populated with the default mapping data based on the
      * {@code appSettingsMappings} argument's value.
      *
      * @param appSettingsMappings     the application level mappings loaded from the IDE settings
@@ -118,7 +115,7 @@ public class GherkinOverviewComponent {
     }
 
     /**
-     * Builds the UI of the Gherkin Overview Settings panel that are separated into Application level and Project level
+     * Builds the UI of the Gherkin Overview Settings panel that is separated into Application-level and Project-level
      * mappings.
      */
     private JPanel buildSettingsPanel() {

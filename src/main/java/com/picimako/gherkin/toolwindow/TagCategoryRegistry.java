@@ -72,6 +72,7 @@ import org.jetbrains.annotations.Nullable;
 public final class TagCategoryRegistry {
 
     private static final String TAG_DELIMITER = ",";
+    private static final String REGEX_PREFIX = "#";
     /**
      * Tag name -> category name.
      * <p>
@@ -132,7 +133,7 @@ public final class TagCategoryRegistry {
     @Nullable
     private String regexBasedCategoryOf(String tagName) {
         return tagToCategory.keySet().stream()
-            .filter(key -> key.startsWith("#") && tagName.matches(key.substring(1)))
+            .filter(key -> key.startsWith(REGEX_PREFIX) && tagName.matches(key.substring(1)))
             .map(tagToCategory::get)
             .findFirst()
             .orElse(null);
