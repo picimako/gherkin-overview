@@ -30,6 +30,7 @@ import com.github.kumaraman21.intellijbehave.language.StoryLanguage;
 import com.github.kumaraman21.intellijbehave.parser.StoryFile;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
@@ -122,6 +123,11 @@ public final class DefaultJBehaveStoryService implements JBehaveStoryService {
 
     @Override
     public boolean isJBehaveStoryFile(PsiFile file) {
+        return StoryFileType.STORY_FILE_TYPE.equals(file.getFileType());
+    }
+
+    @Override
+    public boolean isJBehaveStoryFile(VirtualFile file) {
         return StoryFileType.STORY_FILE_TYPE.equals(file.getFileType());
     }
 

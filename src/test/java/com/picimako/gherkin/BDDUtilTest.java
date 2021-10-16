@@ -26,7 +26,7 @@ import com.intellij.testFramework.fixtures.BasePlatformTestCase;
  */
 public class BDDUtilTest extends BasePlatformTestCase {
 
-    //isABDDFile
+    //isABDDFile(PsiFile)
 
     public void testIsABDDFileGherkin() {
         PsiFile gherkinFile = myFixture.configureByText("gherkin.feature", "");
@@ -44,6 +44,26 @@ public class BDDUtilTest extends BasePlatformTestCase {
         PsiFile storyFile = myFixture.configureByText("SomeClass.java", "");
 
         assertThat(BDDUtil.isABDDFile(storyFile)).isFalse();
+    }
+
+    //isABDDFile(VirtualFile)
+
+    public void testIsABDDVirtualFileGherkin() {
+        PsiFile gherkinFile = myFixture.configureByText("gherkin.feature", "");
+
+        assertThat(BDDUtil.isABDDFile(gherkinFile.getVirtualFile(), getProject())).isTrue();
+    }
+
+    public void testIsABDDVirtualFileStory() {
+        PsiFile storyFile = myFixture.configureByText("story.story", "");
+
+        assertThat(BDDUtil.isABDDFile(storyFile.getVirtualFile(), getProject())).isTrue();
+    }
+
+    public void testIsNotABDDVirtualFile() {
+        PsiFile storyFile = myFixture.configureByText("SomeClass.java", "");
+
+        assertThat(BDDUtil.isABDDFile(storyFile.getVirtualFile(), getProject())).isFalse();
     }
 
 }

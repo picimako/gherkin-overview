@@ -19,6 +19,7 @@ package com.picimako.gherkin;
 import java.util.Collection;
 import java.util.List;
 
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
@@ -89,6 +90,8 @@ public interface JBehaveStoryService {
     boolean is(PsiElement element, IElementType type);
 
     boolean isJBehaveStoryFile(PsiFile file);
+
+    boolean isJBehaveStoryFile(VirtualFile file);
 
     /**
      * Convenience method for {@code is(element, META_KEY)} to avoid referencing META_KEY outside any

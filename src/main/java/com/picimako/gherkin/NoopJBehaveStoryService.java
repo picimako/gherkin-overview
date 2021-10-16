@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
@@ -62,6 +63,11 @@ public class NoopJBehaveStoryService implements JBehaveStoryService {
 
     @Override
     public boolean isJBehaveStoryFile(PsiFile file) {
+        return false;
+    }
+
+    @Override
+    public boolean isJBehaveStoryFile(VirtualFile file) {
         return false;
     }
 

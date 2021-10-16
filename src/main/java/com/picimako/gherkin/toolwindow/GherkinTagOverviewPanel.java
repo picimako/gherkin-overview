@@ -20,6 +20,7 @@ import java.awt.*;
 import javax.swing.*;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiManager;
 import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.ui.components.JBScrollPane;
@@ -42,7 +43,8 @@ public class GherkinTagOverviewPanel extends JPanel {
     public GherkinTagOverviewPanel(Project project) {
         this.project = project;
         buildGUI();
-        PsiManager.getInstance(project).addPsiTreeChangeListener(new GherkinPsiChangeListener(tree, project));
+        PsiManager.getInstance(project).addPsiTreeChangeListener(new GherkinPsiChangeListener(tree, project), project);
+        project.getMessageBus().connect().subscribe(VirtualFileManager.VFS_CHANGES, new FileAndFolderChangeListener(this::rebuildModel, project));
         new TreeSpeedSearch(tree);
     }
 

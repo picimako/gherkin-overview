@@ -22,6 +22,8 @@ import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.fileTypes.UnknownFileType;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 
 /**
@@ -34,6 +36,13 @@ public final class BDDUtil {
      */
     public static boolean isABDDFile(PsiFile file) {
         return isGherkinFile(file) || file.getProject().getService(JBehaveStoryService.class).isJBehaveStoryFile(file);
+    }
+
+    /**
+     * Returns whether the argument file is one of the BDD file types: Gherkin or JBehave Story file.
+     */
+    public static boolean isABDDFile(VirtualFile file, Project project) {
+        return isGherkinFile(file) || project.getService(JBehaveStoryService.class).isJBehaveStoryFile(file);
     }
 
     /**
