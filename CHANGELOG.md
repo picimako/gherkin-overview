@@ -5,13 +5,24 @@
 #### NEW
 - Application-level mappings are now exportable via the IDE's **Export Settings...** dialog.
 - Added a **Reset to default** button to the application-level mappings in the plugin Settings.
+- Added extra file and folder listener to prevent the tool window nodes from breaking when changes like file rename,
+  move, rollback, etc. happens.
+  - **NOTE:**
+    
+    Due to the nature of this plugin, that it supports any kind of projects with Gherkin files,
+    limiting the directory and file change events to ones only in test resources is not achievable since it would be
+    difficult or even impossible to handle all kinds of languages and project type structures.
+    
+    Thus, more frequent tool window updates and model rebuilds are expected mostly during various folder related changes.
 
 #### ENHANCEMENT
 - Added an alternate help tooltip text in the plugin settings for the case when JBehave story files are available too.
+- Further adjustments to ensure the plugin doesn't break when the JBehave Support plugin is not installed, or disabled.
 
 #### BUGFIX
 - Fixed an issue that the default enabled/disabled state of the project-level mappings component in the plugin settings
 didn't reflect the state of the **Use project level category-tag mapping** checkbox.
+- Fixed a cause of `NullPointerException` in `TagOccurrencesRegistry`.
 
 ### 0.2.0
 

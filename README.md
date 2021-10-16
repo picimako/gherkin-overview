@@ -1,5 +1,7 @@
 # Gherkin Overview
 
+[![Gherkin Overview](https://img.shields.io/jetbrains/plugin/v/16716-gherkin-overview)](https://plugins.jetbrains.com/plugin/16716-gherkin-overview)
+
 This JetBrains IDE plugin helps to better visualize the structure of test projects incorporating .feature files, for Cucumber and similar frameworks,
 from the perspective of Gherkin tags.
 
@@ -95,7 +97,14 @@ This extra information can be enabled/disabled under the ![view_icon](assets/too
 
 ### Search in the tree view
 
-To make search easier in the tool window, you can simply start typing your keyword, and the tree view will highlight all matching nodes, the same way search works in the IDE Project view.
+To make search easier in the tool window, you can simply start typing your keyword, and the tree view will highlight all matching, visible nodes, the same way search works in the IDE Project view.
+
+### Tool window updates
+
+Since changes can and do happen in the files and folders in the project, changes are reflected in the Tags tool window as well.
+
+The tool window UI (and the underlying model) is updated when a Gherkin/Story file's content has changed, or the file has be removed,
+in every other case (e.g. file rename, Git revert, folder copy, ...) the whole model is rebuilt from scratch, also collapsing the UI tree.
 
 ## Settings
 
@@ -194,7 +203,7 @@ root folder:
     - homepage_smoke.feature [another/folder]
 ```
 
-## Export/Import
+## Export / Import
 
 Since v0.3.0, application-level category-tags mappings can be exported via the IDE's **Export Settings...** dialog, along with other plugin and IDE settings.
 
