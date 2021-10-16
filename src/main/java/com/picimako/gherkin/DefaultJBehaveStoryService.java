@@ -27,6 +27,7 @@ import java.util.List;
 
 import com.github.kumaraman21.intellijbehave.language.StoryFileType;
 import com.github.kumaraman21.intellijbehave.language.StoryLanguage;
+import com.github.kumaraman21.intellijbehave.parser.StoryFile;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
@@ -127,5 +128,10 @@ public final class DefaultJBehaveStoryService implements JBehaveStoryService {
     @Override
     public boolean isMetaKey(PsiElement element) {
         return is(element, META_KEY);
+    }
+
+    @Override
+    public PsiFile asStoryFile(PsiElement element) {
+        return (StoryFile) element;
     }
 }

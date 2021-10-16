@@ -47,7 +47,7 @@ public class GherkinTagToolWindowFactory implements ToolWindowFactory {
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-        //Registering in StartupManager to make sure that the indices are completely available to collect Gherkin files from the project
+        //Registering in StartupManager to make sure that the indices are completely available to collect files from the project
         StartupManager.getInstance(project).runWhenProjectIsInitialized(() -> {
             GherkinTagOverviewPanel overviewPanel = new GherkinTagOverviewPanel(project);
 

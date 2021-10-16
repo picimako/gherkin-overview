@@ -69,4 +69,9 @@ public class NoopJBehaveStoryService implements JBehaveStoryService {
     public boolean isMetaKey(PsiElement element) {
         return false;
     }
+
+    @Override
+    public PsiFile asStoryFile(PsiElement child) {
+        return null;
+    }
 }

@@ -71,14 +71,14 @@ public final class GherkinUtil {
     /**
      * Returns whether the argument file is a Gherkin file.
      */
-    public static boolean isGherkinFile(PsiFile file) {
+    public static boolean isGherkinFile(@NotNull PsiFile file) {
         return GherkinFileType.INSTANCE.equals(file.getFileType());
     }
 
     /**
      * Returns whether the argument file is a Gherkin file.
      */
-    public static boolean isGherkinFile(VirtualFile file) {
+    public static boolean isGherkinFile(@NotNull VirtualFile file) {
         return GherkinFileType.INSTANCE.equals(file.getFileType());
     }
 

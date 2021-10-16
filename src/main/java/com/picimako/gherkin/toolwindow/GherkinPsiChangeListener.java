@@ -19,7 +19,6 @@ package com.picimako.gherkin.toolwindow;
 import static com.picimako.gherkin.toolwindow.GherkinTagToolWindowUtil.getGherkinTagsToolWindow;
 import static com.picimako.gherkin.toolwindow.GherkinTagToolWindowUtil.getToolWindowHider;
 
-import com.github.kumaraman21.intellijbehave.parser.StoryFile;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.psi.PsiFile;
@@ -29,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.cucumber.psi.GherkinFile;
 
 import com.picimako.gherkin.BDDUtil;
+import com.picimako.gherkin.JBehaveStoryService;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 
 /**
@@ -41,10 +41,12 @@ public class GherkinPsiChangeListener extends PsiTreeChangeAdapter {
 
     private final GherkinTagTree tree;
     private final Project project;
+    private final JBehaveStoryService storyService;
 
     public GherkinPsiChangeListener(GherkinTagTree tree, Project project) {
         this.tree = tree;
         this.project = project;
+        storyService = project.getService(JBehaveStoryService.class);
     }
 
     @Override
@@ -90,8 +92,8 @@ public class GherkinPsiChangeListener extends PsiTreeChangeAdapter {
         } else if (file == null) {
             if (event.getChild() instanceof GherkinFile) {
                 updateModelAndToolWindow((GherkinFile) event.getChild());
-            } else if (event.getChild() instanceof StoryFile) {
-                updateModelAndToolWindow((StoryFile) event.getChild());
+            } else if (event.getChild() instanceof PsiFile && storyService.isJBehaveStoryFile((PsiFile) event.getChild())) {
+                updateModelAndToolWindow(storyService.asStoryFile(event.getChild()));
             }
         }
     }

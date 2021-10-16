@@ -95,4 +95,6 @@ public interface JBehaveStoryService {
      * of its implementation classes, e.g. {@link DefaultJBehaveStoryService}.
      */
     boolean isMetaKey(PsiElement element);
+
+    PsiFile asStoryFile(PsiElement child);
 }
