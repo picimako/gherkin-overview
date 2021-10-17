@@ -74,16 +74,14 @@ public class Tag extends AbstractNodeType {
     /**
      * Adds the provided file to this tag if it isn't already added.
      * <p>
-     * If, after adding the file, there are multiple files with its name, linked to this tag, than their display names
-     * are updated to contain the Feature keywords or the relative paths from the project root in their
-     * display names.
+     * If, after adding the file, there are multiple files with its name, linked to this tag, then their display names
+     * are updated to contain the Feature keywords or the relative paths from the project root in their display names.
      *
      * @param file the file to add
      */
     public Tag add(@NotNull VirtualFile file) {
         if (!this.contains(file)) {
-            FeatureFile featureFile = new FeatureFile(file, displayName, project);
-            featureFiles.add(featureFile);
+            featureFiles.add(new FeatureFile(file, displayName, project));
             updateDisplayNames(file);
         }
         return this;
@@ -158,7 +156,7 @@ public class Tag extends AbstractNodeType {
             } else {
                 featureFilesWithTheSameName.forEach(FeatureFile::setDisplayNameWithPath);
             }
-        } else {
+        } else { //JBehave Story files
             featureFilesWithTheSameName.forEach(FeatureFile::setDisplayNameWithPath);
         }
     }

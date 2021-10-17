@@ -17,6 +17,7 @@
 package com.picimako.gherkin.toolwindow.nodetype;
 
 import static com.picimako.gherkin.toolwindow.LayoutType.GROUP_BY_MODULES;
+import static com.picimako.gherkin.toolwindow.nodetype.Category.OTHER_CATEGORY_NAME;
 import static com.picimako.gherkin.toolwindow.nodetype.ContentRoot.Type.CONTENT_ROOT;
 import static com.picimako.gherkin.toolwindow.nodetype.ContentRoot.Type.MODULE;
 import static java.util.stream.Collectors.toList;
@@ -43,7 +44,6 @@ import com.picimako.gherkin.toolwindow.ProjectBDDTypeService;
  */
 public class ModelDataRoot extends AbstractNodeType implements CategoriesHolder {
 
-    private static final String OTHER_CATEGORY_NAME = "Other";
     private static final String ROOTLESS_CONTENT_ROOT_NAME = "Rootless";
 
     /**
@@ -61,7 +61,7 @@ public class ModelDataRoot extends AbstractNodeType implements CategoriesHolder 
     private List<ContentRoot> contentRoots;
 
     public ModelDataRoot(Project project) {
-        super("Gherkin Tags", project);
+        super(GherkinBundle.toolWindow("root.name.tags"), project);
         initData();
     }
 
@@ -144,7 +144,7 @@ public class ModelDataRoot extends AbstractNodeType implements CategoriesHolder 
         Module contentRootForFile = ModuleUtilCore.findModuleForFile(bddFile);
         if (bddFile.getVirtualFile().isValid()) {
             return contentRootForFile == null
-                ? getContentRoot(getRootless(), "Rootless")  //if file doesn't belong to any content root
+                ? getContentRoot(getRootless(), ROOTLESS_CONTENT_ROOT_NAME)  //if file doesn't belong to any content root
                 : getContentRoot(getContentRoot(contentRootForFile.getName()), contentRootForFile.getName()); //if has content root added with name
         }
 

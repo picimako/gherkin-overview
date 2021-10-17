@@ -38,6 +38,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class Category extends AbstractNodeType {
 
+    static final String OTHER_CATEGORY_NAME = "Other";
     private final List<Tag> tags = new SmartList<>();
 
     public Category(@NotNull String displayName, Project project) {
@@ -93,7 +94,7 @@ public class Category extends AbstractNodeType {
      * Gets whether this category is the catch-all "Other" one.
      */
     public boolean isOther() {
-        return "Other".equals(displayName);
+        return OTHER_CATEGORY_NAME.equals(displayName);
     }
 
     public boolean isNotOtherAndDoesntHaveAnyTag() {
@@ -118,7 +119,7 @@ public class Category extends AbstractNodeType {
     }
 
     public static Category createOther(Project project) {
-        return new Category("Other", project);
+        return new Category(OTHER_CATEGORY_NAME, project);
     }
 
     @Override

@@ -163,7 +163,7 @@ public class TagOccurrencesRegistryTest extends BasePlatformTestCase {
         registry.init(2);
         registry.calculateOccurrenceCounts(virtualFile);
 
-        assertThat(registry.getCountFor(psiFile.getVirtualFile().getPath(), "landing")).isNotZero();
+        assertThat(registry.getCountFor(psiFile.getVirtualFile().getPath(), "landing")).isZero();
     }
 
     //remove
