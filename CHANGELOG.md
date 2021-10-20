@@ -1,17 +1,17 @@
 # Changelog
 
-### 0.3.0-SNAPSHOT
+### 0.3.0
 
 #### NEW
 - Application-level mappings are now exportable via the IDE's **Export Settings...** dialog.
-- Added a **Reset to default** button to the application-level mappings in the plugin Settings.
+- Added a **Reset to default** button to the application-level mappings in the plugin settings.
 - Added extra file and folder listener to prevent the tool window nodes from breaking when changes like file rename,
   move, rollback, etc. happens.
   - **NOTE:**
     
     Due to the nature of this plugin, that it supports any kind of projects with Gherkin files,
     limiting the directory and file change events to ones only in test resources is not achievable since it would be
-    difficult or even impossible to handle all kinds of languages and project type structures.
+    difficult or even impossible to handle all kinds of languages and project structures.
     
     Thus, more frequent tool window updates and model rebuilds are expected mostly during various folder related changes.
 
