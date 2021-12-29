@@ -21,13 +21,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.project.Project;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import com.picimako.gherkin.settings.CategoryAndTags;
 import com.picimako.gherkin.settings.GherkinOverviewApplicationState;
 import com.picimako.gherkin.settings.GherkinOverviewProjectState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Project service to store the mappings between tag and category names. Each tag name is assigned to a category and stored as a separate
@@ -69,7 +71,7 @@ import org.jetbrains.annotations.Nullable;
  * @since 0.1.0
  */
 @Service(Service.Level.PROJECT)
-public final class TagCategoryRegistry {
+public final class TagCategoryRegistry implements Disposable {
 
     private static final String TAG_DELIMITER = ",";
     private static final String REGEX_PREFIX = "#";
@@ -95,13 +97,6 @@ public final class TagCategoryRegistry {
         if (projectSettings.useProjectLevelMappings) {
             putMappingsFrom(projectSettings.mappings);
         }
-    }
-
-    /**
-     * Removes all mappings from this registry.
-     */
-    public void clearMappings() {
-        tagToCategory.clear();
     }
 
     /**
@@ -141,5 +136,13 @@ public final class TagCategoryRegistry {
 
     public static TagCategoryRegistry getInstance(Project project) {
         return project.getService(TagCategoryRegistry.class);
+    }
+
+    /**
+     * Removes all mappings from this registry.
+     */
+    @Override
+    public void dispose() {
+        tagToCategory.clear();
     }
 }

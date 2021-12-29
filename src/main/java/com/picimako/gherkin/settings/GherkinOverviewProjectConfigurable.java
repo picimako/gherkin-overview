@@ -90,7 +90,7 @@ public class GherkinOverviewProjectConfigurable implements Configurable {
 
         appSettings.mappings = new ArrayList<>(component.getApplicationLevelMappings());
         var registry = TagCategoryRegistry.getInstance(project);
-        registry.clearMappings();
+        registry.dispose();
         registry.putMappingsFrom(appSettings.mappings);
         if (component.isUseProjectLevelMappings()) {
             registry.putMappingsFrom(component.getProjectLevelMappings());
@@ -104,7 +104,7 @@ public class GherkinOverviewProjectConfigurable implements Configurable {
             rebuildModel();
         }
     }
-    
+
     @Override
     public void reset() {
         var appSettings = GherkinOverviewApplicationState.getInstance();

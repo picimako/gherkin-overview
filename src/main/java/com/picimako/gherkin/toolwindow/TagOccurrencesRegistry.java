@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -40,7 +41,7 @@ import org.jetbrains.annotations.TestOnly;
  * This way it may be easier to oversee this information.
  */
 @Service(Service.Level.PROJECT)
-public final class TagOccurrencesRegistry {
+public final class TagOccurrencesRegistry implements Disposable {
 
     private final Project project;
     /**
@@ -124,5 +125,11 @@ public final class TagOccurrencesRegistry {
 
     public static TagOccurrencesRegistry getInstance(Project project) {
         return project.getService(TagOccurrencesRegistry.class);
+    }
+
+    @Override
+    public void dispose() {
+        tagOccurrences.clear();
+        tagOccurrences = null;
     }
 }
