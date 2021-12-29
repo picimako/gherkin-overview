@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
     name = "Gherkin Overview Tags Tool Window Settings",
     storages = {@Storage("GherkinTagsToolWindowSettings.xml")}
 )
-@Service
+@Service(Service.Level.PROJECT)
 public final class GherkinTagsToolWindowSettings implements PersistentStateComponent<GherkinTagsToolWindowSettings> {
 
     /**

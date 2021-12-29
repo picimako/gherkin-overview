@@ -17,7 +17,7 @@
 package com.picimako.gherkin.toolwindow;
 
 import com.intellij.openapi.components.Service;
-import com.intellij.openapi.project.Project;
+import com.intellij.openapi.components.Service.Level;
 
 /**
  * Project service to store information about what type of BDD files are available in the current project.
@@ -26,7 +26,7 @@ import com.intellij.openapi.project.Project;
  * @see com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot
  * @since 0.2.0
  */
-@Service
+@Service(Level.PROJECT)
 public final class ProjectBDDTypeService {
 
     public boolean isProjectContainGherkinFile;

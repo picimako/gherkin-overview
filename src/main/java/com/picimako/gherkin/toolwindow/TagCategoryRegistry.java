@@ -68,7 +68,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @since 0.1.0
  */
-@Service
+@Service(Service.Level.PROJECT)
 public final class TagCategoryRegistry {
 
     private static final String TAG_DELIMITER = ",";

@@ -30,11 +30,7 @@
                              displayName="Gherkin Overview" nonDefaultProject="true"/>
         <projectService serviceImplementation="com.picimako.gherkin.settings.GherkinOverviewProjectState"/>
         <applicationService serviceImplementation="com.picimako.gherkin.settings.GherkinOverviewApplicationState"/>
-
         <projectService serviceInterface="com.picimako.gherkin.JBehaveStoryService"
                         serviceImplementation="com.picimako.gherkin.NoopJBehaveStoryService"/>
-
-        <!-- Services via @Service annotation -->
-        <!-- <projectService serviceImplementation="com.picimako.gherkin.toolwindow.ProjectBDDTypeService"/>-->
     </extensions>
 </idea-plugin>

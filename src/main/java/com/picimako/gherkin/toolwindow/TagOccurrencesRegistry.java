@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.intellij.openapi.components.Service;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
@@ -40,10 +39,9 @@ import org.jetbrains.annotations.TestOnly;
  * occurrences in contrast to storing this information in the {@link com.picimako.gherkin.toolwindow.nodetype.FeatureFile}s.
  * This way it may be easier to oversee this information.
  */
-@Service
+@Service(Service.Level.PROJECT)
 public final class TagOccurrencesRegistry {
 
-    private static final Logger LOG = Logger.getInstance(TagOccurrencesRegistry.class);
     private final Project project;
     /**
      * FeatureFile path -> &lt;tag name, count>
