@@ -8,9 +8,11 @@ repositories {
 }
 
 dependencies {
-    testImplementation group: 'junit', name: 'junit', version: '4.13.1'
+    testImplementation group: 'junit', name: 'junit', version: '4.13.2'
+    //NOTE: upgrading AssertJ will need more care as 3.20.x is not binary compatible with 3.19
+    //see: https://assertj.github.io/doc/#assertj-core-3-20-0-release-notes
     testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.19.0'
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.8.0'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.12.4'
 }
 
 apply plugin: 'java'
@@ -24,7 +26,7 @@ intellij {
                //1. The gherkin plugin depends on IntelliLang.
                //2. Adding it also makes it possible to load .feature files into the in-memory editor during unit testing.
                'IntelliLang', //https://plugins.jetbrains.com/plugin/13374-intellilang
-                'jbehave-support-plugin:1.54a'] //https://plugins.jetbrains.com/plugin/7268-jbehave-support
+                'jbehave-support-plugin:1.55'] //https://plugins.jetbrains.com/plugin/7268-jbehave-support
     pluginName = 'Gherkin Overview'
     updateSinceUntilBuild = false
 }
