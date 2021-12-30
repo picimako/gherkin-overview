@@ -43,7 +43,11 @@ public class GherkinTagOverviewPanel extends JPanel {
     public GherkinTagOverviewPanel(Project project) {
         this.project = project;
         buildGUI();
-        PsiManager.getInstance(project).addPsiTreeChangeListener(new GherkinPsiChangeListener(tree, project), project);
+        //Since Project type objects are not allowed to be used as parent disposable, using a light service instead, which is disposed automatically
+        //when implementing the Disposable interface.
+        //see: https://plugins.jetbrains.com/docs/intellij/disposers.html#automatically-disposed-objects
+        //see: https://plugins.jetbrains.com/docs/intellij/disposers.html#choosing-a-disposable-parent
+        PsiManager.getInstance(project).addPsiTreeChangeListener(new GherkinPsiChangeListener(tree, project), OverviewPanelDisposalService.getInstance(project));
         project.getMessageBus().connect().subscribe(VirtualFileManager.VFS_CHANGES, new FileAndFolderChangeListener(this::rebuildModel, project));
         new TreeSpeedSearch(tree);
     }

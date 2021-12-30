@@ -18,6 +18,7 @@ package com.picimako.gherkin.toolwindow;
 
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.components.Service.Level;
+import com.intellij.openapi.project.Project;
 
 /**
  * Project service to store information about what type of BDD files are available in the current project.
