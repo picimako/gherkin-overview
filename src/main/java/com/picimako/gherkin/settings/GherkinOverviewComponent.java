@@ -61,14 +61,13 @@ public class GherkinOverviewComponent {
      */
     public GherkinOverviewComponent(@Nullable List<CategoryAndTags> appSettingsMappings, List<CategoryAndTags> projectSettingsMappings, Project project) {
         this.project = project;
-        applicationLevelMappingsTable.withExtraActions(() -> {
-            return new AnActionButton[]{
+        applicationLevelMappingsTable.withExtraActions(() ->
+            new AnActionButton[]{
                 //Reset to defaults
                 new ExtraActionButton(GherkinBundle.settings("reset.mappings.name"), GherkinBundle.settings("reset.mappings.description"),
                     AllIcons.General.Reset,
                     () -> applicationLevelMappingsTable.setValues(DefaultMappingsLoader.loadDefaultApplicationLevelMappings()))
-            };
-        }).init();
+            }).init();
         setDefaultComponentStates();
         addProjectLevelMappingListeners();
         populateMappingTableContents(appSettingsMappings, projectSettingsMappings);
