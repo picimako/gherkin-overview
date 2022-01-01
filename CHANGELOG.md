@@ -1,5 +1,12 @@
 # Changelog
 
+### 1.0.0
+
+#### ENHANCEMENT
+- Upgraded a couple of dependency versions
+- Replaced Project object with a no-op Disposable for psi tree change listener since Project type Disposables are not allowed as parents
+- Refined light service definitions, and project description
+
 ### 0.3.0
 
 #### NEW
