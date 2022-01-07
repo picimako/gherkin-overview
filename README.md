@@ -63,8 +63,8 @@ Gherkin Tags                            <-- Root node. It is permanent.
         ...
 ```
 
-| No grouping | Grouping by modules |
-|---|---|
+| No grouping                                                                | Grouping by modules                                    |
+|----------------------------------------------------------------------------|--------------------------------------------------------|
 | ![project_view_with_no_grouping](assets/project_view_with_no_grouping.PNG) | ![grouping_by_modules](assets/grouping_by_modules.PNG) |
 
 In case a project doesn't have .feature files, or it has some but there is no Gherkin tag used, the tool window simply displays the following message: *There is no Gherkin tag in this project.*
@@ -87,13 +87,13 @@ and tag occurrence counts.
 
 This extra information can be enabled/disabled under the ![view_icon](assets/tool_window_view_icon.PNG) toolbar menu. They display the following data:
 
-| Node types | Simplified stat. | Detailed stat. | Notes |
-|---|---|---|---|
-| Project/Content root | *X tags, Y .feature files* | X distinct tags in Y .feature files | X: number of distinct tags in the project/content root<br>Y: number of feature files in the project/content root that actually contain tags. The overall number of .feature files in the project/content root may be the same or higher. |
-| Category | *(X)* | *X for Y distinct tags* | X: number of occurrences of all tags under this category in the associated project/content root |
-| Tag | *(X)* | *X in Y files* | X: number of occurrences of this tag in the associated project/content root |
-| Feature | *(X)* | *X occurrence* | X: number of occurrences of the parent tag in this file |
-|  | ![statistics_simplified](assets/statistics_simplified.PNG) | ![statistics_detailed](assets/statistics_detailed.PNG) |  |
+| Node types           | Simplified stat.                                           | Detailed stat.                                         | Notes                                                                                                                                                                                                                                    |
+|----------------------|------------------------------------------------------------|--------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Project/Content root | *X tags, Y .feature files*                                 | X distinct tags in Y .feature files                    | X: number of distinct tags in the project/content root<br>Y: number of feature files in the project/content root that actually contain tags. The overall number of .feature files in the project/content root may be the same or higher. |
+| Category             | *(X)*                                                      | *X for Y distinct tags*                                | X: number of occurrences of all tags under this category in the associated project/content root                                                                                                                                          |
+| Tag                  | *(X)*                                                      | *X in Y files*                                         | X: number of occurrences of this tag in the associated project/content root                                                                                                                                                              |
+| Feature              | *(X)*                                                      | *X occurrence*                                         | X: number of occurrences of the parent tag in this file                                                                                                                                                                                  |
+|                      | ![statistics_simplified](assets/statistics_simplified.PNG) | ![statistics_detailed](assets/statistics_detailed.PNG) |                                                                                                                                                                                                                                          |
 
 ### Search in the tree view
 
@@ -134,13 +134,13 @@ To use the project-level ones, first you have to check the **Use project level c
 
 To better understand how application and project-level values are merged and handled, you can find a few examples here:
 
-| Application | Project | Final, merged mapping |
-|---|---|---|
-| Test Suite -> smoke,regression,e2e |  | Test Suite -> smoke,regression,e2e |
-|  | Device -> mobile,desktop | Device -> mobile,desktop |
-| Test Suite -> smoke,regression,e2e | Device -> mobile,desktop | Test Suite -> smoke,regression,e2e<br>Device -> mobile,desktop |
-| Test Suite -> smoke,regression,e2e | Test Suite -> regression,healthcheck | Test Suite -> smoke,regression,e2e,healthcheck |
-| Test Suite -> smoke,regression,e2e | Test Pack -> e2e | Test Suite -> smoke,regression<br>Test Pack -> e2e |
+| Application                        | Project                              | Final, merged mapping                                          |
+|------------------------------------|--------------------------------------|----------------------------------------------------------------|
+| Test Suite -> smoke,regression,e2e |                                      | Test Suite -> smoke,regression,e2e                             |
+|                                    | Device -> mobile,desktop             | Device -> mobile,desktop                                       |
+| Test Suite -> smoke,regression,e2e | Device -> mobile,desktop             | Test Suite -> smoke,regression,e2e<br>Device -> mobile,desktop |
+| Test Suite -> smoke,regression,e2e | Test Suite -> regression,healthcheck | Test Suite -> smoke,regression,e2e,healthcheck                 |
+| Test Suite -> smoke,regression,e2e | Test Pack -> e2e                     | Test Suite -> smoke,regression<br>Test Pack -> e2e             |
 
 **NOTE:** mapping the same tag (either explicit ones, or regex based tags with overlapping match results) to multiple different categories
 should be avoided as it may cause weird issues in the tool window's tree view.
