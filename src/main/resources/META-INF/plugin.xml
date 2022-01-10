@@ -2,7 +2,7 @@
     <id>gherkin-overview</id>
     <name>Gherkin Overview</name>
     <vendor url="https://github.com/picimako/gherkin-overview">Tamás Balog</vendor>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <resource-bundle>messages.GherkinBundle</resource-bundle>
 
     <!-- https://jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html -->
