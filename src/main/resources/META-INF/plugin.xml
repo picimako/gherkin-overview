@@ -6,7 +6,7 @@
     <resource-bundle>messages.GherkinBundle</resource-bundle>
 
     <!-- https://jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html -->
-    <idea-version since-build="221.*"/>
+    <idea-version since-build="211"/>
 
     <description>Adds Gherkin tag overview for test automation projects</description>
 

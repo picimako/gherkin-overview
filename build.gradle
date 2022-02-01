@@ -26,7 +26,7 @@ intellij {
                //1. The gherkin plugin depends on IntelliLang.
                //2. Adding it also makes it possible to load .feature files into the in-memory editor during unit testing.
                'IntelliLang', //https://plugins.jetbrains.com/plugin/13374-intellilang
-                'jbehave-support-plugin:1.55'] //https://plugins.jetbrains.com/plugin/7268-jbehave-support
+                'jbehave-support-plugin:1.56'] //https://plugins.jetbrains.com/plugin/7268-jbehave-support
     pluginName = 'Gherkin Overview'
     updateSinceUntilBuild = false
 }
