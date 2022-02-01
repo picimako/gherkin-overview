@@ -1,5 +1,10 @@
 # Changelog
 
+### 1.1.0
+
+#### TECHNICAL
+- Add support for IJ 2022.1 EAP.
+
 ### 1.0.0
 
 #### ENHANCEMENT

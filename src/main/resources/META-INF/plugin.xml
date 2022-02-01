@@ -2,11 +2,11 @@
     <id>gherkin-overview</id>
     <name>Gherkin Overview</name>
     <vendor url="https://github.com/picimako/gherkin-overview">Tamás Balog</vendor>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <resource-bundle>messages.GherkinBundle</resource-bundle>
 
     <!-- https://jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html -->
-    <idea-version since-build="211"/>
+    <idea-version since-build="221.*"/>
 
     <description>Adds Gherkin tag overview for test automation projects</description>
 
