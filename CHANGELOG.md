@@ -1,5 +1,10 @@
 # Changelog
 
+### 1.2.0
+
+#### MAINTENANCE
+- Upgrade versions: gradle-intellij-plugin to 1.5.3, gradle to 7.4, jbehave-support-plugin 1.57
+
 ### 1.1.0
 
 #### TECHNICAL
