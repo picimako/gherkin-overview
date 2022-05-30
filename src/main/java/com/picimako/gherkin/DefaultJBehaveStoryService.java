@@ -27,6 +27,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.MultiMap;
+import com.picimako.gherkin.toolwindow.TagNameUtil;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -93,6 +94,16 @@ public final class DefaultJBehaveStoryService implements JBehaveStoryService {
             }
         }
         return metaTexts;
+    }
+
+    @Override
+    public boolean isMetaTextForMetaKeyWithName(@NotNull PsiElement element, @NotNull String metaName) {
+        if (is(element, META_TEXT)) {
+            var metaKey = PsiTreeUtil.findSiblingBackward(element, META_KEY, __ -> {
+            });
+            return metaKey != null && metaName.equals(TagNameUtil.determineTagOrMetaName(metaKey));
+        }
+        return false;
     }
 
     @Override

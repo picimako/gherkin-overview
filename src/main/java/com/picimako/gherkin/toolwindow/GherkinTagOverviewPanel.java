@@ -2,16 +2,19 @@
 
 package com.picimako.gherkin.toolwindow;
 
-import java.awt.*;
-import javax.swing.*;
-
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiManager;
 import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.ui.components.JBScrollPane;
-
+import com.picimako.gherkin.toolwindow.action.TagActionsGroup;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.Map;
 
 /**
  * A custom panel to display the Gherkin tags and associated data.
@@ -21,6 +24,7 @@ import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
  */
 public class GherkinTagOverviewPanel extends JPanel {
 
+    private static final String TAG_ACTIONS_GROUP = "gherkin.overview.tag.TagActionsGroup";
     private final TreeModelFactory treeModelFactory = new TreeModelFactory();
     private final Project project;
     private GherkinTagTree tree;
@@ -83,8 +87,28 @@ public class GherkinTagOverviewPanel extends JPanel {
         model = treeModelFactory.createTreeModel(project);
         model.buildModel();
         tree = new GherkinTagTree(model);
+        registerContextMenuActions();
         tree.addMouseListener(new MouseListeningGherkinFileOpener(project, tree));
         tree.addKeyListener(new KeyboardListeningGherkinFileOpener(project, tree));
         add(new JBScrollPane(tree));
+    }
+
+    private void registerContextMenuActions() {
+        ActionManager actionManager = ActionManager.getInstance();
+
+        //List of action groups to register
+        //Since ActionManager seems to be operating on application level, and not project level, this check makes sure
+        //that in case multiple projects are open, this tool window doesn't try to register the same action group twice,
+        //which would lead to exception thrown, and to a crashing tool window.
+        if (actionManager.getAction(TAG_ACTIONS_GROUP) == null) {
+            actionManager.registerAction(TAG_ACTIONS_GROUP, new TagActionsGroup());
+        }
+        //Add action popup menu to the tree component
+        var actionPopupMenu = actionManager
+            .createActionPopupMenu("GherkinTagToolWindow", (DefaultActionGroup) actionManager.getAction(TAG_ACTIONS_GROUP));
+        actionPopupMenu.setTargetComponent(tree);
+        final var actionPopupMenus = Map.of("Tag", actionPopupMenu);
+
+        tree.addMouseListener(new MouseListeningPopupMenuInvoker(new ToolWindowPopupMenuInvoker(tree, actionPopupMenus)));
     }
 }

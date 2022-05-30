@@ -59,6 +59,15 @@ public interface JBehaveStoryService {
     Collection<PsiElement> collectMetaTextsForMetaKeyAsList(PsiElement metaKey);
 
     /**
+     * Returns whether {@code element} is a meta text and it belongs to a meta key whose name (meta key + meta texts)
+     * matches the provided meta name.
+     *
+     * @param element  the element to inspect
+     * @param metaName the meta name against which the found meta name should match
+     */
+    boolean isMetaTextForMetaKeyWithName(PsiElement element, String metaName);
+
+    /**
      * Collects combined meta names (as per {@link TagNameUtil#metaNameFrom(PsiElement, Collection)}) from the provided file.
      * <p>
      * Returned metas are not distinct. If the same meta is present multiple times in the file, then all occurrences

@@ -43,6 +43,11 @@ public class NoopJBehaveStoryService implements JBehaveStoryService {
     }
 
     @Override
+    public boolean isMetaTextForMetaKeyWithName(PsiElement element, String metaName) {
+        return false;
+    }
+
+    @Override
     public List<String> collectMetasFromFileAsList(PsiFile file) {
         return Collections.emptyList();
     }
