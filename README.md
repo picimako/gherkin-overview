@@ -112,6 +112,8 @@ in every other case (e.g. file rename, Git revert, folder copy, ...) the whole m
 
 Since v1.2.0, a context menu action is available on Tag nodes. It can delete all occurrences of the selected tag/meta from all affected files.
 
+NOTE: minor formatting adjustments might be necessary after using this action. 
+
 ![delete_all_occurrences_context_action](assets/delete_all_occurrences_context_action.png)
 
 ## Settings

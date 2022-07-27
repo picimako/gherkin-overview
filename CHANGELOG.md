@@ -2,8 +2,12 @@
 
 ### 1.2.0
 
+#### NEW
+- Removed support for IJ-2021.1.
+- Added a context menu action to Tag nodes that can delete all occurrences of the selected tag.
+
 #### MAINTENANCE
-- Upgrade versions: gradle-intellij-plugin to 1.5.3, gradle to 7.4, jbehave-support-plugin 1.57
+- Upgraded library versions: gradle-intellij-plugin to 1.7.0, gradle to 7.4, jbehave-support-plugin 1.58
 
 ### 1.1.0
 
