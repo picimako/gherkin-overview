@@ -1,5 +1,11 @@
 # Changelog
 
+### 1.2.1
+
+#### MAINTENANCE
+- Updated JBehave Support plugin dependency to support IJ-2022.3.
+- Updated gradle-intellij-plugin version.
+
 ### 1.2.0
 
 #### NEW
