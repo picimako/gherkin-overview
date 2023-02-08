@@ -6,6 +6,10 @@
 
 ## [1.2.2]
 
+### Added
+- The effects of the **Delete All Occurrences of This Tag** context menu action can now be reverted via the IDE local history.
+It also works with Ctrl+Z and similar Undo actions.
+
 ### Changed
 - Removed support for IJ-2021.2.
 - Added support for IJ-2023.1.
