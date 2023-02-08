@@ -30,23 +30,23 @@ public class DeleteAllTagOccurrencesActionTest extends BasePlatformTestCase {
     //Tags
 
     public void testDeletesSingleTagFromSingleFile() {
-        myFixture.configureByFile("delete_tag.feature");
+        initBDDFileAndTreeWithSelectedNodeToDelete("delete_tag.feature", "vimeo");
 
-        initGherkinTagTreeAndSetSelectionTo("vimeo");
         new DeleteAllTagOccurrencesAction(getProject()).actionPerformed(doTestActionEvent());
+
         myFixture.checkResult(
-            "@e2e @regression @youtube @desktop @youtube @sitemap @JIRA-1234\n" +
+            "@e2e @regression @youtube @desktop @sitemap @JIRA-1234\n" +
                 "Feature: Videos\n" +
                 "\n" +
-                "  @tablet\n" +
-                "  Scenario: Video components");
+                "  @tablet @youtube\n" +
+                "  Scenario: Video components\n");
     }
 
     public void testDeletesMultipleTagsFromSingleFile() {
-        myFixture.configureByFile("delete_tag.feature");
+        initBDDFileAndTreeWithSelectedNodeToDelete("delete_tag.feature", "youtube");
 
-        initGherkinTagTreeAndSetSelectionTo("youtube");
         new DeleteAllTagOccurrencesAction(getProject()).actionPerformed(doTestActionEvent());
+
         myFixture.checkResult(
             "@e2e @regression  @desktop @sitemap @JIRA-1234\n" +
                 "Feature: Videos\n" +
@@ -56,11 +56,11 @@ public class DeleteAllTagOccurrencesActionTest extends BasePlatformTestCase {
     }
 
     public void testDeletesMultipleTagsFromMultipleFiles() {
-        myFixture.configureByFile("delete_tag.feature");
         var delete_tag_more = PsiManager.getInstance(getProject()).findFile(myFixture.copyFileToProject("delete_tag_more.feature"));
+        initBDDFileAndTreeWithSelectedNodeToDelete("delete_tag.feature", "youtube");
 
-        initGherkinTagTreeAndSetSelectionTo("youtube");
         new DeleteAllTagOccurrencesAction(getProject()).actionPerformed(doTestActionEvent());
+
         myFixture.checkResult(
             "@e2e @regression  @desktop @sitemap @JIRA-1234\n" +
                 "Feature: Videos\n" +
@@ -78,10 +78,10 @@ public class DeleteAllTagOccurrencesActionTest extends BasePlatformTestCase {
     //Metas
 
     public void testDeletesSingleMetaKeyFromSingleFile() {
-        myFixture.configureByFile("delete_tag.story");
+        initBDDFileAndTreeWithSelectedNodeToDelete("delete_tag.story", "Single");
 
-        initGherkinTagTreeAndSetSelectionTo("Single");
         new DeleteAllTagOccurrencesAction(getProject()).actionPerformed(doTestActionEvent());
+
         myFixture.checkResult(
             "Meta:\n" +
                 "@Single key\n" +
@@ -100,10 +100,10 @@ public class DeleteAllTagOccurrencesActionTest extends BasePlatformTestCase {
     }
 
     public void testDeletesSingleMetaKeyAndTextFromSingleFile() {
-        myFixture.configureByFile("delete_tag.story");
+        initBDDFileAndTreeWithSelectedNodeToDelete("delete_tag.story", "Single:key");
 
-        initGherkinTagTreeAndSetSelectionTo("Single:key");
         new DeleteAllTagOccurrencesAction(getProject()).actionPerformed(doTestActionEvent());
+
         myFixture.checkResult(
             "Meta:\n" +
                 "@Single\n" +
@@ -122,10 +122,10 @@ public class DeleteAllTagOccurrencesActionTest extends BasePlatformTestCase {
     }
 
     public void testDeletesMultipleMetaKeyAndTextFromSingleFile() {
-        myFixture.configureByFile("delete_tag.story");
+        initBDDFileAndTreeWithSelectedNodeToDelete("delete_tag.story", "Device:tablet");
 
-        initGherkinTagTreeAndSetSelectionTo("Device:tablet");
         new DeleteAllTagOccurrencesAction(getProject()).actionPerformed(doTestActionEvent());
+
         myFixture.checkResult(
             "Meta:\n" +
                 "@Single\n" +
@@ -143,10 +143,10 @@ public class DeleteAllTagOccurrencesActionTest extends BasePlatformTestCase {
     }
 
     public void testDeletesMultipleMetasFromSingleFile() {
-        myFixture.configureByFile("delete_tag.story");
+        initBDDFileAndTreeWithSelectedNodeToDelete("delete_tag.story", "Media:youtube vimeo");
 
-        initGherkinTagTreeAndSetSelectionTo("Media:youtube vimeo");
         new DeleteAllTagOccurrencesAction(getProject()).actionPerformed(doTestActionEvent());
+
         myFixture.checkResult(
             "Meta:\n" +
                 "@Single\n" +
@@ -163,11 +163,11 @@ public class DeleteAllTagOccurrencesActionTest extends BasePlatformTestCase {
     }
 
     public void testDeletesMultipleMetasFromMultipleFiles() {
-        myFixture.configureByFile("delete_tag.story");
         var delete_tag_more = PsiManager.getInstance(getProject()).findFile(myFixture.copyFileToProject("delete_tag_more.story"));
+        initBDDFileAndTreeWithSelectedNodeToDelete("delete_tag.story", "Media:youtube vimeo");
 
-        initGherkinTagTreeAndSetSelectionTo("Media:youtube vimeo");
         new DeleteAllTagOccurrencesAction(getProject()).actionPerformed(doTestActionEvent());
+
         myFixture.checkResult(
             "Meta:\n" +
                 "@Single\n" +
@@ -196,6 +196,24 @@ public class DeleteAllTagOccurrencesActionTest extends BasePlatformTestCase {
                 "Scenario: scenario 1\n");
     }
 
+    //Helpers
+
+    /**
+     * Initializes the BDD resource {@code file} from which tags with {@code tagName} will be deleted.
+     */
+    private void initBDDFileAndTreeWithSelectedNodeToDelete(String file, String tagName) {
+        myFixture.configureByFile(file);
+        initGherkinTagTreeAndSetSelectionTo(tagName);
+    }
+
+    /**
+     * Initializes the Gherkin tag tree and its underlying model, then select the tree node with
+     * the provided {@code tagName}.
+     * <p>
+     * Tags with the selected name will be the ones removed from the target file.
+     *
+     * @param tagName the name of the tag node to select, and that will be removed
+     */
     private void initGherkinTagTreeAndSetSelectionTo(String tagName) {
         var model = new ProjectSpecificGherkinTagTreeModel(getProject());
         model.buildModel();
