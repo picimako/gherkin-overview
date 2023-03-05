@@ -1,35 +1,51 @@
-# Changelog
+<!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
-### 1.2.1
+# Gherkin Overview Changelog
 
-#### MAINTENANCE
+## [Unreleased]
+
+## [1.2.2]
+
+### Added
+- The effects of the **Delete All Occurrences of This Tag** context menu action can now be reverted via the IDE local history.
+It also works with Ctrl+Z and similar Undo actions.
+
+### Changed
+- Removed support for IJ-2021.2.
+- Added support for IJ-2023.1.
+- Updated JBehave Support plugin dependency to support IJ-2023.1.
+- Reworked the plugin build configuration to be based on the intellij-platform-plugin-template.
+
+## [1.2.1]
+
+### Changed
 - Updated JBehave Support plugin dependency to support IJ-2022.3.
 - Updated gradle-intellij-plugin version.
 
-### 1.2.0
+## [1.2.0]
 
-#### NEW
+### Added
 - Removed support for IJ-2021.1.
 - Added a context menu action to Tag nodes that can delete all occurrences of the selected tag.
 
-#### MAINTENANCE
+### Changed
 - Upgraded library versions: gradle-intellij-plugin to 1.7.0, gradle to 7.4, jbehave-support-plugin 1.58
 
-### 1.1.0
+## [1.1.0]
 
-#### TECHNICAL
+### Changed
 - Add support for IJ 2022.1 EAP.
 
-### 1.0.0
+## [1.0.0]
 
-#### ENHANCEMENT
+### Changed
 - Upgraded a couple of dependency versions
 - Replaced Project object with a no-op Disposable for psi tree change listener since Project type Disposables are not allowed as parents
 - Refined light service definitions, and project description
 
-### 0.3.0
+## [0.3.0]
 
-#### NEW
+### Added
 - Application-level mappings are now exportable via the IDE's **Export Settings...** dialog.
 - Added a **Reset to default** button to the application-level mappings in the plugin settings.
 - Added extra file and folder listener to prevent the tool window nodes from breaking when changes like file rename,
@@ -42,18 +58,18 @@
     
     Thus, more frequent tool window updates and model rebuilds are expected mostly during various folder related changes.
 
-#### ENHANCEMENT
+### Changed
 - Added an alternate help tooltip text in the plugin settings for the case when JBehave story files are available too.
 - Further adjustments to ensure the plugin doesn't break when the JBehave Support plugin is not installed, or disabled.
 
-#### BUGFIX
+### Fixed
 - Fixed an issue that the default enabled/disabled state of the project-level mappings component in the plugin settings
 didn't reflect the state of the **Use project level category-tag mapping** checkbox.
 - Fixed a cause of `NullPointerException` in `TagOccurrencesRegistry`.
 
-### 0.2.0
+## [0.2.0]
 
-#### NEW
+### Added
 - Added support for [JBehave](https://jbehave.org) Story files:
   - .story files are now also recognized in projects, given that the [JBehave Support](https://plugins.jetbrains.com/plugin/16716-gherkin-overview) plugin is installed, since that
   plugin provides the language support for JBehave Story files.
@@ -62,11 +78,11 @@ didn't reflect the state of the **Use project level category-tag mapping** check
   - In the tool window, the root element's name reflects whether Gherkin and/or JBehave Story files are available in the
   project.
 
-#### ENHANCEMENT
+### Changed
 - The tree model in the Tags tool window is rebuilt when either the application or the project-level mapping
 has been changed in Settings. This aims to provide a smoother user experience by not having to restart the IDE or
 turn to other workarounds to reload the tool window, so that it displays data with the up-to-date mappings.
 
-### 0.1.0
+## [0.1.0]
 
 Initial release

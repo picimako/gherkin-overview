@@ -1,4 +1,4 @@
-//Copyright 2022 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow.action;
 
@@ -58,24 +58,25 @@ public class DeleteAllTagOccurrencesAction extends AnAction {
 
             //Doing 'for (var featureFile : selectedTagNode.getFeatureFiles()) {}' results in concurrent modification exception
             // because there are listeners in the background updating the tree model based on PSI modification
-            var bddFiles = selectedTagNode.getFeatureFiles().stream().map(FeatureFile::getFile).collect(Collectors.toList());
-            for (var bddFile : bddFiles) {
-                PsiElement[] tagsToDelete = PsiTreeUtil.collectElements(PsiManager.getInstance(project).findFile(bddFile), element -> {
-                    String tagName = TagNameUtil.determineTagOrMetaName(element);
-                    if (tagName != null) { //either a Gherkin tag or a Meta Key
-                        return tagName.equals(selectedTagNode.getDisplayName());
-                    } else if (isStoryLanguageSupported) {
-                        return service.isMetaTextForMetaKeyWithName(element, selectedTagNode.getDisplayName());
-                    }
-                    return false;
-                });
-                //Delete the tags/metas in a single command action, so that it is easier to redo them
-                WriteCommandAction.runWriteCommandAction(project, () -> {
+            WriteCommandAction.runWriteCommandAction(project, () -> {
+                var bddFiles = selectedTagNode.getFeatureFiles().stream().map(FeatureFile::getFile).collect(Collectors.toList());
+                for (var bddFile : bddFiles) {
+                    PsiElement[] tagsToDelete = PsiTreeUtil.collectElements(PsiManager.getInstance(project).findFile(bddFile), element -> {
+                        String tagName = TagNameUtil.determineTagOrMetaName(element);
+                        if (tagName != null) { //either a Gherkin tag or a Meta Key
+                            return tagName.equals(selectedTagNode.getDisplayName());
+                        } else if (isStoryLanguageSupported) {
+                            return service.isMetaTextForMetaKeyWithName(element, selectedTagNode.getDisplayName());
+                        }
+                        return false;
+                    });
+                    //Delete the tags/metas in a single command action, so that it is easier to redo them
                     for (var tag : tagsToDelete) tag.delete();
-                });
-                //Update the occurrence counts once processing the file has finished
-                tagOccurrencesRegistry.updateOccurrenceCounts(bddFile);
-            }
+
+                    //Update the occurrence counts once processing the file has finished
+                    tagOccurrencesRegistry.updateOccurrenceCounts(bddFile);
+                }
+            });
             tree.updateUI();
         }
     }

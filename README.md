@@ -1,11 +1,12 @@
 # Gherkin Overview
 
 [![Gherkin Overview](https://img.shields.io/jetbrains/plugin/v/16716-gherkin-overview)](https://plugins.jetbrains.com/plugin/16716-gherkin-overview)
-![](https://img.shields.io/badge/since-IJ2021.2-blue)
-[![Donate](https://img.shields.io/badge/donate-paypal-yellow.svg)](https://www.paypal.com/donate/?hosted_button_id=VVLWNZWPBRUDL)
+![](https://img.shields.io/badge/since-IJ2021.3-blue)
 
+<!-- Plugin description -->
 This JetBrains IDE plugin helps to better visualize the structure of test projects incorporating .feature files, for Cucumber and similar frameworks,
 from the perspective of Gherkin tags.
+<!-- Plugin description end -->
 
 The core idea is to provide a better overview of what Gherkin tags are available in a project, what Gherkin files they are contained by,
 and with grouping tags into categories, make them easier to search.

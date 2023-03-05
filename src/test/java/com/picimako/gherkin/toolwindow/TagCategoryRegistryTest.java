@@ -1,4 +1,4 @@
-//Copyright 2021 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow;
 
@@ -13,7 +13,7 @@ import com.picimako.gherkin.settings.GherkinOverviewProjectState;
 
 /**
  * Unit test for {@link TagCategoryRegistry}.
- *
+ * <p>
  * TODO: fix tests due to lack of application level service cleanup. !! It is a problem only during full test suite execution.
  */
 public class TagCategoryRegistryTest extends BasePlatformTestCase {
