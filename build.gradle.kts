@@ -104,7 +104,7 @@ tasks {
     }
 
 //    runPluginVerifier {
-//        ideVersions.set(listOf('IC-2021.3', 'IC-2022.1', 'IC-2022.2', 'IC-2022.3', 'IC-2023.1'))
+//        ideVersions.set(listOf('IC-2022.1', 'IC-2022.2', 'IC-2022.3', 'IC-2023.1', 'IC-2023.1', '232.6095.10'))
 //    }
 }
 

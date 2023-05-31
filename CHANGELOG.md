@@ -4,6 +4,11 @@
 
 ## [Unreleased]
 
+## [1.3.0]
+
+### Changed
+- Removed support for IJ-2021.3, and added support for IJ-2023.2.
+
 ## [1.2.2]
 
 ### Added
