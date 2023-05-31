@@ -33,8 +33,6 @@ import com.picimako.gherkin.toolwindow.nodetype.Tag;
 
 /**
  * Unit test for {@link GherkinTagTreeModel}.
- * <p>
- * TODO: fix tests due to lack of application level service cleanup. !! It is a problem only during full test suite execution.
  */
 public class GherkinTagTreeModelJBehaveStoryTest extends MediumBasePlatformTestCase {
 
