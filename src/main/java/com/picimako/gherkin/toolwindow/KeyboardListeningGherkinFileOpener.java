@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 
 import com.intellij.openapi.project.Project;
 import com.picimako.gherkin.toolwindow.nodetype.FeatureFile;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -15,15 +16,13 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * Currently the open action is bound to the Enter key.
  */
+@RequiredArgsConstructor
 public class KeyboardListeningGherkinFileOpener extends KeyAdapter {
 
+    @NotNull
     private final Project project;
+    @NotNull
     private final GherkinTagTree tree;
-
-    public KeyboardListeningGherkinFileOpener(@NotNull Project project, @NotNull GherkinTagTree tree) {
-        this.project = project;
-        this.tree = tree;
-    }
 
     @Override
     public void keyReleased(KeyEvent e) {

@@ -8,6 +8,7 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.Separator;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.picimako.gherkin.resources.GherkinBundle;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -25,15 +26,11 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * After toggling actions the model data and/or the tool window UI is updated to reflect the changes.
  */
+@RequiredArgsConstructor
 public final class ToolWindowAppearanceActionGroupCreator {
 
     private final Runnable updateUICallback;
     private final Runnable updateModelCallback;
-
-    public ToolWindowAppearanceActionGroupCreator(Runnable updateUICallback, Runnable updateModelCallback) {
-        this.updateUICallback = updateUICallback;
-        this.updateModelCallback = updateModelCallback;
-    }
 
     public DefaultActionGroup create() {
         DefaultActionGroup group = new DefaultActionGroup();

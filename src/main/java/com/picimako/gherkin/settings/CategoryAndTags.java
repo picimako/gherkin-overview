@@ -2,7 +2,7 @@
 
 package com.picimako.gherkin.settings;
 
-import java.util.Objects;
+import lombok.*;
 
 /**
  * Stores a category to tags mapping.
@@ -14,6 +14,11 @@ import java.util.Objects;
  * e.g. com.intellij.lang.ant.config.impl.BuildFileProperty
  * e.g. com.intellij.execution.util.EnvironmentVariable
  */
+@AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
 public final class CategoryAndTags implements Cloneable {
 
     private String category;
@@ -23,29 +28,8 @@ public final class CategoryAndTags implements Cloneable {
         this("", "");
     }
 
-    public CategoryAndTags(String category, String tags) {
-        this.category = category;
-        this.tags = tags;
-    }
-
     public CategoryAndTags(CategoryAndTags cat) {
         this(cat.category, cat.tags);
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setTags(String tags) {
-        this.tags = tags;
-    }
-
-    public String getTags() {
-        return tags;
     }
 
     @Override
@@ -55,26 +39,5 @@ public final class CategoryAndTags implements Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CategoryAndTags that = (CategoryAndTags) o;
-        return Objects.equals(category, that.category) && Objects.equals(tags, that.tags);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(category, tags);
-    }
-
-    @Override
-    public String toString() {
-        return "CategoryAndTag{" +
-            "category='" + category + '\'' +
-            ", tags='" + tags + '\'' +
-            '}';
     }
 }

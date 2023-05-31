@@ -13,6 +13,8 @@ plugins {
     id("org.jetbrains.intellij") version "1.13.3"
     // Gradle Changelog Plugin
     id("org.jetbrains.changelog") version "2.0.0"
+    //Lombok
+    id("io.freefair.lombok") version "6.5.0.3"
 }
 
 group = properties("pluginGroup")

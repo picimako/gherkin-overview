@@ -15,6 +15,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiTreeUtil;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
@@ -26,6 +28,7 @@ import org.jetbrains.annotations.TestOnly;
  * occurrences in contrast to storing this information in the {@link com.picimako.gherkin.toolwindow.nodetype.FeatureFile}s.
  * This way it may be easier to oversee this information.
  */
+@RequiredArgsConstructor
 @Service(Service.Level.PROJECT)
 public final class TagOccurrencesRegistry implements Disposable {
 
@@ -33,11 +36,9 @@ public final class TagOccurrencesRegistry implements Disposable {
     /**
      * FeatureFile path -> &lt;tag name, count>
      */
+    @Getter
+    @TestOnly //the getter is test-only, and not the field itself
     private Map<String, Map<String, MutableInt>> tagOccurrences;
-
-    public TagOccurrencesRegistry(Project project) {
-        this.project = project;
-    }
 
     /**
      * Initializes the map according to the number of Gherkin and Story files in the project to minimize the allocation size.
@@ -102,11 +103,6 @@ public final class TagOccurrencesRegistry implements Disposable {
      */
     public void remove(String path) {
         tagOccurrences.remove(path);
-    }
-
-    @TestOnly
-    public Map<String, Map<String, MutableInt>> getTagOccurrences() {
-        return tagOccurrences;
     }
 
     public static TagOccurrencesRegistry getInstance(Project project) {

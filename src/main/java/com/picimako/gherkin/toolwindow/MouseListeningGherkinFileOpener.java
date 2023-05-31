@@ -10,6 +10,7 @@ import javax.swing.tree.TreePath;
 
 import com.intellij.openapi.project.Project;
 import com.picimako.gherkin.toolwindow.nodetype.FeatureFile;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Listens to mouse events, so that in case of the proper button combinations, the Gherkin file selected in the tool
@@ -17,15 +18,11 @@ import com.picimako.gherkin.toolwindow.nodetype.FeatureFile;
  * <p>
  * Currently the open action is bound to the double-click event.
  */
+@RequiredArgsConstructor
 public class MouseListeningGherkinFileOpener extends MouseAdapter {
 
     private final Project project;
     private final GherkinTagTree tree;
-
-    public MouseListeningGherkinFileOpener(Project project, GherkinTagTree tree) {
-        this.project = project;
-        this.tree = tree;
-    }
 
     @Override
     public void mouseClicked(MouseEvent e) {

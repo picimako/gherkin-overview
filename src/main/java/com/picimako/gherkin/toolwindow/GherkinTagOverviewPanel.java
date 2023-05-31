@@ -11,6 +11,7 @@ import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.ui.components.JBScrollPane;
 import com.picimako.gherkin.toolwindow.action.TagActionsGroup;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
+import lombok.Getter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,6 +28,7 @@ public class GherkinTagOverviewPanel extends JPanel {
     private static final String TAG_ACTIONS_GROUP = "gherkin.overview.tag.TagActionsGroup";
     private final TreeModelFactory treeModelFactory = new TreeModelFactory();
     private final Project project;
+    @Getter
     private GherkinTagTree tree;
     private GherkinTagTreeModel model;
 
@@ -40,10 +42,6 @@ public class GherkinTagOverviewPanel extends JPanel {
         PsiManager.getInstance(project).addPsiTreeChangeListener(new GherkinPsiChangeListener(tree, project), OverviewPanelDisposalService.getInstance(project));
         project.getMessageBus().connect().subscribe(VirtualFileManager.VFS_CHANGES, new FileAndFolderChangeListener(this::rebuildModel, project));
         new TreeSpeedSearch(tree);
-    }
-
-    public GherkinTagTree getTree() {
-        return tree;
     }
 
     public ModelDataRoot modelDataRoot() {
