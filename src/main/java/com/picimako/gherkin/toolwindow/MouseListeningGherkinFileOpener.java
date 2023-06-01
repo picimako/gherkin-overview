@@ -2,15 +2,14 @@
 
 package com.picimako.gherkin.toolwindow;
 
-import static javax.swing.SwingUtilities.isLeftMouseButton;
-
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.tree.TreePath;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.ui.DoubleClickListener;
 import com.picimako.gherkin.toolwindow.nodetype.FeatureFile;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Listens to mouse events, so that in case of the proper button combinations, the Gherkin file selected in the tool
@@ -19,16 +18,18 @@ import lombok.RequiredArgsConstructor;
  * Currently the open action is bound to the double-click event.
  */
 @RequiredArgsConstructor
-public class MouseListeningGherkinFileOpener extends MouseAdapter {
+public class MouseListeningGherkinFileOpener extends DoubleClickListener {
 
     private final Project project;
     private final GherkinTagTree tree;
 
     @Override
-    public void mouseClicked(MouseEvent e) {
-        if (isLeftMouseButton(e) && e.getClickCount() == 2 && isGherkinFileAtClickLocation(tree, e.getX(), e.getY())) {
+    protected boolean onDoubleClick(@NotNull MouseEvent event) {
+        if (isGherkinFileAtClickLocation(tree, event.getX(), event.getY())) {
             FileOpener.openFile(((FeatureFile) tree.getLastSelectedPathComponent()).getFile(), project);
+            return true;
         }
+        return false;
     }
 
     /**

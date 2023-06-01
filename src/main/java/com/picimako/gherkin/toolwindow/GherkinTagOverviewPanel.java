@@ -86,7 +86,7 @@ public class GherkinTagOverviewPanel extends JPanel {
         model.buildModel();
         tree = new GherkinTagTree(model);
         registerContextMenuActions();
-        tree.addMouseListener(new MouseListeningGherkinFileOpener(project, tree));
+        new MouseListeningGherkinFileOpener(project, tree).installOn(tree);
         tree.addKeyListener(new KeyboardListeningGherkinFileOpener(project, tree));
         add(new JBScrollPane(tree));
     }
