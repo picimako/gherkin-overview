@@ -8,6 +8,7 @@
 
 ### Changed
 - Removed support for IJ-2021.3, and added support for IJ-2023.2.
+- Configuration updates and optimization under the hood.
 
 ## [1.2.2]
 
