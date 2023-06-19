@@ -11,6 +11,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.SmartList;
 import com.picimako.gherkin.resources.GherkinBundle;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 
@@ -18,13 +19,17 @@ import org.jetbrains.annotations.TestOnly;
  * Represents a general content root, be it a project module, sources root, resources root, or other type of content root
  * identified by the IDE.
  */
+@Getter
 public class ContentRoot extends AbstractNodeType implements CategoriesHolder {
 
     private static final Map<Type, Icon> ICONS = Map.of(
         Type.MODULE, AllIcons.Actions.ModuleDirectory,
-        Type.CONTENT_ROOT, AllIcons.Modules.ResourcesRoot //TODO: modify icon based on the root is a resource, test resource or other non-source root.
+        Type.CONTENT_ROOT, AllIcons.Modules.ResourcesRoot
     );
     private final List<Category> categories = new SmartList<>();
+    /**
+     * The category dedicated for unmapped tags.
+     */
     private final Category other;
     private final Type type;
 
@@ -36,10 +41,6 @@ public class ContentRoot extends AbstractNodeType implements CategoriesHolder {
         this.type = type;
         other = Category.createOther(project);
         categories.add(other);
-    }
-
-    public Type getType() {
-        return type;
     }
 
     public Icon getIcon() {
@@ -54,11 +55,6 @@ public class ContentRoot extends AbstractNodeType implements CategoriesHolder {
         return type == Type.CONTENT_ROOT;
     }
 
-    @Override
-    public List<Category> getCategories() {
-        return categories;
-    }
-
     /**
      * Gets whether this content root node has the argument file stored in any of its underlying tags.
      *
@@ -70,14 +66,6 @@ public class ContentRoot extends AbstractNodeType implements CategoriesHolder {
             .flatMap(category -> category.getTags().stream())
             .flatMap(tag -> tag.getFeatureFiles().stream())
             .anyMatch(featureFile -> featureFile.getFile().equals(file));
-    }
-
-    /**
-     * Gets the category dedicated for unmapped tags.
-     */
-    @Override
-    public @NotNull Category getOther() {
-        return other;
     }
 
     /**

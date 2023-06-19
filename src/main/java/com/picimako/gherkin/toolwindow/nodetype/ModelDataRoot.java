@@ -17,6 +17,7 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.SmartList;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,6 +29,7 @@ import com.picimako.gherkin.toolwindow.ProjectBDDTypeService;
 /**
  * Represents the root element of the tree in the Gherkin Tags tool window.
  */
+@Getter
 public class ModelDataRoot extends AbstractNodeType implements CategoriesHolder {
 
     private static final String ROOTLESS_CONTENT_ROOT_NAME = "Rootless";
@@ -87,10 +89,6 @@ public class ModelDataRoot extends AbstractNodeType implements CategoriesHolder 
 
     public boolean isContentRootDataInitialized() {
         return contentRoots != null;
-    }
-
-    public List<ContentRoot> getContentRoots() {
-        return contentRoots;
     }
 
     /**
@@ -179,13 +177,6 @@ public class ModelDataRoot extends AbstractNodeType implements CategoriesHolder 
     }
 
     //categories
-
-    /**
-     * Returns the list of categories for the whole project.
-     */
-    public List<Category> getCategories() {
-        return categories;
-    }
 
     /**
      * get() is called on the Optional because the category Other should be available.

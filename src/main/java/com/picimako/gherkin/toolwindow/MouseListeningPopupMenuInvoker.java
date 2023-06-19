@@ -3,6 +3,7 @@
 package com.picimako.gherkin.toolwindow;
 
 import com.intellij.ui.PopupHandler;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -27,12 +28,10 @@ import java.awt.*;
  *     <li><a href="https://docs.oracle.com/javase/tutorial/uiswing/components/menu.html#popup">Oracle popup menu tutorial</a></li>
  * </ul>
  */
+@RequiredArgsConstructor
 public final class MouseListeningPopupMenuInvoker extends PopupHandler {
+    @NotNull
     private final ToolWindowPopupMenuInvoker menuInvoker;
-
-    public MouseListeningPopupMenuInvoker(@NotNull ToolWindowPopupMenuInvoker menuInvoker) {
-        this.menuInvoker = menuInvoker;
-    }
 
     @Override
     public void invokePopup(Component comp, int x, int y) {

@@ -4,11 +4,11 @@ package com.picimako.gherkin.toolwindow.nodetype;
 
 import java.util.Objects;
 
-import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import com.picimako.gherkin.resources.GherkinBundle;
@@ -23,6 +23,7 @@ import com.picimako.gherkin.toolwindow.TagOccurrencesRegistry;
  */
 public class FeatureFile extends AbstractNodeType {
 
+    @Getter
     private final VirtualFile file;
     private final String parentTag;
 
@@ -33,10 +34,6 @@ public class FeatureFile extends AbstractNodeType {
         TagOccurrencesRegistry.getInstance(project).calculateOccurrenceCounts(file);
     }
 
-    public VirtualFile getFile() {
-        return file;
-    }
-
     @NotNull
     public String getPath() {
         return file.getPath();
@@ -45,11 +42,6 @@ public class FeatureFile extends AbstractNodeType {
     @NotNull
     public String getName() {
         return file.getName();
-    }
-
-    @NotNull
-    public FileType getFileType() {
-        return file.getFileType();
     }
 
     public boolean hasFileName(String name) {

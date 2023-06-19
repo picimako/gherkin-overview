@@ -5,31 +5,27 @@ package com.picimako.gherkin.toolwindow.nodetype;
 import static java.util.Comparator.comparing;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Supplier;
 
 import com.intellij.openapi.project.Project;
 
 import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
 
-import org.jetbrains.annotations.NotNull;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 /**
  * Stores common properties of nodes.
  */
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(exclude = "project")
 public abstract class AbstractNodeType implements NodeType {
 
-    protected final Project project;
+    @Getter
     protected String displayName;
-
-    protected AbstractNodeType(@NotNull String displayName, @NotNull Project project) {
-        this.displayName = displayName;
-        this.project = project;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
+    protected final Project project;
 
     /**
      * Return a toString value based on what type of statistics should be displayed in the Gherkin Tags tool window.
@@ -67,18 +63,5 @@ public abstract class AbstractNodeType implements NodeType {
         if (elements.size() > 1) {
             elements.sort(comparing(element -> element.displayName.toLowerCase()));
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AbstractNodeType that = (AbstractNodeType) o;
-        return Objects.equals(displayName, that.displayName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(displayName);
     }
 }

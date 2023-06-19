@@ -13,6 +13,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.SmartList;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.plugins.cucumber.psi.GherkinFile;
@@ -28,6 +29,7 @@ import com.picimako.gherkin.toolwindow.TagOccurrencesRegistry;
  */
 public class Tag extends AbstractNodeType {
 
+    @Getter
     private final List<FeatureFile> featureFiles = new SmartList<>();
 
     /**
@@ -37,10 +39,6 @@ public class Tag extends AbstractNodeType {
     public Tag(@NotNull String displayName, @NotNull VirtualFile initialFile, @NotNull Project project) {
         super(displayName, project);
         featureFiles.add(new FeatureFile(initialFile, displayName, project));
-    }
-
-    public List<FeatureFile> getFeatureFiles() {
-        return featureFiles;
     }
 
     public boolean hasFeatureFile() {
