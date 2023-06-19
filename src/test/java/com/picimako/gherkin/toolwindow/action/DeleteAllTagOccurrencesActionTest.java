@@ -10,6 +10,8 @@ import com.intellij.psi.PsiManager;
 import com.intellij.testFramework.TestActionEvent;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import com.picimako.gherkin.toolwindow.GherkinTagTree;
+import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
+import com.picimako.gherkin.toolwindow.LayoutType;
 import com.picimako.gherkin.toolwindow.ProjectSpecificGherkinTagTreeModel;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 
@@ -25,6 +27,12 @@ public class DeleteAllTagOccurrencesActionTest extends BasePlatformTestCase {
     @Override
     protected String getTestDataPath() {
         return "testdata/features";
+    }
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        GherkinTagsToolWindowSettings.getInstance(getProject()).layout = LayoutType.NO_GROUPING;
     }
 
     //Tags
@@ -194,6 +202,12 @@ public class DeleteAllTagOccurrencesActionTest extends BasePlatformTestCase {
                 "Meta:\n" +
                 "@Device tablet\n" +
                 "Scenario: scenario 1\n");
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        tree = null;
+        super.tearDown();
     }
 
     //Helpers
