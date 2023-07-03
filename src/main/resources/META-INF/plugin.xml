@@ -2,7 +2,7 @@
     <id>gherkin-overview</id>
     <name>Gherkin Overview</name>
     <vendor url="https://github.com/picimako/gherkin-overview">Tamás Balog</vendor>
-    <version>1.3.0</version>
+    <version>1.4.0</version>
     <resource-bundle>messages.GherkinBundle</resource-bundle>
 
     <!-- https://jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html -->
@@ -15,7 +15,7 @@
     <depends>com.intellij.modules.platform</depends>
     <depends>gherkin</depends>
     <depends optional="true" config-file="gherkin-overview-withJBehave.xml">jbehave-support-plugin</depends>
-
+    
     <extensions defaultExtensionNs="com.intellij">
 
         <!-- Tool window -->
