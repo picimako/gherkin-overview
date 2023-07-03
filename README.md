@@ -1,7 +1,6 @@
 # Gherkin Overview
 
 [![Gherkin Overview](https://img.shields.io/jetbrains/plugin/v/16716-gherkin-overview)](https://plugins.jetbrains.com/plugin/16716-gherkin-overview)
-![](https://img.shields.io/badge/since-IJ2021.3-blue)
 
 <!-- Plugin description -->
 This JetBrains IDE plugin helps to better visualize the structure of test projects incorporating .feature files, for Cucumber and similar frameworks,
