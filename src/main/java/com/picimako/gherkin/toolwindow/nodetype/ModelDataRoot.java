@@ -10,6 +10,7 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.intellij.openapi.module.Module;
@@ -58,7 +59,7 @@ public class ModelDataRoot extends AbstractNodeType implements CategoriesHolder 
      * the types of BDD files it contains.
      */
     public void updateDisplayName() {
-        ProjectBDDTypeService service = project.getService(ProjectBDDTypeService.class);
+        var service = project.getService(ProjectBDDTypeService.class);
         if (service.hasOnlyJBehaveStoryFiles()) {
             displayName = GherkinBundle.message("gherkin.overview.toolwindow.root.name.metas");
         } else if (service.hasBothGherkinAndStoryFiles()) {
@@ -75,19 +76,19 @@ public class ModelDataRoot extends AbstractNodeType implements CategoriesHolder 
      */
     public void initData() {
         if (GherkinTagsToolWindowSettings.getInstance(project).layout == LayoutType.NO_GROUPING) {
-            if (!isProjectDataInitialized()) {
+            if (!isInitializedAsProjectData()) {
                 categories = new SmartList<>(Category.createOther(project));
             }
-        } else if (!isContentRootDataInitialized()) {
+        } else if (!isInitializedAsContentRootData()) {
             contentRoots = new SmartList<>();
         }
     }
 
-    public boolean isProjectDataInitialized() {
+    public boolean isInitializedAsProjectData() {
         return categories != null;
     }
 
-    public boolean isContentRootDataInitialized() {
+    public boolean isInitializedAsContentRootData() {
         return contentRoots != null;
     }
 
@@ -190,11 +191,11 @@ public class ModelDataRoot extends AbstractNodeType implements CategoriesHolder 
 
     @Override
     public void sort() {
-        if (isProjectDataInitialized()) {
+        if (isInitializedAsProjectData()) {
             categories.forEach(Category::sort);
             sortIfContainsMultiple(categories);
         }
-        if (isContentRootDataInitialized()) {
+        if (isInitializedAsContentRootData()) {
             contentRoots.forEach(ContentRoot::sort);
             sortIfContainsMultiple(contentRoots);
         }
@@ -207,34 +208,45 @@ public class ModelDataRoot extends AbstractNodeType implements CategoriesHolder 
      */
     @Override
     public String toString() {
-        return getToString(
-            () -> GherkinBundle.message("gherkin.overview.toolwindow.statistics.root.simplified", displayName, tagCount(), bddFileCount()),
-            () -> GherkinBundle.message("gherkin.overview.toolwindow.statistics.root.detailed", displayName, tagCount(), bddFileCount()));
+        var service = project.getService(ProjectBDDTypeService.class);
+        if (service.hasOnlyJBehaveStoryFiles()) {
+            return getToString(
+                () -> GherkinBundle.message("gherkin.overview.toolwindow.statistics.root.simplified.story", displayName, tagCount(), bddFileCount()),
+                () -> GherkinBundle.message("gherkin.overview.toolwindow.statistics.root.detailed.story", displayName, tagCount(), bddFileCount()));
+        } else if (service.hasBothGherkinAndStoryFiles()) {
+            return getToString(
+                () -> GherkinBundle.message("gherkin.overview.toolwindow.statistics.root.simplified.both", displayName, tagCount(), bddFileCount()),
+                () -> GherkinBundle.message("gherkin.overview.toolwindow.statistics.root.detailed.both", displayName, tagCount(), bddFileCount()));
+        } else {
+            return getToString(
+                () -> GherkinBundle.message("gherkin.overview.toolwindow.statistics.root.simplified.gherkin", displayName, tagCount(), bddFileCount()),
+                () -> GherkinBundle.message("gherkin.overview.toolwindow.statistics.root.detailed.gherkin", displayName, tagCount(), bddFileCount()));
+        }
     }
 
     /**
      * Counts the distinct number of tags stored in this model.
      */
     private long tagCount() {
-        return (isProjectDataInitialized()
-            ? this.categories.stream()
-            : contentRoots.stream().flatMap(contentRoot -> contentRoot.getCategories().stream()))
-            .flatMap(category -> category.getTags().stream())
-            .distinct()
-            .count();
+        return getTagsAsStream().distinct().count();
     }
 
     /**
      * Counts the distinct number of Gherkin files stored in this model.
      */
     private long bddFileCount() {
-        return (isProjectDataInitialized()
-            ? categories.stream()
-            : contentRoots.stream().flatMap(contentRoot -> contentRoot.getCategories().stream()))
-            .flatMap(category -> category.getTags().stream())
+        return getTagsAsStream()
             .flatMap(tag -> tag.getFeatureFiles().stream())
             .distinct()
             .count();
+    }
+
+    @NotNull
+    private Stream<Tag> getTagsAsStream() {
+        return (isInitializedAsProjectData()
+            ? categories.stream()
+            : contentRoots.stream().flatMap(contentRoot -> contentRoot.getCategories().stream()))
+            .flatMap(category -> category.getTags().stream());
     }
 
     @Override

@@ -217,7 +217,7 @@ public abstract class GherkinTagTreeModel implements TreeModel, Disposable {
             category.getTags().removeIf(tag -> !tag.hasFeatureFile());
         }
         contentRoot.getCategories().removeIf(Category::isNotOtherAndDoesntHaveAnyTag);
-        if (data.isContentRootDataInitialized()) {
+        if (data.isInitializedAsContentRootData()) {
             data.getContentRoots().removeIf(projectModule -> projectModule.getCategories().size() == 1 && !projectModule.getOther().hasTag());
         }
     }
@@ -233,7 +233,7 @@ public abstract class GherkinTagTreeModel implements TreeModel, Disposable {
             contentRoot.getCategories().remove(category);
         }
         //If there is no more Categories and tags existing under a Content Root, then remove the Content Root as well
-        if (data.isContentRootDataInitialized() && contentRoot.getCategories().size() == 1 && !contentRoot.getOther().hasTag()) {
+        if (data.isInitializedAsContentRootData() && contentRoot.getCategories().size() == 1 && !contentRoot.getOther().hasTag()) {
             data.getContentRoots().remove(contentRoot); //here contentRoot is a ContentRoot object, so removal is fine
         }
     }

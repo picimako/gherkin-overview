@@ -5,8 +5,11 @@
 ## [Unreleased]
 
 ## [1.4.0]
+
 ### Fixed
 - Fix a potential class not found exception due to the JBehave icon.
+- [#7](https://github.com/picimako/gherkin-overview/issues/7): Root node in the tool window display a customized statistics message depending on if the project contains
+only Gherkin files, only Story files, or both.
 
 ## [1.3.0]
 
