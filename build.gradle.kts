@@ -1,6 +1,5 @@
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 fun properties(key: String) = providers.gradleProperty(key)
 fun environment(key: String) = providers.environmentVariable(key)
@@ -49,17 +48,6 @@ intellij {
 }
 
 tasks {
-    // Set the JVM compatibility versions
-//    properties("javaVersion").let {
-//        withType<JavaCompile> {
-//            sourceCompatibility = it
-//            targetCompatibility = it
-//        }
-//        withType<KotlinCompile> {
-//            kotlinOptions.jvmTarget = it
-//        }
-//    }
-
     wrapper {
         gradleVersion = properties("gradleVersion").get()
     }
