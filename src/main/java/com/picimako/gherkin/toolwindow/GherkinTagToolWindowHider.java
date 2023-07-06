@@ -35,7 +35,7 @@ public class GherkinTagToolWindowHider extends JBPanelWithEmptyText {
 
     @TestOnly
     public GherkinTagToolWindowHider(@NotNull JComponent gherkinTagOverview, @NotNull Project project) {
-        this(gherkinTagOverview, project, GherkinBundle.toolWindow("no.tag.in.project"));
+        this(gherkinTagOverview, project, GherkinBundle.message("gherkin.overview.toolwindow.no.tag.in.project"));
     }
 
     /**

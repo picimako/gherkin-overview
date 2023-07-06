@@ -28,16 +28,6 @@ public class GherkinBundle extends DynamicBundle {
     }
 
     /**
-     * Retrieves a Gherkin Tags tool window specific message for the provided id.
-     *
-     * @param id the suffix of the message key
-     * @return the actual message
-     */
-    public static String toolWindow(@NonNls String id, Object @NotNull ... params) {
-        return message("gherkin.overview.toolwindow." + id, params);
-    }
-
-    /**
      * Retrieves a plugin settings specific message for the provided id.
      *
      * @param id the suffix of the message key

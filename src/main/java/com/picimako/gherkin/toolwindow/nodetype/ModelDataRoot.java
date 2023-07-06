@@ -49,7 +49,7 @@ public class ModelDataRoot extends AbstractNodeType implements CategoriesHolder 
     private List<ContentRoot> contentRoots;
 
     public ModelDataRoot(Project project) {
-        super(GherkinBundle.toolWindow("root.name.tags"), project);
+        super(GherkinBundle.message("gherkin.overview.toolwindow.root.name.tags"), project);
         initData();
     }
 
@@ -60,11 +60,11 @@ public class ModelDataRoot extends AbstractNodeType implements CategoriesHolder 
     public void updateDisplayName() {
         ProjectBDDTypeService service = project.getService(ProjectBDDTypeService.class);
         if (service.hasOnlyJBehaveStoryFiles()) {
-            displayName = GherkinBundle.toolWindow("root.name.metas");
+            displayName = GherkinBundle.message("gherkin.overview.toolwindow.root.name.metas");
         } else if (service.hasBothGherkinAndStoryFiles()) {
-            displayName = GherkinBundle.toolWindow("root.name.tags.and.metas");
+            displayName = GherkinBundle.message("gherkin.overview.toolwindow.root.name.tags.and.metas");
         } else {
-            displayName = GherkinBundle.toolWindow("root.name.tags");
+            displayName = GherkinBundle.message("gherkin.overview.toolwindow.root.name.tags");
         }
     }
 
@@ -208,8 +208,8 @@ public class ModelDataRoot extends AbstractNodeType implements CategoriesHolder 
     @Override
     public String toString() {
         return getToString(
-            () -> GherkinBundle.toolWindow("statistics.root.simplified", displayName, tagCount(), bddFileCount()),
-            () -> GherkinBundle.toolWindow("statistics.root.detailed", displayName, tagCount(), bddFileCount()));
+            () -> GherkinBundle.message("gherkin.overview.toolwindow.statistics.root.simplified", displayName, tagCount(), bddFileCount()),
+            () -> GherkinBundle.message("gherkin.overview.toolwindow.statistics.root.detailed", displayName, tagCount(), bddFileCount()));
     }
 
     /**

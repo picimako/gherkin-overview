@@ -41,7 +41,7 @@ public class DeleteAllTagOccurrencesAction extends AnAction {
     private final Project project;
 
     public DeleteAllTagOccurrencesAction(Project project) {
-        super(GherkinBundle.toolWindow("delete.tags"), "", CollaborationToolsIcons.Delete);
+        super(GherkinBundle.message("gherkin.overview.toolwindow.delete.tags"), "", CollaborationToolsIcons.Delete);
         this.project = project;
     }
 
@@ -90,7 +90,7 @@ public class DeleteAllTagOccurrencesAction extends AnAction {
     private boolean isUserSureToDeleteAllOccurrencesOfTag(Project project) {
         return ApplicationManager.getApplication().isUnitTestMode()
             || Messages.showYesNoDialog(project,
-            GherkinBundle.toolWindow("delete.are.you.sure"), GherkinBundle.toolWindow("delete.tags"),
+            GherkinBundle.message("gherkin.overview.toolwindow.delete.are.you.sure"), GherkinBundle.message("gherkin.overview.toolwindow.delete.tags"),
             Messages.getQuestionIcon()) == YES;
     }
 

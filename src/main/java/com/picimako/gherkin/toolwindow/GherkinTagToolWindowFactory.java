@@ -51,7 +51,7 @@ public class GherkinTagToolWindowFactory implements ToolWindowFactory {
 
     @NotNull
     private String getHiderMessage() {
-        return BDDUtil.isStoryLanguageSupported() ? GherkinBundle.toolWindow("no.tag.or.meta.in.project") : GherkinBundle.toolWindow("no.tag.in.project");
+        return BDDUtil.isStoryLanguageSupported() ? GherkinBundle.message("gherkin.overview.toolwindow.no.tag.or.meta.in.project") : GherkinBundle.message("gherkin.overview.toolwindow.no.tag.in.project");
     }
 
     @Override

@@ -34,17 +34,17 @@ public final class ToolWindowAppearanceActionGroupCreator {
 
     public DefaultActionGroup create() {
         DefaultActionGroup group = new DefaultActionGroup();
-        group.getTemplatePresentation().setText(GherkinBundle.toolWindow("statistics.button.tooltip"));
-        group.getTemplatePresentation().setDescription(GherkinBundle.toolWindow("statistics.button.description"));
+        group.getTemplatePresentation().setText(GherkinBundle.message("gherkin.overview.toolwindow.statistics.button.tooltip"));
+        group.getTemplatePresentation().setDescription(GherkinBundle.message("gherkin.overview.toolwindow.statistics.button.description"));
         group.getTemplatePresentation().setIcon(AllIcons.Actions.Show);
 
-        group.add(new Separator(GherkinBundle.toolWindow("statistics.separator")));
-        group.add(createStatAction(GherkinBundle.toolWindow("statistics.type.disabled"), StatisticsType.DISABLED));
-        group.add(createStatAction(GherkinBundle.toolWindow("statistics.type.simplified"), StatisticsType.SIMPLIFIED));
-        group.add(createStatAction(GherkinBundle.toolWindow("statistics.type.detailed"), StatisticsType.DETAILED));
+        group.add(new Separator(GherkinBundle.message("gherkin.overview.toolwindow.statistics.separator")));
+        group.add(createStatAction(GherkinBundle.message("gherkin.overview.toolwindow.statistics.type.disabled"), StatisticsType.DISABLED));
+        group.add(createStatAction(GherkinBundle.message("gherkin.overview.toolwindow.statistics.type.simplified"), StatisticsType.SIMPLIFIED));
+        group.add(createStatAction(GherkinBundle.message("gherkin.overview.toolwindow.statistics.type.detailed"), StatisticsType.DETAILED));
 
-        group.add(new Separator(GherkinBundle.toolWindow("layout.separator")));
-        group.add(createLayoutAction(GherkinBundle.toolWindow("layout.group.by.modules")));
+        group.add(new Separator(GherkinBundle.message("gherkin.overview.toolwindow.layout.separator")));
+        group.add(createLayoutAction(GherkinBundle.message("gherkin.overview.toolwindow.layout.group.by.modules")));
 
         group.setPopup(true);
         return group;
