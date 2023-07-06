@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+## [1.4.0]
+### Fixed
+- Fix a potential class not found exception due to the JBehave icon.
+
 ## [1.3.0]
 
 ### Changed

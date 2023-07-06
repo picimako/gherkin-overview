@@ -3,6 +3,7 @@
 package com.picimako.gherkin;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import com.intellij.openapi.vfs.VirtualFile;
@@ -13,6 +14,9 @@ import com.intellij.util.containers.MultiMap;
 import org.jetbrains.annotations.NotNull;
 
 import com.picimako.gherkin.toolwindow.TagNameUtil;
+import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 /**
  * Interface for project services to provide JBehave Story files related data.
@@ -34,7 +38,9 @@ public interface JBehaveStoryService {
      *
      * @return the list of Story files, or empty list if no Story file is found
      */
-    @NotNull List<PsiFile> collectStoryFilesFromProject();
+    default @NotNull List<PsiFile> collectStoryFilesFromProject() {
+        return Collections.emptyList();
+    }
 
     /**
      * Collects all Metas from the provided file as a 1-N, Meta key to Meta text(s) mapping.
@@ -48,7 +54,9 @@ public interface JBehaveStoryService {
      * @param file the story file to collect metas from
      * @return the metas as a mapping, or empty map if no meta is found
      */
-    MultiMap<PsiElement, PsiElement> collectMetasFromFile(PsiFile file);
+    default MultiMap<PsiElement, PsiElement> collectMetasFromFile(PsiFile file) {
+        return MultiMap.empty();
+    }
 
     /**
      * Collects the meta text elements for the given meta key.
@@ -56,7 +64,9 @@ public interface JBehaveStoryService {
      * @param metaKey the meta key to collect the texts for
      * @return the list of meta text elements, or empty list if the meta key doesn't have meta text associated with it
      */
-    Collection<PsiElement> collectMetaTextsForMetaKeyAsList(PsiElement metaKey);
+    default Collection<PsiElement> collectMetaTextsForMetaKeyAsList(PsiElement metaKey) {
+        return Collections.emptyList();
+    }
 
     /**
      * Returns whether {@code element} is a meta text and it belongs to a meta key whose name (meta key + meta texts)
@@ -65,7 +75,9 @@ public interface JBehaveStoryService {
      * @param element  the element to inspect
      * @param metaName the meta name against which the found meta name should match
      */
-    boolean isMetaTextForMetaKeyWithName(PsiElement element, String metaName);
+    default boolean isMetaTextForMetaKeyWithName(PsiElement element, String metaName) {
+        return false;
+    }
 
     /**
      * Collects combined meta names (as per {@link TagNameUtil#metaNameFrom(PsiElement, Collection)}) from the provided file.
@@ -77,22 +89,39 @@ public interface JBehaveStoryService {
      * @return the list of meta names, or empty list if none found
      * @see #collectMetasFromFile(PsiFile)
      */
-    List<String> collectMetasFromFileAsList(PsiFile file);
+    default List<String> collectMetasFromFileAsList(PsiFile file) {
+        return Collections.emptyList();
+    }
 
     /**
      * Returns whether the provided PSI element is of the given type.
      */
-    boolean is(PsiElement element, IElementType type);
+    default boolean is(PsiElement element, IElementType type) {
+        return false;
+    }
 
-    boolean isJBehaveStoryFile(PsiFile file);
+    default boolean isJBehaveStoryFile(PsiFile file) {
+        return false;
+    }
 
-    boolean isJBehaveStoryFile(VirtualFile file);
+    default boolean isJBehaveStoryFile(VirtualFile file) {
+        return false;
+    }
 
     /**
      * Convenience method for {@code is(element, META_KEY)} to avoid referencing META_KEY outside any
      * of its implementation classes, e.g. {@link DefaultJBehaveStoryService}.
      */
-    boolean isMetaKey(PsiElement element);
+    default boolean isMetaKey(PsiElement element) {
+        return false;
+    }
 
-    PsiFile asStoryFile(PsiElement child);
+    default PsiFile asStoryFile(PsiElement child) {
+        return null;
+    }
+
+    @Nullable
+    default Icon getJBehaveIcon() {
+        return null;
+    }
 }

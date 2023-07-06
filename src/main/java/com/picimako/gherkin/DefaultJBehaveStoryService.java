@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import com.github.kumaraman21.intellijbehave.language.JBehaveIcons;
 import com.github.kumaraman21.intellijbehave.language.StoryFileType;
 import com.github.kumaraman21.intellijbehave.language.StoryLanguage;
 import com.github.kumaraman21.intellijbehave.parser.StoryFile;
@@ -29,6 +30,9 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.MultiMap;
 import com.picimako.gherkin.toolwindow.TagNameUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 /**
  * Default implementation of the {@link JBehaveStoryService} to use when the JBehave Support plugin is installed
@@ -136,5 +140,11 @@ public final class DefaultJBehaveStoryService implements JBehaveStoryService {
     @Override
     public PsiFile asStoryFile(PsiElement element) {
         return (StoryFile) element;
+    }
+
+    @Override
+    @Nullable
+    public Icon getJBehaveIcon() {
+        return JBehaveIcons.JB;
     }
 }

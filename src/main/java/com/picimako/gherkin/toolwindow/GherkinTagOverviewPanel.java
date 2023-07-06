@@ -84,7 +84,7 @@ public class GherkinTagOverviewPanel extends JPanel {
         setLayout(new BorderLayout());
         model = treeModelFactory.createTreeModel(project);
         model.buildModel();
-        tree = new GherkinTagTree(model);
+        tree = new GherkinTagTree(model, project);
         registerContextMenuActions();
         new MouseListeningGherkinFileOpener(project, tree).installOn(tree);
         tree.addKeyListener(new KeyboardListeningGherkinFileOpener(project, tree));

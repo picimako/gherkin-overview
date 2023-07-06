@@ -31,8 +31,8 @@ public class GherkinTagsNodeRendererTest extends BasePlatformTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        tree = new GherkinTagTree(new ProjectSpecificGherkinTagTreeModel(getProject()));
-        renderer = new GherkinTagTree.GherkinTagsNodeRenderer();
+        tree = new GherkinTagTree(new ProjectSpecificGherkinTagTreeModel(getProject()), getProject());
+        renderer = new GherkinTagTree.GherkinTagsNodeRenderer(getProject());
     }
 
     public void testRenderCellForModelDataRoot() {

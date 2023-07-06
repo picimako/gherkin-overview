@@ -8,8 +8,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentManager;
 import org.jetbrains.annotations.NotNull;
 
 import com.picimako.gherkin.BDDUtil;
@@ -35,16 +33,16 @@ public class GherkinTagToolWindowFactory implements ToolWindowFactory {
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         //Registering in StartupManager to make sure that the indices are completely available to collect files from the project
         StartupManager.getInstance(project).runWhenProjectIsInitialized(() -> {
-            GherkinTagOverviewPanel overviewPanel = new GherkinTagOverviewPanel(project);
+            var overviewPanel = new GherkinTagOverviewPanel(project);
 
             toolWindow.setTitleActions(singletonList(new ToolWindowAppearanceActionGroupCreator(
                 () -> overviewPanel.getTree().updateUI(),
                 () -> overviewPanel.updateModel()
             ).create()));
 
-            GherkinTagToolWindowHider hider = new GherkinTagToolWindowHider(overviewPanel, project, getHiderMessage());
-            ContentManager contentManager = toolWindow.getContentManager();
-            Content content = contentManager.getFactory().createContent(hider, null, true);
+            var hider = new GherkinTagToolWindowHider(overviewPanel, project, getHiderMessage());
+            var contentManager = toolWindow.getContentManager();
+            var content = contentManager.getFactory().createContent(hider, null, true);
             contentManager.addContent(content);
 
             hider.setContentVisibilityBasedOn(overviewPanel.modelDataRoot());
