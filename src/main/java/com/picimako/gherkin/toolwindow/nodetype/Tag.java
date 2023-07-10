@@ -163,7 +163,7 @@ public class Tag extends AbstractNodeType {
     public String toString() {
         return getToString(
             () -> displayName + " (" + occurrenceCount() + ")",
-            () -> GherkinBundle.toolWindow("statistics.tag.detailed", displayName, occurrenceCount(), featureFiles.size()));
+            () -> GherkinBundle.message("gherkin.overview.toolwindow.statistics.tag.detailed", displayName, occurrenceCount(), featureFiles.size()));
     }
 
     /**

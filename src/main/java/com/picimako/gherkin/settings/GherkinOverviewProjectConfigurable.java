@@ -22,6 +22,7 @@ import com.picimako.gherkin.toolwindow.GherkinTagOverviewPanel;
 import com.picimako.gherkin.toolwindow.GherkinTagToolWindowHider;
 import com.picimako.gherkin.toolwindow.TagCategoryRegistry;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
+import org.jetbrains.annotations.VisibleForTesting;
 
 /**
  * A Configurable object acting as the bridge between the Gherkin Overview Settings UI components,
@@ -98,6 +99,19 @@ public class GherkinOverviewProjectConfigurable implements Configurable {
         component.setApplicationLevelMappings(new ArrayList<>(appSettings.mappings));
         component.setUseProjectLevelMappings(projectSettings.useProjectLevelMappings);
         component.setProjectLevelMappings(new ArrayList<>(projectSettings.mappings));
+    }
+
+    /**
+     * Resets both the application- and project-level mapping settings to their defaults, so that tests can start with a clean
+     * state of settings that don't interfere with each other.
+     */
+    @VisibleForTesting
+    @TestOnly
+    void resetToDefault() throws ConfigurationException {
+        component.setApplicationLevelMappings(DefaultMappingsLoader.loadDefaultApplicationLevelMappings());
+        component.setProjectLevelMappings(List.of());
+        component.setUseProjectLevelMappings(false);
+        apply();
     }
 
     @Override

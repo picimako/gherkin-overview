@@ -18,7 +18,7 @@ import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 import javax.swing.tree.TreePath;
 
 /**
- * Functional test for {@link DeleteAllTagOccurrencesAction}.
+ * Integration test for {@link DeleteAllTagOccurrencesAction}.
  */
 public class DeleteAllTagOccurrencesActionTest extends BasePlatformTestCase {
 
@@ -231,7 +231,7 @@ public class DeleteAllTagOccurrencesActionTest extends BasePlatformTestCase {
     private void initGherkinTagTreeAndSetSelectionTo(String tagName) {
         var model = new ProjectSpecificGherkinTagTreeModel(getProject());
         model.buildModel();
-        tree = new GherkinTagTree(model);
+        tree = new GherkinTagTree(model, getProject());
         tree.setSelectionPath(new TreePath(((ModelDataRoot) tree.getModel().getRoot()).getOther().get(tagName).get()));
     }
 

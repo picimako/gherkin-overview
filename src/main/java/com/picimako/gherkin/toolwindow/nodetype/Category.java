@@ -95,7 +95,7 @@ public class Category extends AbstractNodeType {
     public String toString() {
         return getToString(
             () -> displayName + " (" + tags.size() + ")",
-            () -> GherkinBundle.toolWindow("statistics.category.detailed", displayName, tagsOccurrenceCount(), tags.size()));
+            () -> GherkinBundle.message("gherkin.overview.toolwindow.statistics.category.detailed", displayName, tagsOccurrenceCount(), tags.size()));
     }
 
     private int tagsOccurrenceCount() {

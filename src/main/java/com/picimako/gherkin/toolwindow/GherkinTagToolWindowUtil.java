@@ -49,6 +49,11 @@ public final class GherkinTagToolWindowUtil {
             .getComponent();
     }
 
+    public static GherkinTagOverviewPanel getGherkinTagOverViewPanel(@NotNull ToolWindow gherkinTagsToolWindow) {
+        var hider = getToolWindowHider(gherkinTagsToolWindow);
+        return (GherkinTagOverviewPanel) hider.getComponent(0);
+    }
+
     private GherkinTagToolWindowUtil() {
         //Utility class
     }

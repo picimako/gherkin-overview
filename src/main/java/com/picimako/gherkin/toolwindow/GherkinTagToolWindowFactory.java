@@ -2,18 +2,17 @@
 
 package com.picimako.gherkin.toolwindow;
 
-import static java.util.Collections.singletonList;
-
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentManager;
+import com.picimako.gherkin.toolwindow.action.SelectFocusedTagAction;
 import org.jetbrains.annotations.NotNull;
 
 import com.picimako.gherkin.BDDUtil;
 import com.picimako.gherkin.resources.GherkinBundle;
+
+import java.util.List;
 
 /**
  * Creates the contents of the Gherkin tag tool window.
@@ -35,16 +34,18 @@ public class GherkinTagToolWindowFactory implements ToolWindowFactory {
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         //Registering in StartupManager to make sure that the indices are completely available to collect files from the project
         StartupManager.getInstance(project).runWhenProjectIsInitialized(() -> {
-            GherkinTagOverviewPanel overviewPanel = new GherkinTagOverviewPanel(project);
+            var overviewPanel = new GherkinTagOverviewPanel(project);
 
-            toolWindow.setTitleActions(singletonList(new ToolWindowAppearanceActionGroupCreator(
-                () -> overviewPanel.getTree().updateUI(),
-                () -> overviewPanel.updateModel()
-            ).create()));
+            toolWindow.setTitleActions(List.of(
+                new SelectFocusedTagAction(),
+                new ToolWindowAppearanceActionGroupCreator(
+                    () -> overviewPanel.getTree().updateUI(),
+                    () -> overviewPanel.updateModel()
+                ).create()));
 
-            GherkinTagToolWindowHider hider = new GherkinTagToolWindowHider(overviewPanel, project, getHiderMessage());
-            ContentManager contentManager = toolWindow.getContentManager();
-            Content content = contentManager.getFactory().createContent(hider, null, true);
+            var hider = new GherkinTagToolWindowHider(overviewPanel, project, getHiderMessage());
+            var contentManager = toolWindow.getContentManager();
+            var content = contentManager.getFactory().createContent(hider, null, true);
             contentManager.addContent(content);
 
             hider.setContentVisibilityBasedOn(overviewPanel.modelDataRoot());
@@ -53,7 +54,7 @@ public class GherkinTagToolWindowFactory implements ToolWindowFactory {
 
     @NotNull
     private String getHiderMessage() {
-        return BDDUtil.isStoryLanguageSupported() ? GherkinBundle.toolWindow("no.tag.or.meta.in.project") : GherkinBundle.toolWindow("no.tag.in.project");
+        return BDDUtil.isStoryLanguageSupported() ? GherkinBundle.message("gherkin.overview.toolwindow.no.tag.or.meta.in.project") : GherkinBundle.message("gherkin.overview.toolwindow.no.tag.in.project");
     }
 
     @Override

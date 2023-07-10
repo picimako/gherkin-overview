@@ -85,7 +85,7 @@ public class FeatureFile extends AbstractNodeType {
     public String toString() {
         return getToString(
             () -> displayName + " (" + count() + ")",
-            () -> GherkinBundle.toolWindow("statistics.feature.file.detailed", displayName, count()));
+            () -> GherkinBundle.message("gherkin.overview.toolwindow.statistics.feature.file.detailed", displayName, count()));
     }
 
     private int count() {

@@ -4,6 +4,17 @@
 
 ## [Unreleased]
 
+## [1.4.0]
+
+### Added
+- [#3](https://github.com/picimako/gherkin-overview/issues/3): Added a new toolbar button in the Tags tool window. When a Gherkin tag is under the caret
+in an editor, it locates and selects the corresponding Gherkin tag node in the tool window. 
+
+### Fixed
+- Fix a potential class not found exception due to the JBehave icon.
+- [#7](https://github.com/picimako/gherkin-overview/issues/7): The root node in the tool window displays a customized statistics message depending on if the project contains
+only Gherkin files, only Story files, or both.
+
 ## [1.3.0]
 
 ### Changed

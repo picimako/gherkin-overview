@@ -9,12 +9,14 @@ import javax.swing.*;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
-import com.github.kumaraman21.intellijbehave.language.JBehaveIcons;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.treeView.NodeRenderer;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.NlsSafe;
 import com.intellij.util.PlatformIcons;
+import com.picimako.gherkin.JBehaveStoryService;
 import icons.CucumberIcons;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import com.picimako.gherkin.toolwindow.nodetype.Category;
@@ -28,9 +30,9 @@ import com.picimako.gherkin.toolwindow.nodetype.Tag;
  */
 public class GherkinTagTree extends JTree {
 
-    public GherkinTagTree(TreeModel model) {
+    public GherkinTagTree(TreeModel model, Project project) {
         super(model);
-        setCellRenderer(new GherkinTagsNodeRenderer());
+        setCellRenderer(new GherkinTagsNodeRenderer(project));
         getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         setExpandsSelectedPaths(true);
     }
@@ -40,7 +42,10 @@ public class GherkinTagTree extends JTree {
      * <p>
      * Configures the icons of nodes according to their node types.
      */
+    @RequiredArgsConstructor
     static final class GherkinTagsNodeRenderer extends NodeRenderer {
+        private final transient Project project;
+
         @Override
         public void customizeCellRenderer(@NotNull JTree tree, @NlsSafe Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
             super.customizeCellRenderer(tree, value, selected, expanded, leaf, row, hasFocus);
@@ -54,7 +59,7 @@ public class GherkinTagTree extends JTree {
             } else if (value instanceof Tag) {
                 setIcon(AllIcons.Gutter.ExtAnnotation);
             } else if (value instanceof FeatureFile) {
-                setIcon(isGherkinFile(((FeatureFile) value).getFile()) ? CucumberIcons.Cucumber : JBehaveIcons.JB);
+                setIcon(isGherkinFile(((FeatureFile) value).getFile()) ? CucumberIcons.Cucumber : project.getService(JBehaveStoryService.class).getJBehaveIcon());
             }
         }
     }

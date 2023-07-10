@@ -59,8 +59,8 @@ public class GherkinTagOverviewPanel extends JPanel {
     public void updateModel() {
         model = treeModelFactory.createTreeModel(modelDataRoot(), project);
         LayoutType layout = GherkinTagsToolWindowSettings.getInstance(project).layout;
-        if ((layout == LayoutType.NO_GROUPING && !modelDataRoot().isProjectDataInitialized())
-            || (layout != LayoutType.NO_GROUPING && !modelDataRoot().isContentRootDataInitialized())) {
+        if ((layout == LayoutType.NO_GROUPING && !modelDataRoot().isInitializedAsProjectData())
+            || (layout != LayoutType.NO_GROUPING && !modelDataRoot().isInitializedAsContentRootData())) {
             model.buildModel();
         }
         tree.setModel(model);
@@ -84,7 +84,7 @@ public class GherkinTagOverviewPanel extends JPanel {
         setLayout(new BorderLayout());
         model = treeModelFactory.createTreeModel(project);
         model.buildModel();
-        tree = new GherkinTagTree(model);
+        tree = new GherkinTagTree(model, project);
         registerContextMenuActions();
         new MouseListeningGherkinFileOpener(project, tree).installOn(tree);
         tree.addKeyListener(new KeyboardListeningGherkinFileOpener(project, tree));

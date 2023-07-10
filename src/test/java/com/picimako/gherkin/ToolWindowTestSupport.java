@@ -42,7 +42,7 @@ public final class ToolWindowTestSupport {
             .createContent(new GherkinTagToolWindowHider(panelContent, project), "", true);
         toolWindow.getContentManager().addContent(content);
     }
-    
+
     public static ModelDataRoot getToolWindowModel(Project project) {
         GherkinTagToolWindowHider hider = getToolWindowHider(ToolWindowManager.getInstance(project).getToolWindow(TOOL_WINDOW_ID));
         GherkinTagOverviewPanel toolWindowPanel = (GherkinTagOverviewPanel) hider.getComponent(0);

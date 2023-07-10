@@ -11,6 +11,7 @@ import com.intellij.openapi.vfs.newvfs.events.VFileContentChangeEvent;
 import com.intellij.openapi.vfs.newvfs.events.VFileCreateEvent;
 import com.intellij.openapi.vfs.newvfs.events.VFileDeleteEvent;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import com.picimako.gherkin.BDDUtil;
@@ -25,15 +26,11 @@ import com.picimako.gherkin.BDDUtil;
  * <p>
  * Thus, more frequent tool window updates and model rebuilds are expected mostly during various folder related changes.
  */
+@RequiredArgsConstructor
 public class FileAndFolderChangeListener implements BulkFileListener {
 
     private final Runnable rebuildModel;
     private final Project project;
-
-    public FileAndFolderChangeListener(Runnable rebuildModel, Project project) {
-        this.rebuildModel = rebuildModel;
-        this.project = project;
-    }
 
     /**
      * Updating the UI is necessary because in case of e.g. a file rename, or a Git bulk rollback/revert of files,
