@@ -2,16 +2,17 @@
 
 package com.picimako.gherkin.toolwindow;
 
-import static java.util.Collections.singletonList;
-
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
+import com.picimako.gherkin.toolwindow.action.SelectFocusedTagAction;
 import org.jetbrains.annotations.NotNull;
 
 import com.picimako.gherkin.BDDUtil;
 import com.picimako.gherkin.resources.GherkinBundle;
+
+import java.util.List;
 
 /**
  * Creates the contents of the Gherkin tag tool window.
@@ -35,10 +36,12 @@ public class GherkinTagToolWindowFactory implements ToolWindowFactory {
         StartupManager.getInstance(project).runWhenProjectIsInitialized(() -> {
             var overviewPanel = new GherkinTagOverviewPanel(project);
 
-            toolWindow.setTitleActions(singletonList(new ToolWindowAppearanceActionGroupCreator(
-                () -> overviewPanel.getTree().updateUI(),
-                () -> overviewPanel.updateModel()
-            ).create()));
+            toolWindow.setTitleActions(List.of(
+                new SelectFocusedTagAction(),
+                new ToolWindowAppearanceActionGroupCreator(
+                    () -> overviewPanel.getTree().updateUI(),
+                    () -> overviewPanel.updateModel()
+                ).create()));
 
             var hider = new GherkinTagToolWindowHider(overviewPanel, project, getHiderMessage());
             var contentManager = toolWindow.getContentManager();

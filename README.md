@@ -89,8 +89,7 @@ a file is not part of any IDE content root. The difference here is that this roo
 
 ### Statistics
 
-In addition to the tree view itself, the nodes can display extra statistics about the number of Gherkin files, tags
-and tag occurrence counts.
+In addition to the tree view itself, the nodes can display extra statistics about the number of Gherkin files, tags and tag occurrence counts.
 
 This extra information can be enabled/disabled under the ![view_icon](assets/tool_window_view_icon.PNG) toolbar menu. They display the following data:
 
@@ -105,6 +104,17 @@ This extra information can be enabled/disabled under the ![view_icon](assets/too
 ### Search in the tree view
 
 To make search easier in the tool window, you can simply start typing your keyword, and the tree view will highlight all matching, visible nodes, the same way search works in the IDE Project view.
+
+### Locate tags
+
+An action, similar to the Project View's 'Select Opened File' one, is available on the tool window's toolbar.
+It locates and selects the Tag node of a Gherkin Tag that is under the caret in the currently selected text editor.
+Upon selection, the tool window is focused and can be interacted with using the keyboard.
+
+The toolbar button is disabled for JBehave Story metas for now, or when there is more than one caret placed in the current editor.
+
+This feature is meant to help find out what other Gherkin files use the same, selected tag, and provides a simpler, more focused view of this information,
+than a plain text search of the tag's text would.
 
 ### Tool window updates
 
@@ -323,25 +333,38 @@ A fa nézeten felül, a csomópontok további statisztikai adatokat is képesek 
 
 Ez ez extra információ az eszköztár ![view_icon](assets/tool_window_view_icon.PNG) ikonjával kapcsolható ki/be, és az alábbi adatokat jeleníti meg:
 
-| Csomópont típusok    | Egyszerűsített statisztika                                 | Részletes statisztika                                  | Notes                                                                                                                                                                                                                                    |
-|----------------------|------------------------------------------------------------|--------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Project/Content root | *X tags, Y .feature files*                                 | X distinct tags in Y .feature files                    | X: number of distinct tags in the project/content root<br>Y: number of feature files in the project/content root that actually contain tags. The overall number of .feature files in the project/content root may be the same or higher. |
-| Category             | *(X)*                                                      | *X for Y distinct tags*                                | X: number of occurrences of all tags under this category in the associated project/content root                                                                                                                                          |
-| Tag                  | *(X)*                                                      | *X in Y files*                                         | X: number of occurrences of this tag in the associated project/content root                                                                                                                                                              |
-| Feature              | *(X)*                                                      | *X occurrence*                                         | X: number of occurrences of the parent tag in this file                                                                                                                                                                                  |
-|                      | ![statistics_simplified](assets/statistics_simplified.PNG) | ![statistics_detailed](assets/statistics_detailed.PNG) |                                                                                                                                                                                                                                          |
+| Csomópont típusok    | Egyszerűsített statisztika                                                                      | Részletes statisztika                                                                                                            | Notes                                                                                                                                                                                                                                    |
+|----------------------|-------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Project/Content root | *X tags, Y .feature files*<br/>*X metas, Y .story files*<br/>*X items, Y .feature/.story files* | *X distinct tags in Y .feature files*<br/>*X distinct metas in Y .story files*<br/>*X distinct items in Y .feature/.story files* | X: number of distinct tags in the project/content root<br>Y: number of feature files in the project/content root that actually contain tags. The overall number of .feature files in the project/content root may be the same or higher. |
+| Category             | *(X)*                                                                                           | *X for Y distinct tags*                                                                                                          | X: number of occurrences of all tags under this category in the associated project/content root                                                                                                                                          |
+| Tag                  | *(X)*                                                                                           | *X in Y files*                                                                                                                   | X: number of occurrences of this tag in the associated project/content root                                                                                                                                                              |
+| Feature              | *(X)*                                                                                           | *X occurrence*                                                                                                                   | X: number of occurrences of the parent tag in this file                                                                                                                                                                                  |
+|                      | ![statistics_simplified](assets/statistics_simplified.PNG)                                      | ![statistics_detailed](assets/statistics_detailed.PNG)                                                                           |                                                                                                                                                                                                                                          |
 
 ### Keresés a fában
 
 Hogy a tool window-ban történő keresés egyszerűbb legyen, csak kezdd el írni a keresett kifejezést.
 A fában ekkor, az IDE Projekt nézetéhez hasonlóan, kijelölésre kerül minden vele egyező, és látható, csomópont.
 
+### Tag-ek kijelölése
+
+Elérhető egy, a Project View 'Select Opened File' műveletéhez hasonló, művelet a tool window eszköztárán.
+Ez segít behatárolni és kijelölni egy Gherkin tag-hez tartozó Tag elemet a tool window-ban. Ehhez szükséges,
+hogy a kurzor egy Gherkin tag elemre legyen helyezve az aktív szerkesztőben. A kijelölés után a tool window önmaga is fókuszt kap,
+így azonnal lehetséges a billentyűzettel műveleteket végezni benne.
+
+A művelethez tartozó gomb nincs engedélyezve JBehave Story meták esetén, és amikor több mint 1 kurzor van
+elhelyezve az aktív szerkesztőben.
+
+Ez a funkció annak kiderítésében hivatott segíteni, hogy egy adott tag milyen más Gherkin fájlokban fordul még elő.
+Ezzel egy egyszerűbb és áttekinhetőbb nézetet kapnak a felhasználók ahhoz képest, mintha egyszerű, szövegalapú keresést végeznének a tag nevével.
+
 ### A tool window tartalmának frissítése
 
 A projektfájlokban és -mappákban történő változásokat a tool window-ban megjelenített adatok is követik és tükrözik.
 
 A tool window adatai (az alsóbb szintű adatmodell) és a grafikus felület azonnal, szimplán frissítésre kerül,
-amint egy Gherkin/Story fájl megváltozik vagy a fájl törlésre kerül. Minden más esetben
+amint egy Gherkin/Story fájl megváltozik, vagy a fájl törlésre kerül. Minden más esetben
 (pl. fájl átnevezése, Git revert, mappa másolása, ...), a teljes adatmodell újjáépül, a fa nézet pedig összecsukódik.
 
 ### Helyi menü lehetőségek

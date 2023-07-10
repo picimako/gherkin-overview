@@ -18,7 +18,7 @@ import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 import javax.swing.tree.TreePath;
 
 /**
- * Functional test for {@link DeleteAllTagOccurrencesAction}.
+ * Integration test for {@link DeleteAllTagOccurrencesAction}.
  */
 public class DeleteAllTagOccurrencesActionTest extends BasePlatformTestCase {
 
