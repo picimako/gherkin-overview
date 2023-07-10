@@ -89,17 +89,10 @@ tasks {
         //See https://app.slack.com/client/T5P9YATH9/C5U8BM1MK/thread/C5U8BM1MK-1639934273.054400
         isScanForTestClasses = false
         include("**/*Test.class")
-        exclude("**/GherkinTagTreeModelTest.class", "**/GherkinTagTreeModelJBehaveStoryTest.class", "**/TagCategoryRegistryTest.class")
         //  systemProperty('idea.home.path', '<absolute path to locally cloned intellij-community GitHub repository>')
     }
 
 //    runPluginVerifier {
 //        ideVersions.set(listOf('IC-2022.1', 'IC-2022.2', 'IC-2022.3', 'IC-2023.1', 'IC-2023.1', '232.6095.10'))
 //    }
-}
-
-//These tests are executed separately because they need application service state reset
-tasks.register<Test>("appServiceCleanupTests") {
-    isScanForTestClasses = false
-    include("**/GherkinTagTreeModelTest.class", "**/GherkinTagTreeModelJBehaveStoryTest.class", "**/TagCategoryRegistryTest.class")
 }

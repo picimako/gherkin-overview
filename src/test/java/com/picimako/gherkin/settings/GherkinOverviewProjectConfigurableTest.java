@@ -22,8 +22,6 @@ import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 
 /**
  * Unit test for {@link GherkinOverviewProjectConfigurable}.
- * <p>
- * TODO: fix tests due to lack of application level service cleanup. Test methods executed individually pass.
  */
 public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTestCase {
 
@@ -44,6 +42,7 @@ public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTe
 
     @Override
     public void tearDown() throws Exception {
+        configurable.resetToDefault();
         configurable.disposeUIResources();
         super.tearDown();
     }
