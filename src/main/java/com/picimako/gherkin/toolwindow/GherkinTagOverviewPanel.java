@@ -7,7 +7,7 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiManager;
-import com.intellij.ui.TreeSpeedSearch;
+import com.intellij.ui.TreeUIHelper;
 import com.intellij.ui.components.JBScrollPane;
 import com.picimako.gherkin.toolwindow.action.TagActionsGroup;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
@@ -41,7 +41,7 @@ public class GherkinTagOverviewPanel extends JPanel {
         //see: https://plugins.jetbrains.com/docs/intellij/disposers.html#choosing-a-disposable-parent
         PsiManager.getInstance(project).addPsiTreeChangeListener(new GherkinPsiChangeListener(tree, project), OverviewPanelDisposalService.getInstance(project));
         project.getMessageBus().connect().subscribe(VirtualFileManager.VFS_CHANGES, new FileAndFolderChangeListener(this::rebuildModel, project));
-        new TreeSpeedSearch(tree);
+        TreeUIHelper.getInstance().installTreeSpeedSearch(tree);
     }
 
     public ModelDataRoot modelDataRoot() {
