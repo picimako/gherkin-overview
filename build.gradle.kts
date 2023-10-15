@@ -22,7 +22,7 @@ repositories {
 
 // Set the JVM language level used to compile sources and generate files - Java 11 is required since 2020.3
 kotlin {
-    jvmToolchain(11)
+    jvmToolchain(17)
 }
 
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
@@ -32,12 +32,12 @@ dependencies {
     //see: https://assertj.github.io/doc/#assertj-core-3-20-0-release-notes
     testImplementation("org.assertj:assertj-core:3.19.0")
     //https://kotlinlang.org/docs/reflection.html#jvm-dependency
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.8.22")
-    testImplementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.0")
+    testImplementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0")
     testImplementation("org.mockito:mockito-core:3.12.4")
 }
 
-// Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
+// Configure Gradle IntelliJ Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
     pluginName = properties("pluginName")
     version = properties("platformVersion")
@@ -45,6 +45,12 @@ intellij {
 
     // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file.
     plugins = properties("platformPlugins").map { it.split(',').map(String::trim).filter(String::isNotEmpty) }
+}
+
+// Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
+changelog {
+    groups.empty()
+    repositoryUrl = properties("pluginRepositoryUrl")
 }
 
 tasks {
