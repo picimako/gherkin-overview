@@ -66,24 +66,25 @@ public final class TagOccurrencesRegistry implements Disposable {
     }
 
     private void calculateCounts(@NotNull VirtualFile file) {
-        PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
-        if (psiFile != null) {
-            var counts = tagOccurrences.get(file.getPath());
+        if (!file.exists() || !file.isValid()) return;
 
-            PsiTreeUtil.processElements(psiFile, element -> {
-                if (!element.equals(psiFile)) { //the file itself is definitely not a tag/meta, so can be skipped 
-                    String tagOrMetaName = determineTagOrMetaName(element);
-                    if (tagOrMetaName != null) {
-                        if (counts.containsKey(tagOrMetaName)) {
-                            counts.get(tagOrMetaName).increment();
-                        } else {
-                            counts.put(tagOrMetaName, new MutableInt(1));
-                        }
+        PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
+        if (psiFile == null) return;
+
+        var counts = tagOccurrences.get(file.getPath());
+        PsiTreeUtil.processElements(psiFile, element -> {
+            if (!element.equals(psiFile)) { //the file itself is definitely not a tag/meta, so can be skipped
+                String tagOrMetaName = determineTagOrMetaName(element);
+                if (tagOrMetaName != null) {
+                    if (counts.containsKey(tagOrMetaName)) {
+                        counts.get(tagOrMetaName).increment();
+                    } else {
+                        counts.put(tagOrMetaName, new MutableInt(1));
                     }
                 }
-                return true; //continue execution, so that all tags/metas are counted
-            });
-        }
+            }
+            return true; //continue execution, so that all tags/metas are counted
+        });
     }
 
     /**
