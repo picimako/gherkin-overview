@@ -5,12 +5,15 @@ package com.picimako.gherkin.toolwindow;
 import static com.picimako.gherkin.SoftAsserts.assertSoftly;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.intellij.mock.MockVirtualFile;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
+import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.cucumber.psi.GherkinTag;
 
 /**
@@ -29,10 +32,7 @@ public class TagOccurrencesRegistryTest extends BasePlatformTestCase {
         VirtualFile virtualFile = myFixture.configureByFile("A_gherkin.feature").getVirtualFile();
         VirtualFile virtualFile2 = myFixture.configureByFile("for_statistics.feature").getVirtualFile();
 
-        TagOccurrencesRegistry registry = new TagOccurrencesRegistry(getProject());
-        registry.init(2);
-        registry.calculateOccurrenceCounts(virtualFile);
-        registry.calculateOccurrenceCounts(virtualFile2);
+        var registry = initRegistryAndCalculateCounts(2, virtualFile, virtualFile2);
 
         assertSoftly(
             softly -> softly.assertThat(registry.getCountFor(virtualFile.getPath(), "disabled")).isEqualTo(1),
@@ -45,10 +45,7 @@ public class TagOccurrencesRegistryTest extends BasePlatformTestCase {
         VirtualFile virtualFile = myFixture.configureByFile("Story.story").getVirtualFile();
         VirtualFile virtualFile2 = myFixture.configureByFile("Another story.story").getVirtualFile();
 
-        TagOccurrencesRegistry registry = new TagOccurrencesRegistry(getProject());
-        registry.init(2);
-        registry.calculateOccurrenceCounts(virtualFile);
-        registry.calculateOccurrenceCounts(virtualFile2);
+        var registry = initRegistryAndCalculateCounts(2, virtualFile, virtualFile2);
 
         assertSoftly(
             softly -> softly.assertThat(registry.getCountFor(virtualFile.getPath(), "Disabled")).isEqualTo(2),
@@ -57,15 +54,29 @@ public class TagOccurrencesRegistryTest extends BasePlatformTestCase {
         );
     }
 
+    public void testDoesntCalculateCountsForNonExistentFile() {
+        var nonExistentFile = new InvalidatableMockVirtualFile("some_non_existent_gherkin.feature", false, false);
+
+        var registry = initRegistryAndCalculateCounts(2, nonExistentFile);
+
+        assertThat(registry.getTagOccurrences().get(nonExistentFile.getPath())).isEmpty();
+    }
+
+    public void testDoesntCalculateCountsForInvalidFile() {
+        var invalidFile = new InvalidatableMockVirtualFile("some_invalid_gherkin.feature", true, false);
+
+        var registry = initRegistryAndCalculateCounts(2, invalidFile);
+
+        assertThat(registry.getTagOccurrences().get(invalidFile.getPath())).isEmpty();
+    }
+
     //updateOccurrenceCounts
 
     public void testUpdatesCounts() {
         PsiFile psiFile = myFixture.configureByFile("for_statistics.feature");
         VirtualFile virtualFile = psiFile.getVirtualFile();
 
-        TagOccurrencesRegistry registry = new TagOccurrencesRegistry(getProject());
-        registry.init(1);
-        registry.calculateOccurrenceCounts(virtualFile);
+        var registry = initRegistryAndCalculateCounts(1, virtualFile);
 
         assertThat(registry.getCountFor(virtualFile.getPath(), "youtube")).isEqualTo(3);
 
@@ -80,9 +91,7 @@ public class TagOccurrencesRegistryTest extends BasePlatformTestCase {
         PsiFile psiFile = myFixture.configureByFile("Story.story");
         VirtualFile virtualFile = psiFile.getVirtualFile();
 
-        TagOccurrencesRegistry registry = new TagOccurrencesRegistry(getProject());
-        registry.init(1);
-        registry.calculateOccurrenceCounts(virtualFile);
+        var registry = initRegistryAndCalculateCounts(1, virtualFile);
 
         assertThat(registry.getCountFor(virtualFile.getPath(), "Disabled")).isEqualTo(2);
 
@@ -90,7 +99,29 @@ public class TagOccurrencesRegistryTest extends BasePlatformTestCase {
         WriteAction.run(() -> CommandProcessor.getInstance().executeCommand(getProject(), () -> meta.delete(), "Delete", "group.id"));
         registry.updateOccurrenceCounts(virtualFile);
 
-        assertThat(registry.getCountFor(virtualFile.getPath(), "Disabled")).isEqualTo(1);
+        assertThat(registry.getCountFor(virtualFile.getPath(), "Disabled")).isOne();
+    }
+
+    public void testDoesntUpdateCountsForFileBecameNonExistent() {
+        var toBecomeNonExistentFile = new InvalidatableMockVirtualFile("some_to_become_non_existent_gherkin.feature", true, true);
+
+        var registry = initRegistryAndCalculateCounts(2, toBecomeNonExistentFile);
+
+        toBecomeNonExistentFile.setExist(false);
+        registry.updateOccurrenceCounts(toBecomeNonExistentFile);
+
+        assertThat(registry.getTagOccurrences().get(toBecomeNonExistentFile.getPath())).isEmpty();
+    }
+
+    public void testDoesntUpdateCountsForFileBecameInvalid() {
+        var toBecomeInvalidFile = new InvalidatableMockVirtualFile("some_to_become_invalid_gherkin.feature", true, true);
+
+        var registry = initRegistryAndCalculateCounts(2, toBecomeInvalidFile);
+
+        toBecomeInvalidFile.setValid(false);
+        registry.updateOccurrenceCounts(toBecomeInvalidFile);
+
+        assertThat(registry.getTagOccurrences().get(toBecomeInvalidFile.getPath())).isEmpty();
     }
 
     //getCountFor
@@ -100,9 +131,7 @@ public class TagOccurrencesRegistryTest extends BasePlatformTestCase {
         myFixture.configureByFile("A_gherkin.feature");
         VirtualFile virtualFile = myFixture.configureByFile("for_statistics.feature").getVirtualFile();
 
-        TagOccurrencesRegistry registry = new TagOccurrencesRegistry(getProject());
-        registry.init(2);
-        registry.calculateOccurrenceCounts(virtualFile);
+        var registry = initRegistryAndCalculateCounts(2, virtualFile);
 
         assertThat(registry.getCountFor(virtualFile.getPath(), "tablet")).isEqualTo(2);
     }
@@ -111,9 +140,7 @@ public class TagOccurrencesRegistryTest extends BasePlatformTestCase {
         myFixture.configureByFile("Story.story");
         VirtualFile virtualFile = myFixture.configureByFile("Another story.story").getVirtualFile();
 
-        TagOccurrencesRegistry registry = new TagOccurrencesRegistry(getProject());
-        registry.init(1);
-        registry.calculateOccurrenceCounts(virtualFile);
+        var registry = initRegistryAndCalculateCounts(1, virtualFile);
 
         assertThat(registry.getCountFor(virtualFile.getPath(), "Media:youtube vimeo")).isEqualTo(3);
     }
@@ -123,9 +150,7 @@ public class TagOccurrencesRegistryTest extends BasePlatformTestCase {
         myFixture.configureByFile("A_gherkin.feature");
         VirtualFile virtualFile = myFixture.configureByFile("for_statistics.feature").getVirtualFile();
 
-        TagOccurrencesRegistry registry = new TagOccurrencesRegistry(getProject());
-        registry.init(3);
-        registry.calculateOccurrenceCounts(virtualFile);
+        var registry = initRegistryAndCalculateCounts(3, virtualFile);
 
         assertThat(registry.getCountFor(virtualFile.getPath(), "landing")).isZero();
     }
@@ -134,20 +159,16 @@ public class TagOccurrencesRegistryTest extends BasePlatformTestCase {
         myFixture.configureByFile("Story.story");
         VirtualFile virtualFile = myFixture.configureByFile("Another story.story").getVirtualFile();
 
-        TagOccurrencesRegistry registry = new TagOccurrencesRegistry(getProject());
-        registry.init(2);
-        registry.calculateOccurrenceCounts(virtualFile);
+        var registry = initRegistryAndCalculateCounts(2, virtualFile);
 
         assertThat(registry.getCountFor(virtualFile.getPath(), "landing")).isZero();
     }
-    
+
     public void testReturnsZeroAsCountForNonMappedFilePath() {
         PsiFile psiFile = myFixture.configureByFile("Story.story");
         VirtualFile virtualFile = myFixture.configureByFile("Another story.story").getVirtualFile();
 
-        TagOccurrencesRegistry registry = new TagOccurrencesRegistry(getProject());
-        registry.init(2);
-        registry.calculateOccurrenceCounts(virtualFile);
+        var registry = initRegistryAndCalculateCounts(2, virtualFile);
 
         assertThat(registry.getCountFor(psiFile.getVirtualFile().getPath(), "landing")).isZero();
     }
@@ -158,10 +179,7 @@ public class TagOccurrencesRegistryTest extends BasePlatformTestCase {
         VirtualFile virtualFile = myFixture.configureByFile("A_gherkin.feature").getVirtualFile();
         VirtualFile virtualFile2 = myFixture.configureByFile("for_statistics.feature").getVirtualFile();
 
-        TagOccurrencesRegistry registry = new TagOccurrencesRegistry(getProject());
-        registry.init(2);
-        registry.calculateOccurrenceCounts(virtualFile);
-        registry.calculateOccurrenceCounts(virtualFile2);
+        var registry = initRegistryAndCalculateCounts(2, virtualFile, virtualFile2);
 
         assertThat(registry.getTagOccurrences()).hasSize(2);
 
@@ -174,15 +192,54 @@ public class TagOccurrencesRegistryTest extends BasePlatformTestCase {
         VirtualFile virtualFile = myFixture.configureByFile("Story.story").getVirtualFile();
         VirtualFile virtualFile2 = myFixture.configureByFile("Another story.story").getVirtualFile();
 
-        TagOccurrencesRegistry registry = new TagOccurrencesRegistry(getProject());
-        registry.init(2);
-        registry.calculateOccurrenceCounts(virtualFile);
-        registry.calculateOccurrenceCounts(virtualFile2);
+        var registry = initRegistryAndCalculateCounts(2, virtualFile, virtualFile2);
 
         assertThat(registry.getTagOccurrences()).hasSize(2);
 
         registry.remove(virtualFile.getPath());
 
         assertThat(registry.getTagOccurrences()).hasSize(1);
+    }
+
+    //Helpers
+
+    private TagOccurrencesRegistry initRegistryAndCalculateCounts(int bddFileCount, VirtualFile... virtualFiles) {
+        var registry = new TagOccurrencesRegistry(getProject());
+        registry.init(bddFileCount);
+
+        for (var virtualFile : virtualFiles)
+            registry.calculateOccurrenceCounts(virtualFile);
+
+        return registry;
+    }
+
+    @Setter
+    private static final class InvalidatableMockVirtualFile extends MockVirtualFile {
+        private boolean isExist;
+        private boolean isValid;
+
+        public InvalidatableMockVirtualFile(String name, boolean isExist, boolean isValid) {
+            super(name);
+            this.isExist = isExist;
+            this.isValid = isValid;
+        }
+
+        @Override
+        public boolean exists() {
+            return isExist;
+        }
+
+        @Override
+        public boolean isValid() {
+            return isValid;
+        }
+
+        @Override
+        public byte @NotNull [] contentsToByteArray() {
+            return """
+                @smoke @mobile @edge
+                Feature: Videos
+                """.getBytes();
+        }
     }
 }

@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+## [1.5.1]
+
+### Fixed
+- [12](https://github.com/picimako/gherkin-overview/issues/12): Fixed the issue that an exception was thrown when the tag occurrence counts started to be updated
+for an invalid or non-existent file.
+
 ## [1.5.0]
 
 ### Changed
