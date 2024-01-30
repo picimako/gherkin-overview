@@ -33,7 +33,7 @@ public class GherkinTagToolWindowFactory implements ToolWindowFactory {
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         //Registering in StartupManager to make sure that the indices are completely available to collect files from the project
-        StartupManager.getInstance(project).runWhenProjectIsInitialized(() -> {
+        StartupManager.getInstance(project).runAfterOpened(() -> {
             var overviewPanel = new GherkinTagOverviewPanel(project);
 
             toolWindow.setTitleActions(List.of(
@@ -61,5 +61,4 @@ public class GherkinTagToolWindowFactory implements ToolWindowFactory {
     public boolean isApplicable(@NotNull Project project) {
         return !project.isDefault();
     }
-
 }
