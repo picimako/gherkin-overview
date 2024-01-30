@@ -28,13 +28,11 @@ kotlin {
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
 dependencies {
     testImplementation("junit:junit:4.13.2")
-    //NOTE: upgrading AssertJ will need more care as 3.20.x is not binary compatible with 3.19
-    //see: https://assertj.github.io/doc/#assertj-core-3-20-0-release-notes
-    testImplementation("org.assertj:assertj-core:3.19.0")
+    testImplementation("org.assertj:assertj-core:3.25.2")
     //https://kotlinlang.org/docs/reflection.html#jvm-dependency
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.0")
     testImplementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0")
-    testImplementation("org.mockito:mockito-core:3.12.4")
+    testImplementation("org.mockito:mockito-core:5.10.0")
 }
 
 // Configure Gradle IntelliJ Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
