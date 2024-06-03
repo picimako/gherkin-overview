@@ -28,11 +28,10 @@ kotlin {
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
 dependencies {
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.assertj:assertj-core:3.25.2")
+    testImplementation("org.assertj:assertj-core:3.26.0")
     //https://kotlinlang.org/docs/reflection.html#jvm-dependency
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.0")
-    testImplementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0")
-    testImplementation("org.mockito:mockito-core:5.10.0")
+    testImplementation("org.mockito:mockito-core:5.12.0")
 }
 
 // Configure Gradle IntelliJ Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html

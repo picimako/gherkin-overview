@@ -4,6 +4,7 @@ package com.picimako.gherkin.toolwindow.action;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.psi.PsiManager;
@@ -235,8 +236,8 @@ public class DeleteAllTagOccurrencesActionTest extends BasePlatformTestCase {
         tree.setSelectionPath(new TreePath(((ModelDataRoot) tree.getModel().getRoot()).getOther().get(tagName).get()));
     }
 
-    private TestActionEvent doTestActionEvent() {
-        return new TestActionEvent(dataId -> {
+    private AnActionEvent doTestActionEvent() {
+        return TestActionEvent.createTestEvent(dataId -> {
             if (CommonDataKeys.PROJECT.is(dataId)) return getProject();
             if (PlatformDataKeys.CONTEXT_COMPONENT.is(dataId)) return tree;
             return null;
