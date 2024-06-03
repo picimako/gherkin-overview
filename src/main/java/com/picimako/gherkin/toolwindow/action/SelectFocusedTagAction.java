@@ -8,6 +8,7 @@ import static com.picimako.gherkin.toolwindow.TagNameUtil.tagNameFrom;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -95,6 +96,11 @@ public class SelectFocusedTagAction extends AnActionButton {
             .isPresent();
 
         e.getPresentation().setEnabled(shouldBeEnabled);
+    }
+
+    @Override
+    public @NotNull ActionUpdateThread getActionUpdateThread() {
+        return ActionUpdateThread.BGT;
     }
 
     /**

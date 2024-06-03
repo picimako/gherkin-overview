@@ -6,6 +6,7 @@ import java.util.List;
 import javax.swing.*;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.NlsContexts;
@@ -14,6 +15,7 @@ import com.intellij.ui.ContextHelpLabel;
 import com.intellij.ui.TitledSeparator;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.util.ui.FormBuilder;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,6 +29,7 @@ import com.picimako.gherkin.resources.GherkinBundle;
  */
 public class GherkinOverviewComponent {
 
+    @Getter
     private final JPanel settingsPanel;
     private final GherkinMappingsTable applicationLevelMappingsTable = new GherkinMappingsTable();
     private final JBCheckBox useProjectLevelMappingsCheckbox = new JBCheckBox(GherkinBundle.settings("use.project.level.mappings"));
@@ -135,10 +138,6 @@ public class GherkinOverviewComponent {
 
     // ---- Getter, setter, retriever methods ----
 
-    public JPanel getSettingsPanel() {
-        return settingsPanel;
-    }
-
     public boolean isUseProjectLevelMappings() {
         return useProjectLevelMappingsCheckbox.isSelected();
     }
@@ -178,6 +177,11 @@ public class GherkinOverviewComponent {
         @Override
         public void actionPerformed(@NotNull AnActionEvent e) {
             action.run();
+        }
+
+        @Override
+        public @NotNull ActionUpdateThread getActionUpdateThread() {
+            return ActionUpdateThread.BGT;
         }
     }
 }

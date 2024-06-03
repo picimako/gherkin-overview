@@ -3,6 +3,7 @@
 package com.picimako.gherkin.toolwindow;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.Separator;
@@ -64,6 +65,11 @@ public final class ToolWindowAppearanceActionGroupCreator {
                     updateUICallback.run();
                 }
             }
+
+            @Override
+            public @NotNull ActionUpdateThread getActionUpdateThread() {
+                return ActionUpdateThread.BGT;
+            }
         };
     }
 
@@ -80,6 +86,11 @@ public final class ToolWindowAppearanceActionGroupCreator {
                 //The UI update must happen after the model is updated
                 updateModelCallback.run();
                 updateUICallback.run();
+            }
+
+            @Override
+            public @NotNull ActionUpdateThread getActionUpdateThread() {
+                return ActionUpdateThread.BGT;
             }
         };
     }

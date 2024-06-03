@@ -4,6 +4,7 @@ package com.picimako.gherkin.toolwindow.action;
 
 import static com.intellij.openapi.ui.Messages.YES;
 
+import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
@@ -25,8 +26,6 @@ import com.picimako.gherkin.toolwindow.nodetype.NodeType;
 import com.picimako.gherkin.toolwindow.nodetype.Tag;
 import icons.CollaborationToolsIcons;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.stream.Collectors;
 
 /**
  * This action deletes all occurrences of a tag/meta selected in the Gherkin Tag tool window, after users
@@ -59,7 +58,7 @@ public class DeleteAllTagOccurrencesAction extends AnAction {
             //Doing 'for (var featureFile : selectedTagNode.getFeatureFiles()) {}' results in concurrent modification exception
             // because there are listeners in the background updating the tree model based on PSI modification
             WriteCommandAction.runWriteCommandAction(project, () -> {
-                var bddFiles = selectedTagNode.getFeatureFiles().stream().map(FeatureFile::getFile).collect(Collectors.toList());
+                var bddFiles = selectedTagNode.getFeatureFiles().stream().map(FeatureFile::getFile).toList();
                 for (var bddFile : bddFiles) {
                     PsiElement[] tagsToDelete = PsiTreeUtil.collectElements(PsiManager.getInstance(project).findFile(bddFile), element -> {
                         String tagName = TagNameUtil.determineTagOrMetaName(element);
@@ -85,6 +84,11 @@ public class DeleteAllTagOccurrencesAction extends AnAction {
     public void update(@NotNull AnActionEvent e) {
         var tree = (GherkinTagTree) e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
         e.getPresentation().setEnabled(tree != null && isGherkinTag(tree.getLastSelectedPathComponent()));
+    }
+
+    @Override
+    public @NotNull ActionUpdateThread getActionUpdateThread() {
+        return ActionUpdateThread.BGT;
     }
 
     private boolean isUserSureToDeleteAllOccurrencesOfTag(Project project) {

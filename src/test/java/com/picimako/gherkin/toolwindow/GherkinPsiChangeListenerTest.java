@@ -30,9 +30,9 @@ public class GherkinPsiChangeListenerTest extends BasePlatformTestCase {
     public void testUpdatesModelForGherkinFile() {
         registerToolWindow(getProject());
         PsiFile gherkinFile = myFixture.configureByFile("the_gherkin.feature");
-        GherkinTagTree tree = mock(GherkinTagTree.class);
-        GherkinTagTreeModel model = mock(ContentRootBasedGherkinTagTreeModel.class);
-        ModelDataRoot modelRoot = mock(ModelDataRoot.class);
+        GherkinTagTree tree = mock();
+        GherkinTagTreeModel model = mock();
+        ModelDataRoot modelRoot = mock();
         when(tree.getModel()).thenReturn(model);
         when(model.getRoot()).thenReturn(modelRoot);
 
@@ -97,7 +97,7 @@ public class GherkinPsiChangeListenerTest extends BasePlatformTestCase {
         when(tree.getModel()).thenReturn(model);
         when(model.getRoot()).thenReturn(modelRoot);
 
-        WriteAction.run(() -> gherkinFile.delete());
+        WriteAction.run(gherkinFile::delete);
 
         var listener = new GherkinPsiChangeListener(tree, getProject());
         var event = new PsiTreeChangeEventImpl(PsiManager.getInstance(getProject()));
