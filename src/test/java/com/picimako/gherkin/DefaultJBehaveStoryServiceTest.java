@@ -35,17 +35,18 @@ public class DefaultJBehaveStoryServiceTest extends BasePlatformTestCase {
 
     public void testCollectMetasFromFile() {
         PsiFile storyFile = myFixture.configureByText("story.story",
-            "Meta:\n" +
-                "@Suite smoke\n" +
-                "@Browser firefox chrome\n" +
-                "@Jira\n" +
-                "\n" +
-                "Scenario:\n" +
-                "\n" +
-                "Meta:\n" +
-                "@Suite smoke\n" +
-                "\n" +
-                "Scenario:");
+            """
+                Meta:
+                @Suite smoke
+                @Browser firefox chrome
+                @Jira
+
+                Scenario:
+
+                Meta:
+                @Suite smoke
+
+                Scenario:""");
 
         var metas = storyService.collectMetasFromFile(storyFile);
 
@@ -64,17 +65,18 @@ public class DefaultJBehaveStoryServiceTest extends BasePlatformTestCase {
 
     public void testCollectMetasFromFileAsList() {
         PsiFile storyFile = myFixture.configureByText("story.story",
-            "Meta:\n" +
-                "@Suite smoke\n" +
-                "@Browser firefox chrome\n" +
-                "@Jira\n" +
-                "\n" +
-                "Scenario:\n" +
-                "\n" +
-                "Meta:\n" +
-                "@Suite smoke\n" +
-                "\n" +
-                "Scenario:");
+            """
+                Meta:
+                @Suite smoke
+                @Browser firefox chrome
+                @Jira
+
+                Scenario:
+
+                Meta:
+                @Suite smoke
+
+                Scenario:""");
 
         List<String> metas = storyService.collectMetasFromFileAsList(storyFile);
 

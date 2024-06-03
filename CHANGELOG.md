@@ -4,7 +4,13 @@
 
 ## [Unreleased]
 
+## [1.7.0]
+### Changed
+- New supported IDE version range: 2023.1.6-2024.2-EAP.
+- Updated plugin dependencies.
+
 ## [1.6.0]
+### Changed
 - New supported IDE version range: 2022.3.3-2024.1-EAP.
 - Updated plugin dependencies.
 

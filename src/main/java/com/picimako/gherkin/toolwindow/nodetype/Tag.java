@@ -131,7 +131,7 @@ public class Tag extends AbstractNodeType {
                 .filter(features -> features.length > 0)
                 .map(features -> features[0].getFeatureName()) //regardless of the number of Feature keywords in the file, it always takes the first one if there is at least one
                 .distinct()
-                .collect(toList());
+                .toList();
 
             if (distinctFeatureNames.size() == featureFilesWithTheSameName.size()) {
                 for (int i = 0; i < distinctFeatureNames.size(); i++) {

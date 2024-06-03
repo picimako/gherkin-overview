@@ -76,10 +76,10 @@ public class GherkinPsiChangeListener extends PsiTreeChangeAdapter {
         if (file != null && BDDUtil.isABDDFile(file)) {
             updateModelAndToolWindow(file);
         } else if (file == null) {
-            if (event.getChild() instanceof GherkinFile) {
-                updateModelAndToolWindow((GherkinFile) event.getChild());
-            } else if (event.getChild() instanceof PsiFile && storyService.isJBehaveStoryFile((PsiFile) event.getChild())) {
-                updateModelAndToolWindow(storyService.asStoryFile(event.getChild()));
+            if (event.getChild() instanceof GherkinFile gherkinFile) {
+                updateModelAndToolWindow(gherkinFile);
+            } else if (event.getChild() instanceof PsiFile psiFile && storyService.isJBehaveStoryFile(psiFile)) {
+                updateModelAndToolWindow(storyService.asStoryFile(psiFile));
             }
         }
     }

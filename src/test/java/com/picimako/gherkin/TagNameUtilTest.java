@@ -42,9 +42,10 @@ public class TagNameUtilTest extends BasePlatformTestCase {
 
     public void testReturnMetaNameForKeyAndText() {
         PsiFile storyFile = myFixture.configureByText("story.story",
-            "Meta:\n" +
-                "@Suite smoke\n" +
-                "Scenario:");
+            """
+                Meta:
+                @Suite smoke
+                Scenario:""");
 
         var meta = new ArrayList<>(storyService.collectMetasFromFile(storyFile).entrySet());
         assertThat(meta.get(0).getValue()).hasSize(1);
@@ -56,9 +57,10 @@ public class TagNameUtilTest extends BasePlatformTestCase {
 
     public void testReturnMetaNameForKeyOnly() {
         PsiFile storyFile = myFixture.configureByText("story.story",
-            "Meta:\n" +
-                "@Jira\n" +
-                "Scenario:");
+            """
+                Meta:
+                @Jira
+                Scenario:""");
 
         var meta = new ArrayList<>(storyService.collectMetasFromFile(storyFile).entrySet());
         assertThat(meta.get(0).getValue()).isEmpty();
@@ -85,9 +87,10 @@ public class TagNameUtilTest extends BasePlatformTestCase {
 
     public void testDeterminesMetaName() {
         PsiFile storyFile = myFixture.configureByText("story.story",
-            "Meta:\n" +
-                "@Suite smoke regression\n" +
-                "Scenario:");
+            """
+                Meta:
+                @Suite smoke regression
+                Scenario:""");
 
         var meta = new ArrayList<>(storyService.collectMetasFromFile(storyFile).entrySet());
 

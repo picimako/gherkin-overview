@@ -4,6 +4,7 @@ package com.picimako.gherkin.toolwindow.action;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.psi.PsiManager;
@@ -43,11 +44,13 @@ public class DeleteAllTagOccurrencesActionTest extends BasePlatformTestCase {
         new DeleteAllTagOccurrencesAction(getProject()).actionPerformed(doTestActionEvent());
 
         myFixture.checkResult(
-            "@e2e @regression @youtube @desktop @sitemap @JIRA-1234\n" +
-                "Feature: Videos\n" +
-                "\n" +
-                "  @tablet @youtube\n" +
-                "  Scenario: Video components\n");
+            """
+                @e2e @regression @youtube @desktop @sitemap @JIRA-1234
+                Feature: Videos
+
+                  @tablet @youtube
+                  Scenario: Video components
+                """);
     }
 
     public void testDeletesMultipleTagsFromSingleFile() {
@@ -56,11 +59,13 @@ public class DeleteAllTagOccurrencesActionTest extends BasePlatformTestCase {
         new DeleteAllTagOccurrencesAction(getProject()).actionPerformed(doTestActionEvent());
 
         myFixture.checkResult(
-            "@e2e @regression  @desktop @sitemap @JIRA-1234\n" +
-                "Feature: Videos\n" +
-                "\n" +
-                "  @vimeo @tablet\n" +
-                "  Scenario: Video components\n");
+            """
+                @e2e @regression  @desktop @sitemap @JIRA-1234
+                Feature: Videos
+
+                  @vimeo @tablet
+                  Scenario: Video components
+                """);
     }
 
     public void testDeletesMultipleTagsFromMultipleFiles() {
@@ -70,17 +75,21 @@ public class DeleteAllTagOccurrencesActionTest extends BasePlatformTestCase {
         new DeleteAllTagOccurrencesAction(getProject()).actionPerformed(doTestActionEvent());
 
         myFixture.checkResult(
-            "@e2e @regression  @desktop @sitemap @JIRA-1234\n" +
-                "Feature: Videos\n" +
-                "\n" +
-                "  @vimeo @tablet\n" +
-                "  Scenario: Video components\n");
+            """
+                @e2e @regression  @desktop @sitemap @JIRA-1234
+                Feature: Videos
+
+                  @vimeo @tablet
+                  Scenario: Video components
+                """);
         assertThat(delete_tag_more.getText()).isEqualTo(
-            "@e2e @regression  @desktop @sitemap @JIRA-1234\n" +
-                "Feature: Videos\n" +
-                "\n" +
-                "  @vimeo @tablet\n" +
-                "  Scenario: Video components\n");
+            """
+                @e2e @regression  @desktop @sitemap @JIRA-1234
+                Feature: Videos
+
+                  @vimeo @tablet
+                  Scenario: Video components
+                """);
     }
 
     //Metas
@@ -91,20 +100,22 @@ public class DeleteAllTagOccurrencesActionTest extends BasePlatformTestCase {
         new DeleteAllTagOccurrencesAction(getProject()).actionPerformed(doTestActionEvent());
 
         myFixture.checkResult(
-            "Meta:\n" +
-                "@Single key\n" +
-                "@Media youtube vimeo\n" +
-                "Scenario: scenario 1\n" +
-                "\n" +
-                "Meta:\n" +
-                "@Device tablet\n" +
-                "@Media youtube vimeo\n" +
-                "Scenario: scenario 1\n" +
-                "\n" +
-                "Meta:\n" +
-                "@Device tablet\n" +
-                "@Media youtube vimeo\n" +
-                "Scenario: scenario 1\n");
+            """
+                Meta:
+                @Single key
+                @Media youtube vimeo
+                Scenario: scenario 1
+
+                Meta:
+                @Device tablet
+                @Media youtube vimeo
+                Scenario: scenario 1
+
+                Meta:
+                @Device tablet
+                @Media youtube vimeo
+                Scenario: scenario 1
+                """);
     }
 
     public void testDeletesSingleMetaKeyAndTextFromSingleFile() {
@@ -113,20 +124,22 @@ public class DeleteAllTagOccurrencesActionTest extends BasePlatformTestCase {
         new DeleteAllTagOccurrencesAction(getProject()).actionPerformed(doTestActionEvent());
 
         myFixture.checkResult(
-            "Meta:\n" +
-                "@Single\n" +
-                "@Media youtube vimeo\n" +
-                "Scenario: scenario 1\n" +
-                "\n" +
-                "Meta:\n" +
-                "@Device tablet\n" +
-                "@Media youtube vimeo\n" +
-                "Scenario: scenario 1\n" +
-                "\n" +
-                "Meta:\n" +
-                "@Device tablet\n" +
-                "@Media youtube vimeo\n" +
-                "Scenario: scenario 1\n");
+            """
+                Meta:
+                @Single
+                @Media youtube vimeo
+                Scenario: scenario 1
+
+                Meta:
+                @Device tablet
+                @Media youtube vimeo
+                Scenario: scenario 1
+
+                Meta:
+                @Device tablet
+                @Media youtube vimeo
+                Scenario: scenario 1
+                """);
     }
 
     public void testDeletesMultipleMetaKeyAndTextFromSingleFile() {
@@ -135,19 +148,21 @@ public class DeleteAllTagOccurrencesActionTest extends BasePlatformTestCase {
         new DeleteAllTagOccurrencesAction(getProject()).actionPerformed(doTestActionEvent());
 
         myFixture.checkResult(
-            "Meta:\n" +
-                "@Single\n" +
-                "@Single key\n" +
-                "@Media youtube vimeo\n" +
-                "Scenario: scenario 1\n" +
-                "\n" +
-                "Meta:\n" +
-                "@Media youtube vimeo\n" +
-                "Scenario: scenario 1\n" +
-                "\n" +
-                "Meta:\n" +
-                "@Media youtube vimeo\n" +
-                "Scenario: scenario 1\n");
+            """
+                Meta:
+                @Single
+                @Single key
+                @Media youtube vimeo
+                Scenario: scenario 1
+
+                Meta:
+                @Media youtube vimeo
+                Scenario: scenario 1
+
+                Meta:
+                @Media youtube vimeo
+                Scenario: scenario 1
+                """);
     }
 
     public void testDeletesMultipleMetasFromSingleFile() {
@@ -156,18 +171,20 @@ public class DeleteAllTagOccurrencesActionTest extends BasePlatformTestCase {
         new DeleteAllTagOccurrencesAction(getProject()).actionPerformed(doTestActionEvent());
 
         myFixture.checkResult(
-            "Meta:\n" +
-                "@Single\n" +
-                "@Single key\n" +
-                "Scenario: scenario 1\n" +
-                "\n" +
-                "Meta:\n" +
-                "@Device tablet\n" +
-                "Scenario: scenario 1\n" +
-                "\n" +
-                "Meta:\n" +
-                "@Device tablet\n" +
-                "Scenario: scenario 1\n");
+            """
+                Meta:
+                @Single
+                @Single key
+                Scenario: scenario 1
+
+                Meta:
+                @Device tablet
+                Scenario: scenario 1
+
+                Meta:
+                @Device tablet
+                Scenario: scenario 1
+                """);
     }
 
     public void testDeletesMultipleMetasFromMultipleFiles() {
@@ -177,31 +194,35 @@ public class DeleteAllTagOccurrencesActionTest extends BasePlatformTestCase {
         new DeleteAllTagOccurrencesAction(getProject()).actionPerformed(doTestActionEvent());
 
         myFixture.checkResult(
-            "Meta:\n" +
-                "@Single\n" +
-                "@Single key\n" +
-                "Scenario: scenario 1\n" +
-                "\n" +
-                "Meta:\n" +
-                "@Device tablet\n" +
-                "Scenario: scenario 1\n" +
-                "\n" +
-                "Meta:\n" +
-                "@Device tablet\n" +
-                "Scenario: scenario 1\n");
+            """
+                Meta:
+                @Single
+                @Single key
+                Scenario: scenario 1
+
+                Meta:
+                @Device tablet
+                Scenario: scenario 1
+
+                Meta:
+                @Device tablet
+                Scenario: scenario 1
+                """);
         assertThat(delete_tag_more.getText()).isEqualTo(
-            "Meta:\n" +
-                "@Single\n" +
-                "@Single key\n" +
-                "Scenario: scenario 1\n" +
-                "\n" +
-                "Meta:\n" +
-                "@Device tablet\n" +
-                "Scenario: scenario 1\n" +
-                "\n" +
-                "Meta:\n" +
-                "@Device tablet\n" +
-                "Scenario: scenario 1\n");
+            """
+                Meta:
+                @Single
+                @Single key
+                Scenario: scenario 1
+
+                Meta:
+                @Device tablet
+                Scenario: scenario 1
+
+                Meta:
+                @Device tablet
+                Scenario: scenario 1
+                """);
     }
 
     @Override
@@ -235,8 +256,8 @@ public class DeleteAllTagOccurrencesActionTest extends BasePlatformTestCase {
         tree.setSelectionPath(new TreePath(((ModelDataRoot) tree.getModel().getRoot()).getOther().get(tagName).get()));
     }
 
-    private TestActionEvent doTestActionEvent() {
-        return new TestActionEvent(dataId -> {
+    private AnActionEvent doTestActionEvent() {
+        return TestActionEvent.createTestEvent(dataId -> {
             if (CommonDataKeys.PROJECT.is(dataId)) return getProject();
             if (PlatformDataKeys.CONTEXT_COMPONENT.is(dataId)) return tree;
             return null;

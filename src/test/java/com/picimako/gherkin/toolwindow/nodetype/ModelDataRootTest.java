@@ -196,7 +196,7 @@ public class ModelDataRootTest extends MediumBasePlatformTestCase {
                 .addCategory(new Category("category", getProject())
                     .add(new Tag("tag", psiFile.getVirtualFile(), getProject()))));
 
-        WriteAction.run(() -> psiFile.delete());
+        WriteAction.run(psiFile::delete);
 
         var root = modelDataRoot.findContentRootOrRootless(psiFile);
 

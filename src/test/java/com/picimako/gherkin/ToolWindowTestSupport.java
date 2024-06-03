@@ -4,19 +4,18 @@ package com.picimako.gherkin;
 
 import static com.picimako.gherkin.toolwindow.GherkinTagToolWindowUtil.getToolWindowHider;
 
-import javax.swing.*;
-
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.wm.RegisterToolWindowTask;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.Content;
-
 import com.picimako.gherkin.toolwindow.GherkinTagOverviewPanel;
 import com.picimako.gherkin.toolwindow.GherkinTagToolWindowFactory;
 import com.picimako.gherkin.toolwindow.GherkinTagToolWindowHider;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
+import kotlin.Unit;
+
+import javax.swing.*;
 
 /**
  * Utility for managing tool windows in unit tests.
@@ -30,14 +29,16 @@ public final class ToolWindowTestSupport {
     }
 
     public static void registerToolWindow(JPanel panelContent, Project project) {
-        ToolWindow toolWindow = ToolWindowManager.getInstance(project)
-            .registerToolWindow(
-                new RegisterToolWindowTask(TOOL_WINDOW_ID,
-                    ToolWindowAnchor.LEFT,
-                    new GherkinTagToolWindowHider(panelContent, project),
-                    true, true, false, true,
-                    new GherkinTagToolWindowFactory(),
-                    null, null));
+        ToolWindow toolWindow = ToolWindowManager.getInstance(project).registerToolWindow(TOOL_WINDOW_ID, taskBuilder -> {
+            taskBuilder.anchor = ToolWindowAnchor.LEFT;
+            taskBuilder.sideTool = true;
+            taskBuilder.canCloseContent = true;
+            taskBuilder.shouldBeAvailable = true;
+            taskBuilder.contentFactory = new GherkinTagToolWindowFactory();
+            taskBuilder.icon = null;
+            taskBuilder.stripeTitle = null;
+            return Unit.INSTANCE;
+        });
         Content content = toolWindow.getContentManager().getFactory()
             .createContent(new GherkinTagToolWindowHider(panelContent, project), "", true);
         toolWindow.getContentManager().addContent(content);
@@ -48,7 +49,7 @@ public final class ToolWindowTestSupport {
         GherkinTagOverviewPanel toolWindowPanel = (GherkinTagOverviewPanel) hider.getComponent(0);
         return (ModelDataRoot) toolWindowPanel.getTree().getModel().getRoot();
     }
-    
+
     private ToolWindowTestSupport() {
         //Utility class
     }

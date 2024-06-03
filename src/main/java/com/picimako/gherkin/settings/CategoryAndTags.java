@@ -9,7 +9,7 @@ import lombok.*;
  * <p>
  * The tags are stored as comma separated values.
  * <p>
- * {@link Cloneable} is implemented so that this type of objects are handled properly during the IDE Settings workflow.
+ * {@link Cloneable} is implemented so that these type of objects are handled properly during the IDE Settings workflow.
  * <p>
  * e.g. com.intellij.lang.ant.config.impl.BuildFileProperty
  * e.g. com.intellij.execution.util.EnvironmentVariable

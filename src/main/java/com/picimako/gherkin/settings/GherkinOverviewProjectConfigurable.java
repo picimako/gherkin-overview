@@ -69,7 +69,7 @@ public class GherkinOverviewProjectConfigurable implements Configurable {
     }
 
     @Override
-    public void apply() throws ConfigurationException {
+    public void apply() {
         var appSettings = GherkinOverviewApplicationState.getInstance();
         var projectSettings = GherkinOverviewProjectState.getInstance(project);
         //Saving this state, before overwriting the saved mappings with the new values

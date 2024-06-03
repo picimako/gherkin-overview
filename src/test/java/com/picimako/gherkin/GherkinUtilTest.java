@@ -22,14 +22,15 @@ public class GherkinUtilTest extends BasePlatformTestCase {
 
     public void testCollectGherkinTagsFromFile() {
         PsiFile gherkinFile = myFixture.configureByText("gherkin.feature",
-            "@smoke\n" +
-                "Feature: A feature\n" +
-                "\n" +
-                "\t@regression\n" +
-                "\tScenario:\n" +
-                "\n" +
-                "\t@jira @trello @regression\n" +
-                "\tScenario:");
+            """
+                @smoke
+                Feature: A feature
+
+                \t@regression
+                \tScenario:
+
+                \t@jira @trello @regression
+                \tScenario:""");
 
         List<String> tags = GherkinUtil.collectGherkinTagsFromFile(gherkinFile);
 

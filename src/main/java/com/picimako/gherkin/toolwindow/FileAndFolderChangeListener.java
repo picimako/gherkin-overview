@@ -18,7 +18,7 @@ import com.picimako.gherkin.BDDUtil;
 
 /**
  * Listener to rebuild the tool window model in case of file and folder changes.
- *
+ * <p>
  * <strong>NOTE:</strong>
  * Due to the nature of this plugin, that it supports any kind of projects with Gherkin and Story files,
  * limiting the directory and file change events to ones only in test resources is not achievable since it would be
