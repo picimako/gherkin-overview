@@ -20,19 +20,19 @@ import com.picimako.gherkin.settings.GherkinOverviewProjectState;
 /**
  * Project service to store the mappings between tag and category names. Each tag name is assigned to a category and stored as a separate
  * entry. The following assignments in the plugin Settings
- * <pre>
+ * <pre>{@code
  * Test Suite=smoke,regression,e2e
  * Device=mobile, tablet, desktop
- * </pre>
+ * }</pre>
  * will be stored in the underlying mapping as:
- * <pre>
+ * <pre>{@code
  * smoke -> Test Suite
  * regression -> Test Suite
  * e2e -> Test Suite
  * mobile -> Device
  * tablet -> Device
  * desktop -> Device
- * </pre>
+ * }</pre>
  * This service is initialized when the tool window's {@link GherkinTagTreeModel} is being first built, and it requests
  * a mapping by calling {@link #categoryOf(String)}.
  * <p>
@@ -46,9 +46,9 @@ import com.picimako.gherkin.settings.GherkinOverviewProjectState;
  * starting with the # symbol to have them recognized as regex patterns.
  * <p>
  * One example is Jira ticket ids in which case the mapping looks like
- * <pre>
+ * <pre>{@code
  * Jira=#^[A-Z]+-[0-9]+$
- * </pre>
+ * }</pre>
  * <p>
  * So, any tag name that matches this pattern will be added to the Jira category. If there is more than one category
  * this same pattern, or one yielding the same matches is added to the registry, upon querying the one added earliest

@@ -19,17 +19,17 @@ import com.picimako.gherkin.toolwindow.nodetype.Tag;
  * Model object for displaying the structure of the underlying model data grouped by content roots.
  * <p>
  * This is a five-level model consisting of the following levels:
- * <pre>
- * - Gherkin Tags                   <-- This is the root node. It is permanent and cannot be removed.
+ * <pre>{@code
+ * - Gherkin Tags                   <-- This is the root node. Permanent, can't be removed.
  *      - Content root              <-- A content root in the current IDE project.
  *          - Category              <-- The category a Gherkin tag is associated to for grouping.
  *              - Tag               <-- The Gherkin tag.
- *                  - Gherkin file  <-- One or more {@link FeatureFile}s.
+ *                  - Gherkin file  <-- One or more 'FeatureFile's.
  *      - Content root
  *          - Category
  *              - Tag
  *                  - Gherkin file
- * </pre>
+ * }</pre>
  */
 final class ContentRootBasedGherkinTagTreeModel extends GherkinTagTreeModel {
 

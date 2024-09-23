@@ -16,14 +16,14 @@ import org.jetbrains.annotations.NotNull;
  * Creates an action group in which the appearance of the Gherkin Tags tool window can be customized.
  * <p>
  * The structure is:
- * <pre>
+ * <pre>{@code
  * Statistics
  *      Disabled
  *      Simplified
  *      Detailed
  * Layout
  *      Group by Modules
- * </pre>
+ * }</pre>
  * <p>
  * After toggling actions the model data and/or the tool window UI is updated to reflect the changes.
  */

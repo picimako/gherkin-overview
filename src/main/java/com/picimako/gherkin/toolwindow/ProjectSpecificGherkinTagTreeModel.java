@@ -18,12 +18,12 @@ import com.picimako.gherkin.toolwindow.nodetype.Tag;
  * content root.
  * <p>
  * This is a four-level model consisting of the following levels:
- * <pre>
- * - Gherkin Tags               <-- This is the root node. It is permanent and cannot be removed.
+ * <pre>{@code
+ * - Gherkin Tags               <-- This is the root node. Permanent, can't be removed.
  *      - Category              <-- The category a Gherkin tag is associated to for grouping.
  *          - Tag               <-- The Gherkin tag.
- *              - Gherkin file  <-- One or more {@link FeatureFile}s.
- * </pre>
+ *              - Gherkin file  <-- One or more 'FeatureFile's.
+ * }</pre>
  */
 public final class ProjectSpecificGherkinTagTreeModel extends GherkinTagTreeModel {
 
