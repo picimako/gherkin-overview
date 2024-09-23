@@ -110,7 +110,7 @@ final class GherkinMappingsTable extends ListTableWithButtons<CategoryAndTags> {
     }
 
     @Override
-    protected AnActionButton @NotNull [] createExtraActions() {
+    protected AnActionButton @NotNull [] createExtraToolbarActions() {
         return extraActions.get();
     }
 
