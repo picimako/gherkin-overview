@@ -9,8 +9,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import java.util.Optional;
 
-import com.intellij.openapi.options.ConfigurationException;
-
 import com.picimako.gherkin.MediumBasePlatformTestCase;
 import com.picimako.gherkin.ToolWindowTestSupport;
 import com.picimako.gherkin.toolwindow.GherkinTagOverviewPanel;
