@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow.nodetype;
 
@@ -20,7 +20,7 @@ import org.jetbrains.annotations.TestOnly;
  * identified by the IDE.
  */
 @Getter
-public class ContentRoot extends AbstractNodeType implements CategoriesHolder {
+public final class ContentRoot extends AbstractNodeType implements CategoriesHolder {
 
     private static final Map<Type, Icon> ICONS = Map.of(
         Type.MODULE, AllIcons.Actions.ModuleDirectory,
@@ -36,7 +36,7 @@ public class ContentRoot extends AbstractNodeType implements CategoriesHolder {
     /**
      * It initializes the collection of categories with one called {@code Other}, where unmapped tags will be put.
      */
-    protected ContentRoot(@NotNull String displayName, Type type, @NotNull Project project) {
+    public ContentRoot(@NotNull String displayName, Type type, @NotNull Project project) {
         super(displayName, project);
         this.type = type;
         other = Category.createOther(project);

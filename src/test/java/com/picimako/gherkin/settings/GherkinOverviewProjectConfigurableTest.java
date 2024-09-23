@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.settings;
 
@@ -8,8 +8,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import java.util.Optional;
-
-import com.intellij.openapi.options.ConfigurationException;
 
 import com.picimako.gherkin.MediumBasePlatformTestCase;
 import com.picimako.gherkin.ToolWindowTestSupport;
@@ -87,7 +85,7 @@ public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTe
 
     //apply
 
-    public void testAppliesSettingsWithoutProjectLevelMappings() throws ConfigurationException {
+    public void testAppliesSettingsWithoutProjectLevelMappings() {
         CategoryAndTags breakpoint = new CategoryAndTags("Breakpoint", "small,medium");
         CategoryAndTags media = new CategoryAndTags("Media", "image");
         configurable.getComponent().setApplicationLevelMappings(List.of(breakpoint));
@@ -108,7 +106,7 @@ public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTe
         );
     }
 
-    public void testAppliesSettingsWithProjectLevelMappings() throws ConfigurationException {
+    public void testAppliesSettingsWithProjectLevelMappings() {
         ToolWindowTestSupport.registerToolWindow(new GherkinTagOverviewPanel(getProject()), getProject());
         CategoryAndTags breakpoint = new CategoryAndTags("Breakpoint", "small,medium");
         CategoryAndTags media = new CategoryAndTags("Media", "image");
@@ -131,7 +129,7 @@ public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTe
         );
     }
 
-    public void testRebuildsModelIfAppLevelMappingsChanged() throws ConfigurationException {
+    public void testRebuildsModelIfAppLevelMappingsChanged() {
         myFixture.configureByFile("the_gherkin.feature");
         ToolWindowTestSupport.registerToolWindow(new GherkinTagOverviewPanel(getProject()), getProject());
         GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = StatisticsType.SIMPLIFIED;
@@ -144,7 +142,7 @@ public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTe
         validateCategories(getToolWindowModel(getProject()), "Web Browser", "Browser");
     }
 
-    public void testRebuildsModelIfProjectLevelMappingsChanged() throws ConfigurationException {
+    public void testRebuildsModelIfProjectLevelMappingsChanged() {
         myFixture.configureByFile("the_gherkin.feature");
         ToolWindowTestSupport.registerToolWindow(new GherkinTagOverviewPanel(getProject()), getProject());
         GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = StatisticsType.SIMPLIFIED;
@@ -158,7 +156,7 @@ public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTe
         validateCategories(getToolWindowModel(getProject()), "Web Browser", "Browser");
     }
 
-    public void testDoesntRebuildModelIfNoMappingHasChanged() throws ConfigurationException {
+    public void testDoesntRebuildModelIfNoMappingHasChanged() {
         myFixture.configureByFile("the_gherkin.feature");
         ToolWindowTestSupport.registerToolWindow(new GherkinTagOverviewPanel(getProject()), getProject());
         GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = StatisticsType.SIMPLIFIED;

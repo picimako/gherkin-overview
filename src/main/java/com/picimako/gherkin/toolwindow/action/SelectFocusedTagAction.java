@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow.action;
 
@@ -36,7 +36,7 @@ import java.util.Optional;
  * <p>
  * This action is disabled for JBehave Story metas for now, or when there is more than one caret placed in the current editor.
  */
-public class SelectFocusedTagAction extends AnActionButton {
+public final class SelectFocusedTagAction extends AnActionButton {
 
     public SelectFocusedTagAction() {
         super(

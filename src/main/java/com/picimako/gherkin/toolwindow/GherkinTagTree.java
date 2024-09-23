@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow;
 
@@ -28,7 +28,7 @@ import com.picimako.gherkin.toolwindow.nodetype.Tag;
 /**
  * A custom JTree implementation for rendering the elements of the Gherkin tag tree.
  */
-public class GherkinTagTree extends JTree {
+public final class GherkinTagTree extends JTree {
 
     public GherkinTagTree(TreeModel model, Project project) {
         super(model);

@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow;
 
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
  * Currently the open action is bound to the double-click event.
  */
 @RequiredArgsConstructor
-public class MouseListeningGherkinFileOpener extends DoubleClickListener {
+final class MouseListeningGherkinFileOpener extends DoubleClickListener {
 
     private final Project project;
     private final GherkinTagTree tree;

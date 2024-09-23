@@ -1,5 +1,6 @@
 build
 *.iml
 .idea/*
+.intellijPlatform
 .gradle/*
 out

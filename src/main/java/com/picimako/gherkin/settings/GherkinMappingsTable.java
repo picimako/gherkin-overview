@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.settings;
 
@@ -23,14 +23,14 @@ import com.picimako.gherkin.resources.GherkinBundle;
  * <p>
  * Moving tables row up and down is not yet supported by this implementation.
  */
-public class GherkinMappingsTable extends ListTableWithButtons<CategoryAndTags> {
+final class GherkinMappingsTable extends ListTableWithButtons<CategoryAndTags> {
 
     /**
      * Actions in addition to the default Add and Remove.
      */
     private ExtraActionsSupplier extraActions = ExtraActionsSupplier.NO_ACTION;
 
-    public GherkinMappingsTable withExtraActions(ExtraActionsSupplier extraActions) {
+    GherkinMappingsTable withExtraActions(ExtraActionsSupplier extraActions) {
         this.extraActions = extraActions;
         return this;
     }
@@ -41,7 +41,7 @@ public class GherkinMappingsTable extends ListTableWithButtons<CategoryAndTags> 
      * Due to the {@code getComponent()} call that set the extra actions under the hood,
      * this method must be called after {@code withExtraActions},and must be called whenever this table is instantiated.
      */
-    public GherkinMappingsTable init() {
+    GherkinMappingsTable init() {
         getComponent().setPreferredSize(new Dimension(getComponent().getWidth(), 250));
         return this;
     }
@@ -110,7 +110,7 @@ public class GherkinMappingsTable extends ListTableWithButtons<CategoryAndTags> 
     }
 
     @Override
-    protected AnActionButton @NotNull [] createExtraActions() {
+    protected AnActionButton @NotNull [] createExtraToolbarActions() {
         return extraActions.get();
     }
 
@@ -143,7 +143,7 @@ public class GherkinMappingsTable extends ListTableWithButtons<CategoryAndTags> 
      * Provides extra action buttons for the {@link GherkinMappingsTable}.
      */
     @FunctionalInterface
-    public interface ExtraActionsSupplier extends Supplier<AnActionButton[]> {
+    interface ExtraActionsSupplier extends Supplier<AnActionButton[]> {
         AnActionButton[] EMPTY = new AnActionButton[0];
         ExtraActionsSupplier NO_ACTION = () -> EMPTY;
     }

@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow;
 
@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
  * Currently the open action is bound to the Enter key.
  */
 @RequiredArgsConstructor
-public class KeyboardListeningGherkinFileOpener extends KeyAdapter {
+final class KeyboardListeningGherkinFileOpener extends KeyAdapter {
 
     @NotNull
     private final Project project;

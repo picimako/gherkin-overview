@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow;
 
@@ -19,25 +19,25 @@ import com.picimako.gherkin.toolwindow.nodetype.Tag;
  * Model object for displaying the structure of the underlying model data grouped by content roots.
  * <p>
  * This is a five-level model consisting of the following levels:
- * <pre>
- * - Gherkin Tags                   <-- This is the root node. It is permanent and cannot be removed.
+ * <pre>{@code
+ * - Gherkin Tags                   <-- This is the root node. Permanent, can't be removed.
  *      - Content root              <-- A content root in the current IDE project.
  *          - Category              <-- The category a Gherkin tag is associated to for grouping.
  *              - Tag               <-- The Gherkin tag.
- *                  - Gherkin file  <-- One or more {@link FeatureFile}s.
+ *                  - Gherkin file  <-- One or more 'FeatureFile's.
  *      - Content root
  *          - Category
  *              - Tag
  *                  - Gherkin file
- * </pre>
+ * }</pre>
  */
-public class ContentRootBasedGherkinTagTreeModel extends GherkinTagTreeModel {
+final class ContentRootBasedGherkinTagTreeModel extends GherkinTagTreeModel {
 
-    public ContentRootBasedGherkinTagTreeModel(Project project) {
+    ContentRootBasedGherkinTagTreeModel(Project project) {
         super(project);
     }
 
-    public ContentRootBasedGherkinTagTreeModel(ModelDataRoot data, Project project) {
+    ContentRootBasedGherkinTagTreeModel(ModelDataRoot data, Project project) {
         super(data, project);
     }
 
@@ -97,14 +97,13 @@ public class ContentRootBasedGherkinTagTreeModel extends GherkinTagTreeModel {
     public int getIndexOfChild(Object parent, Object child) {
         int indexOfChild = 0;
         if (parent != null && child != null) {
-            if (parent instanceof ModelDataRoot) {
-                indexOfChild = data.getContentRootsByLayout().indexOf(child);
-            } else if (parent instanceof ContentRoot) {
-                indexOfChild = asContentRoot(parent).getCategories().indexOf(child);
-            } else if (parent instanceof Category) {
-                indexOfChild = asCategory(parent).getTags().indexOf(child);
-            } else if (parent instanceof Tag) {
-                indexOfChild = asTag(parent).getFeatureFiles().indexOf(child);
+            switch (parent) {
+                case ModelDataRoot __ -> indexOfChild = data.getContentRootsByLayout().indexOf(child);
+                case ContentRoot __ -> indexOfChild = asContentRoot(parent).getCategories().indexOf(child);
+                case Category __ -> indexOfChild = asCategory(parent).getTags().indexOf(child);
+                case Tag __ -> indexOfChild = asTag(parent).getFeatureFiles().indexOf(child);
+                default -> {
+                }
             }
         } else {
             indexOfChild = -1;

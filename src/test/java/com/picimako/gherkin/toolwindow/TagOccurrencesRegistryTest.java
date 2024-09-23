@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow;
 
@@ -35,7 +35,7 @@ public class TagOccurrencesRegistryTest extends BasePlatformTestCase {
         var registry = initRegistryAndCalculateCounts(2, virtualFile, virtualFile2);
 
         assertSoftly(
-            softly -> softly.assertThat(registry.getCountFor(virtualFile.getPath(), "disabled")).isEqualTo(1),
+            softly -> softly.assertThat(registry.getCountFor(virtualFile.getPath(), "disabled")).isOne(),
             softly -> softly.assertThat(registry.getCountFor(virtualFile2.getPath(), "tablet")).isEqualTo(2),
             softly -> softly.assertThat(registry.getCountFor(virtualFile2.getPath(), "youtube")).isEqualTo(3)
         );

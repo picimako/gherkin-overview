@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow;
 
@@ -16,24 +16,24 @@ import org.jetbrains.annotations.NotNull;
  * Creates an action group in which the appearance of the Gherkin Tags tool window can be customized.
  * <p>
  * The structure is:
- * <pre>
+ * <pre>{@code
  * Statistics
  *      Disabled
  *      Simplified
  *      Detailed
  * Layout
  *      Group by Modules
- * </pre>
+ * }</pre>
  * <p>
  * After toggling actions the model data and/or the tool window UI is updated to reflect the changes.
  */
 @RequiredArgsConstructor
-public final class ToolWindowAppearanceActionGroupCreator {
+final class ToolWindowAppearanceActionGroupCreator {
 
     private final Runnable updateUICallback;
     private final Runnable updateModelCallback;
 
-    public DefaultActionGroup create() {
+    DefaultActionGroup create() {
         DefaultActionGroup group = new DefaultActionGroup();
         group.getTemplatePresentation().setText(GherkinBundle.message("gherkin.overview.toolwindow.statistics.button.tooltip"));
         group.getTemplatePresentation().setDescription(GherkinBundle.message("gherkin.overview.toolwindow.statistics.button.description"));

@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow;
 
@@ -16,14 +16,14 @@ import java.util.Map;
  * types, and for any selected node, it displays the proper action popup menu.
  */
 @RequiredArgsConstructor
-public final class ToolWindowPopupMenuInvoker {
+final class ToolWindowPopupMenuInvoker {
     @NotNull
     private final GherkinTagTree tree;
     @NotNull
     private final Map<String, ActionPopupMenu> actionPopupMenus;
 
     //Invokes the context menu only when it is initiated on the proper node type
-    public void invokePopup(Component comp, int x, int y) {
+    void invokePopup(Component comp, int x, int y) {
         String nodeTypeToSelect = identifyTreeNodeTypeForClickLocation(tree, x, y);
         if (nodeTypeToSelect != null) {
             actionPopupMenus.get(nodeTypeToSelect).getComponent().show(comp, x, y);

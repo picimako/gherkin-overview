@@ -1,9 +1,10 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow;
 
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiManager;
@@ -23,7 +24,7 @@ import java.util.Map;
  * The underlying tree component is also extended with action listeners, so that e.g. hitting Enter or double-clicking on
  * Gherkin and Story file nodes open the selected file.
  */
-public class GherkinTagOverviewPanel extends JPanel {
+public final class GherkinTagOverviewPanel extends JPanel {
 
     private static final String TAG_ACTIONS_GROUP = "gherkin.overview.tag.TagActionsGroup";
     private final TreeModelFactory treeModelFactory = new TreeModelFactory();
@@ -61,9 +62,10 @@ public class GherkinTagOverviewPanel extends JPanel {
         LayoutType layout = GherkinTagsToolWindowSettings.getInstance(project).layout;
         if ((layout == LayoutType.NO_GROUPING && !modelDataRoot().isInitializedAsProjectData())
             || (layout != LayoutType.NO_GROUPING && !modelDataRoot().isInitializedAsContentRootData())) {
-            model.buildModel();
+            NonBlocking.readNoResult(project, () -> model.buildModel(), () -> tree.setModel(model));
+        } else {
+            tree.setModel(model);
         }
-        tree.setModel(model);
     }
 
     /**
@@ -73,11 +75,29 @@ public class GherkinTagOverviewPanel extends JPanel {
      * @see com.picimako.gherkin.settings.GherkinOverviewProjectConfigurable
      * @see FileAndFolderChangeListener
      */
+    public void rebuildModel(Runnable edtActions) {
+        if (ApplicationManager.getApplication().isUnitTestMode()) {
+            model.dispose();
+            model.buildModel();
+            tree.setModel(model);
+            tree.updateUI();
+        } else {
+            NonBlocking.readNoResult(project, () -> {
+                model.dispose();
+                model.buildModel();
+            }, () -> {
+                tree.setModel(model);
+                tree.updateUI();
+                edtActions.run();
+            });
+        }
+    }
+
+    /**
+     * Convenience method for calling {@code rebuildModel(() -> {})}.
+     */
     public void rebuildModel() {
-        model.dispose();
-        model.buildModel();
-        tree.setModel(model);
-        tree.updateUI();
+        rebuildModel(() -> {});
     }
 
     private void buildGUI() {

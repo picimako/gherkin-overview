@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow;
 
@@ -18,7 +18,7 @@ import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 /**
  * A wrapper panel that shows a pre-defined text when there is no Gherkin tag defined in a project.
  */
-public class GherkinTagToolWindowHider extends JBPanelWithEmptyText {
+public final class GherkinTagToolWindowHider extends JBPanelWithEmptyText {
 
     private static final BiPredicate<ModelDataRoot, Project> IS_TAG_PRESENT_IN_PROJECT =
         (modelRoot, proj) -> GherkinTagsToolWindowSettings.getInstance(proj).layout == LayoutType.NO_GROUPING

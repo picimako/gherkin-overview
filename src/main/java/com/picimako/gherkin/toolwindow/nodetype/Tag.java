@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow.nodetype;
 
@@ -27,7 +27,7 @@ import com.picimako.gherkin.toolwindow.TagOccurrencesRegistry;
  * One or multiple Gherkin files (as {@link FeatureFile}s) may be bound to a tag, meaning the tag is present in all
  * bound Gherkin files. It may be present one or more times in one file.
  */
-public class Tag extends AbstractNodeType {
+public final class Tag extends AbstractNodeType {
 
     @Getter
     private final List<FeatureFile> featureFiles = new SmartList<>();
@@ -98,11 +98,11 @@ public class Tag extends AbstractNodeType {
         featureFiles.removeIf(featureFile -> featureFile.getPath().equals(file.getPath()));
 
         if (featureFiles.size() == 1) {
-            featureFiles.get(0).resetDisplayName();
+            featureFiles.getFirst().resetDisplayName();
         } else if (featureFiles.size() > 1) {
             var featureFilesWithTheSameName = getFeatureFilesWithTheNameOf(file);
             if (featureFilesWithTheSameName.size() == 1) {
-                featureFilesWithTheSameName.get(0).resetDisplayName();
+                featureFilesWithTheSameName.getFirst().resetDisplayName();
             } else if (featureFilesWithTheSameName.size() > 1) {
                 updateDisplayNamesOf(featureFilesWithTheSameName, file);
             }

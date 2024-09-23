@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow;
 
@@ -166,7 +166,7 @@ public class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
         validateCategories(List.of("Other", "Test Suite", "Device", "Excluded", "Browser", "Analytics and SEO", "Jira"));
         validateCategoryToTagMappings(expectedCategoryTagMappings, root);
         validateTagToGherkinFileMappings(expectedTagGherkinFileMappings, root);
-        assertThat(root.getModules().get(0).getOther().get("desktop")).isEmpty();
+        assertThat(root.getModules().getFirst().getOther().get("desktop")).isEmpty();
     }
 
     public void testUpdateTreeModelWhenGherkinTagIsReplaced() {
@@ -191,8 +191,8 @@ public class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
         validateCategories(List.of("Other", "Test Suite", "Device", "Excluded", "Browser", "Work in Progress", "Jira"));
         validateCategoryToTagMappings(expectedCategoryTagMappings, root);
         validateTagToGherkinFileMappings(expectedTagGherkinFileMappings, root);
-        assertThat(root.getModules().get(0).getOther().get("sitemap")).isEmpty();
-        assertThat(root.getModules().get(0).findCategory("Work in Progress").get().get("WIP")).isNotEmpty();
+        assertThat(root.getModules().getFirst().getOther().get("sitemap")).isEmpty();
+        assertThat(root.getModules().getFirst().findCategory("Work in Progress").get().get("WIP")).isNotEmpty();
     }
 
     public void testTagOccurrenceIsUpdated() {
@@ -200,7 +200,7 @@ public class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
 
         Supplier<Integer> countGetter = () -> TagOccurrencesRegistry.getInstance(getProject())
             .getTagOccurrences()
-            .get(root.getModules().get(0).findTag("youtube").get().getFeatureFiles().get(0).getPath())
+            .get(root.getModules().getFirst().findTag("youtube").get().getFeatureFiles().getFirst().getPath())
             .get("youtube")
             .intValue();
 
@@ -209,7 +209,7 @@ public class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
         WriteAction.run(() -> CommandProcessor.getInstance().executeCommand(getProject(), () -> tag.delete(), "Delete", "group.id"));
         model.updateModelForFile(psiTheGherkin);
 
-        assertThat(countGetter.get()).isEqualTo(1);
+        assertThat(countGetter.get()).isOne();
     }
 
     /**
@@ -228,12 +228,12 @@ public class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
         WriteAction.run(() -> CommandProcessor.getInstance().executeCommand(getProject(), () -> tag.replace(topLevelElements[0]), "Replace", "group.id"));
         model.updateModelForFile(psiTheGherkin);
 
-        assertThat(root.getModules().get(0).findCategory("Jira")).isEmpty();
-        Optional<Category> trello = root.getModules().get(0).findCategory("Trello");
+        assertThat(root.getModules().getFirst().findCategory("Jira")).isEmpty();
+        Optional<Category> trello = root.getModules().getFirst().findCategory("Trello");
         assertSoftly(
             softly -> softly.assertThat(trello).isNotNull(),
             softly -> softly.assertThat(trello.get().get("TRELLO-9999")).isNotNull(),
-            softly -> softly.assertThat(trello.get().get("TRELLO-9999").get().getFeatureFiles().get(0).getDisplayName()).isEqualTo("the_gherkin.feature")
+            softly -> softly.assertThat(trello.get().get("TRELLO-9999").get().getFeatureFiles().getFirst().getDisplayName()).isEqualTo("the_gherkin.feature")
         );
     }
 
@@ -243,7 +243,7 @@ public class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
 
         GherkinTagTreeModel model = new ContentRootBasedGherkinTagTreeModel(getProject());
         model.buildModel();
-        Tag samename = ((ModelDataRoot) model.getRoot()).getModules().get(0).findTag("samename").get();
+        Tag samename = ((ModelDataRoot) model.getRoot()).getModules().getFirst().findTag("samename").get();
 
         assertThat(samename.getFeatureFiles()).extracting(AbstractNodeType::getDisplayName)
             .containsExactlyInAnyOrder("gherkin_with_same_name.feature [Almost same name]", "gherkin_with_same_name.feature [Same name]");
@@ -278,7 +278,7 @@ public class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
     private void validateCategoryToTagMappings(Map<String, List<String>> expectedCategoryTagMappings, ModelDataRoot root) {
         SoftAssertions softly = new SoftAssertions();
         expectedCategoryTagMappings.forEach((category, tags) -> softly
-            .assertThat(root.getModules().get(0).findCategory(category).get().getTags())
+            .assertThat(root.getModules().getFirst().findCategory(category).get().getTags())
             .extracting(Tag::getDisplayName)
             .containsExactlyInAnyOrderElementsOf(tags));
         softly.assertAll();
@@ -286,7 +286,7 @@ public class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
 
     private void validateTagToGherkinFileMappings(Map<String, List<VirtualFile>> expectedTagGherkinFileMappings, ModelDataRoot root) {
         SoftAssertions softly = new SoftAssertions();
-        Map<String, Tag> tags = root.getContentRoots().get(0).getCategories().stream()
+        Map<String, Tag> tags = root.getContentRoots().getFirst().getCategories().stream()
             .flatMap(category -> category.getTags().stream())
             .collect(toMap(Tag::getDisplayName, Function.identity()));
         expectedTagGherkinFileMappings.forEach((tag, gherkinFiles) -> {

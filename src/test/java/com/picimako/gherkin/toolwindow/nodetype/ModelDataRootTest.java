@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow.nodetype;
 
@@ -345,7 +345,7 @@ public class ModelDataRootTest extends MediumBasePlatformTestCase {
         var anotherStory = myFixture.configureByFile("Another story.story").getVirtualFile();
 
         var modelDataRoot = setupModelData();
-        modelDataRoot.getModules().get(0).findCategory("Component").get().addTagOrFileToTag("vimeo", anotherStory);
+        modelDataRoot.getModules().getFirst().findCategory("Component").get().addTagOrFileToTag("vimeo", anotherStory);
 
         configureFileTypesInProject(true, true);
         modelDataRoot.updateDisplayName();
@@ -379,7 +379,7 @@ public class ModelDataRootTest extends MediumBasePlatformTestCase {
         var anotherStory = myFixture.configureByFile("Another story.story").getVirtualFile();
 
         var modelDataRoot = setupModelData();
-        modelDataRoot.getModules().get(0).findCategory("Component").get().addTagOrFileToTag("vimeo", anotherStory);
+        modelDataRoot.getModules().getFirst().findCategory("Component").get().addTagOrFileToTag("vimeo", anotherStory);
 
         configureFileTypesInProject(true, true);
         modelDataRoot.updateDisplayName();

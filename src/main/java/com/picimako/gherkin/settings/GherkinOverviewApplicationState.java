@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.settings;
 
@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
     name = "Gherkin Overview Application-level Mappings",
     storages = {@Storage(value = "GherkinOverviewAppSettings.xml", exportable = true)}
 )
-public class GherkinOverviewApplicationState implements PersistentStateComponent<GherkinOverviewApplicationState> {
+public final class GherkinOverviewApplicationState implements PersistentStateComponent<GherkinOverviewApplicationState> {
 
     /**
      * Contains the application level category to tags mappings.

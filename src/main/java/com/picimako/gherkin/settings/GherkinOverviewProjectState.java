@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.settings;
 
@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
     name = "Gherkin Overview Project-Level Mappings",
     storages = {@Storage(value = "GherkinOverviewProjectSettings.xml", exportable = true)}
 )
-public class GherkinOverviewProjectState implements PersistentStateComponent<GherkinOverviewProjectState> {
+public final class GherkinOverviewProjectState implements PersistentStateComponent<GherkinOverviewProjectState> {
 
     /**
      * Whether to override the IDE-level mappings in the current project.

@@ -1,16 +1,15 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
-import com.picimako.gherkin.toolwindow.action.SelectFocusedTagAction;
-import org.jetbrains.annotations.NotNull;
-
 import com.picimako.gherkin.BDDUtil;
 import com.picimako.gherkin.resources.GherkinBundle;
+import com.picimako.gherkin.toolwindow.action.SelectFocusedTagAction;
+import kotlin.coroutines.Continuation;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -28,28 +27,29 @@ import java.util.List;
  * @see GherkinTagOverviewPanel
  * @since 0.1.0
  */
-public class GherkinTagToolWindowFactory implements ToolWindowFactory {
+public final class GherkinTagToolWindowFactory implements ToolWindowFactory {
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         //Registering in StartupManager to make sure that the indices are completely available to collect files from the project
-        StartupManager.getInstance(project).runWhenProjectIsInitialized(() -> {
-            var overviewPanel = new GherkinTagOverviewPanel(project);
 
-            toolWindow.setTitleActions(List.of(
-                new SelectFocusedTagAction(),
-                new ToolWindowAppearanceActionGroupCreator(
-                    () -> overviewPanel.getTree().updateUI(),
-                    () -> overviewPanel.updateModel()
-                ).create()));
+        NonBlocking.read(project,
+            () -> new GherkinTagOverviewPanel(project),
+            overviewPanel -> {
+                toolWindow.setTitleActions(List.of(
+                    new SelectFocusedTagAction(),
+                    new ToolWindowAppearanceActionGroupCreator(
+                        () -> overviewPanel.getTree().updateUI(),
+                        () -> overviewPanel.updateModel()
+                    ).create()));
 
-            var hider = new GherkinTagToolWindowHider(overviewPanel, project, getHiderMessage());
-            var contentManager = toolWindow.getContentManager();
-            var content = contentManager.getFactory().createContent(hider, null, true);
-            contentManager.addContent(content);
+                var hider = new GherkinTagToolWindowHider(overviewPanel, project, getHiderMessage());
+                var contentManager = toolWindow.getContentManager();
+                var content = contentManager.getFactory().createContent(hider, null, true);
+                contentManager.addContent(content);
 
-            hider.setContentVisibilityBasedOn(overviewPanel.modelDataRoot());
-        });
+                hider.setContentVisibilityBasedOn(overviewPanel.modelDataRoot());
+            });
     }
 
     @NotNull
@@ -58,7 +58,7 @@ public class GherkinTagToolWindowFactory implements ToolWindowFactory {
     }
 
     @Override
-    public boolean isApplicable(@NotNull Project project) {
+    public Object isApplicableAsync(@NotNull Project project, @NotNull Continuation<? super Boolean> $completion) {
         return !project.isDefault();
     }
 }

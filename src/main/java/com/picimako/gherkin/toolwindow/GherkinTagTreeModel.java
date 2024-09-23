@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow;
 
@@ -16,12 +16,10 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.SlowOperations;
 import com.intellij.util.SmartList;
 import org.jetbrains.plugins.cucumber.psi.GherkinTag;
 
@@ -53,7 +51,7 @@ import com.picimako.gherkin.toolwindow.nodetype.Tag;
  * @see GherkinTagTree
  * @see GherkinPsiChangeListener
  */
-public abstract class GherkinTagTreeModel implements TreeModel, Disposable {
+abstract class GherkinTagTreeModel implements TreeModel, Disposable {
 
     private final Project project;
     private final TagCategoryRegistry registry;
@@ -101,8 +99,8 @@ public abstract class GherkinTagTreeModel implements TreeModel, Disposable {
             final List<PsiFile> storyFiles = new SmartList<>();
             //NOTE: Handling the whole logic in one stream() call chain may not return and process all Gherkin files in the project, hence the separation
             //NOTE2: Reading the Gherkin and Story files in separate read actions is in place to ensure that all files are read consistently.
-            SlowOperations.allowSlowOperations(() -> DumbService.getInstance(project).runReadActionInSmartMode(() -> gherkinFiles.addAll(GherkinUtil.collectGherkinFilesFromProject(project))));
-            SlowOperations.allowSlowOperations(() -> DumbService.getInstance(project).runReadActionInSmartMode(() -> storyFiles.addAll(storyService.collectStoryFilesFromProject())));
+            gherkinFiles.addAll(GherkinUtil.collectGherkinFilesFromProject(project));
+            storyFiles.addAll(storyService.collectStoryFilesFromProject());
 
             ProjectBDDTypeService service = project.getService(ProjectBDDTypeService.class);
             service.isProjectContainGherkinFile = !gherkinFiles.isEmpty();

@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow.nodetype;
 
@@ -31,7 +31,7 @@ import com.picimako.gherkin.toolwindow.ProjectBDDTypeService;
  * Represents the root element of the tree in the Gherkin Tags tool window.
  */
 @Getter
-public class ModelDataRoot extends AbstractNodeType implements CategoriesHolder {
+public final class ModelDataRoot extends AbstractNodeType implements CategoriesHolder {
 
     private static final String ROOTLESS_CONTENT_ROOT_NAME = "Rootless";
 

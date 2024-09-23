@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow.nodetype;
 
@@ -21,7 +21,7 @@ import com.picimako.gherkin.toolwindow.TagOccurrencesRegistry;
  * and stored. For this reason, it also stores the tag's name this file is assigned to, so that it knows the occurrence
  * count of which tag it should display.
  */
-public class FeatureFile extends AbstractNodeType {
+public final class FeatureFile extends AbstractNodeType {
 
     @Getter
     private final VirtualFile file;

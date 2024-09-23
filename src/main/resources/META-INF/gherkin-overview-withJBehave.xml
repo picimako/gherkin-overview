@@ -1,4 +1,3 @@
-<!-- Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file. -->
 <idea-plugin require-restart="true">
     <extensions defaultExtensionNs="com.intellij">
         <!-- This implementation overrides the default NoopJBehaveStoryService -->

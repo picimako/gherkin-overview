@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.settings;
 
@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.NlsContexts;
 import com.intellij.openapi.wm.ToolWindow;
@@ -36,7 +36,7 @@ import org.jetbrains.annotations.VisibleForTesting;
  * so that users don't have to restart the IDE themselves to have the data updated, and there is no need for a manual
  * "rebuild model manually" feature to be implemented in the tool window.
  */
-public class GherkinOverviewProjectConfigurable implements Configurable {
+public final class GherkinOverviewProjectConfigurable implements Configurable {
 
     private final Project project;
     private GherkinOverviewComponent component;
@@ -107,7 +107,7 @@ public class GherkinOverviewProjectConfigurable implements Configurable {
      */
     @VisibleForTesting
     @TestOnly
-    void resetToDefault() throws ConfigurationException {
+    void resetToDefault() {
         component.setApplicationLevelMappings(DefaultMappingsLoader.loadDefaultApplicationLevelMappings());
         component.setProjectLevelMappings(List.of());
         component.setUseProjectLevelMappings(false);
@@ -133,8 +133,12 @@ public class GherkinOverviewProjectConfigurable implements Configurable {
         if (gherkinTagsToolWindow != null) {
             GherkinTagToolWindowHider hider = getToolWindowHider(gherkinTagsToolWindow);
             GherkinTagOverviewPanel toolWindowPanel = (GherkinTagOverviewPanel) hider.getComponent(0);
-            toolWindowPanel.rebuildModel();
-            hider.setContentVisibilityBasedOn((ModelDataRoot) toolWindowPanel.getTree().getModel().getRoot());
+            if (ApplicationManager.getApplication().isUnitTestMode()) {
+                toolWindowPanel.rebuildModel();
+                hider.setContentVisibilityBasedOn((ModelDataRoot) toolWindowPanel.getTree().getModel().getRoot());
+            } else {
+                toolWindowPanel.rebuildModel(() -> hider.setContentVisibilityBasedOn((ModelDataRoot) toolWindowPanel.getTree().getModel().getRoot()));
+            }
         }
     }
 
