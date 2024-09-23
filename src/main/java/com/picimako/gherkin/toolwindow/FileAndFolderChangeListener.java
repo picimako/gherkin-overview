@@ -2,19 +2,15 @@
 
 package com.picimako.gherkin.toolwindow;
 
-import java.util.List;
-
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.newvfs.BulkFileListener;
-import com.intellij.openapi.vfs.newvfs.events.VFileContentChangeEvent;
-import com.intellij.openapi.vfs.newvfs.events.VFileCreateEvent;
-import com.intellij.openapi.vfs.newvfs.events.VFileDeleteEvent;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
+import com.picimako.gherkin.BDDUtil;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
-import com.picimako.gherkin.BDDUtil;
+import java.util.List;
 
 /**
  * Listener to rebuild the tool window model in case of file and folder changes.
@@ -25,6 +21,9 @@ import com.picimako.gherkin.BDDUtil;
  * difficult or even impossible to handle different languages and project type structures.
  * <p>
  * Thus, more frequent tool window updates and model rebuilds are expected mostly during various folder related changes.
+ * <p>
+ * The event type is validated by name because the implementations of {@code VFileEvent} are internal,
+ * so this enables testing this class.
  */
 @RequiredArgsConstructor
 final class FileAndFolderChangeListener implements BulkFileListener {
@@ -43,7 +42,9 @@ final class FileAndFolderChangeListener implements BulkFileListener {
     @Override
     public void after(@NotNull List<? extends VFileEvent> events) {
         if (events.stream().anyMatch(this::isChangeOnFolderOrBDDFile)) {
-            ApplicationManager.getApplication().invokeLater(rebuildModel);
+            if (ApplicationManager.getApplication().isUnitTestMode())
+                rebuildModel.run();
+            else ApplicationManager.getApplication().invokeLater(rebuildModel);
         }
     }
 
@@ -55,13 +56,17 @@ final class FileAndFolderChangeListener implements BulkFileListener {
      * Folder creation is ignored since there is no BDD file in it yet that makes the model rebuild necessary.
      */
     private boolean isEventOnDirectory(VFileEvent event) {
-        return event.getFile().isDirectory() && !(event instanceof VFileCreateEvent);
+        return event.getFile().isDirectory() && !"VFileCreateEvent".equals(event.getClass().getSimpleName());
     }
 
     /**
      * BDD file content change and file deletion events are handled by {@link GherkinPsiChangeListener}.
      */
     private boolean isEventOnBDDFile(VFileEvent event) {
-        return BDDUtil.isABDDFile(event.getFile(), project) && !(event instanceof VFileContentChangeEvent) && !(event instanceof VFileDeleteEvent);
+        if (BDDUtil.isABDDFile(event.getFile(), project)) {
+            String className = event.getClass().getSimpleName();
+            return !"VFileContentChangeEvent".equals(className) && !"VFileDeleteEvent".equals(className);
+        }
+        return false;
     }
 }
