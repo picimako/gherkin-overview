@@ -107,7 +107,7 @@ public final class GherkinOverviewProjectConfigurable implements Configurable {
      */
     @VisibleForTesting
     @TestOnly
-    void resetToDefault() throws ConfigurationException {
+    void resetToDefault() {
         component.setApplicationLevelMappings(DefaultMappingsLoader.loadDefaultApplicationLevelMappings());
         component.setProjectLevelMappings(List.of());
         component.setUseProjectLevelMappings(false);

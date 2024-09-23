@@ -45,12 +45,12 @@ public final class ProjectSpecificGherkinTagTreeModel extends GherkinTagTreeMode
     @Override
     public Object getChild(Object parent, int index) {
         Object child = null;
-        if (parent instanceof ModelDataRoot) {
-            child = data.getCategories().get(index);
-        } else if (parent instanceof Category) {
-            child = asCategory(parent).getTags().get(index);
-        } else if (parent instanceof Tag) {
-            child = asTag(parent).getFeatureFiles().get(index);
+        switch (parent) {
+            case ModelDataRoot __ -> child = data.getCategories().get(index);
+            case Category __ -> child = asCategory(parent).getTags().get(index);
+            case Tag __ -> child = asTag(parent).getFeatureFiles().get(index);
+            case null, default -> {
+            }
         }
         return child;
     }
@@ -58,12 +58,12 @@ public final class ProjectSpecificGherkinTagTreeModel extends GherkinTagTreeMode
     @Override
     public int getChildCount(Object parent) {
         int count = 0;
-        if (parent instanceof ModelDataRoot) {
-            count = data.getCategories().size();
-        } else if (parent instanceof Category) {
-            count = asCategory(parent).getTags().size();
-        } else if (parent instanceof Tag) {
-            count = asTag(parent).getFeatureFiles().size();
+        switch (parent) {
+            case ModelDataRoot __ -> count = data.getCategories().size();
+            case Category __ -> count = asCategory(parent).getTags().size();
+            case Tag __ -> count = asTag(parent).getFeatureFiles().size();
+            case null, default -> {
+            }
         }
         return count;
     }
@@ -71,12 +71,12 @@ public final class ProjectSpecificGherkinTagTreeModel extends GherkinTagTreeMode
     @Override
     public boolean isLeaf(Object node) {
         boolean isLeaf = data.getCategories().isEmpty();
-        if (node instanceof Category) {
-            isLeaf = !asCategory(node).hasTag();
-        } else if (node instanceof Tag) {
-            isLeaf = !asTag(node).hasFeatureFile();
-        } else if (node instanceof FeatureFile) {
-            isLeaf = true;
+        switch (node) {
+            case Category __ -> isLeaf = !asCategory(node).hasTag();
+            case Tag __ -> isLeaf = !asTag(node).hasFeatureFile();
+            case FeatureFile __ -> isLeaf = true;
+            case null, default -> {
+            }
         }
         return isLeaf;
     }
@@ -85,12 +85,12 @@ public final class ProjectSpecificGherkinTagTreeModel extends GherkinTagTreeMode
     public int getIndexOfChild(Object parent, Object child) {
         int indexOfChild = 0;
         if (parent != null && child != null) {
-            if (parent instanceof ModelDataRoot) {
-                indexOfChild = data.getCategories().indexOf(child);
-            } else if (parent instanceof Category) {
-                indexOfChild = asCategory(parent).getTags().indexOf(child);
-            } else if (parent instanceof Tag) {
-                indexOfChild = asTag(parent).getFeatureFiles().indexOf(child);
+            switch (parent) {
+                case ModelDataRoot __ -> indexOfChild = data.getCategories().indexOf(child);
+                case Category __ -> indexOfChild = asCategory(parent).getTags().indexOf(child);
+                case Tag __ -> indexOfChild = asTag(parent).getFeatureFiles().indexOf(child);
+                default -> {
+                }
             }
         } else {
             indexOfChild = -1;

@@ -36,7 +36,7 @@ public final class ContentRoot extends AbstractNodeType implements CategoriesHol
     /**
      * It initializes the collection of categories with one called {@code Other}, where unmapped tags will be put.
      */
-    protected ContentRoot(@NotNull String displayName, Type type, @NotNull Project project) {
+    public ContentRoot(@NotNull String displayName, Type type, @NotNull Project project) {
         super(displayName, project);
         this.type = type;
         other = Category.createOther(project);

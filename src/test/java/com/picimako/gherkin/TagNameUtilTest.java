@@ -48,9 +48,9 @@ public class TagNameUtilTest extends BasePlatformTestCase {
                 Scenario:""");
 
         var meta = new ArrayList<>(storyService.collectMetasFromFile(storyFile).entrySet());
-        assertThat(meta.get(0).getValue()).hasSize(1);
+        assertThat(meta.getFirst().getValue()).hasSize(1);
 
-        String metaName = TagNameUtil.metaNameFrom(meta.get(0).getKey(), new ArrayList<>(meta.get(0).getValue()));
+        String metaName = TagNameUtil.metaNameFrom(meta.getFirst().getKey(), new ArrayList<>(meta.getFirst().getValue()));
 
         assertThat(metaName).isEqualTo("Suite:smoke");
     }
@@ -63,9 +63,9 @@ public class TagNameUtilTest extends BasePlatformTestCase {
                 Scenario:""");
 
         var meta = new ArrayList<>(storyService.collectMetasFromFile(storyFile).entrySet());
-        assertThat(meta.get(0).getValue()).isEmpty();
+        assertThat(meta.getFirst().getValue()).isEmpty();
 
-        String metaName = TagNameUtil.metaNameFrom(meta.get(0).getKey(), null);
+        String metaName = TagNameUtil.metaNameFrom(meta.getFirst().getKey(), null);
         assertThat(metaName).isEqualTo("Jira");
     }
 
@@ -94,7 +94,7 @@ public class TagNameUtilTest extends BasePlatformTestCase {
 
         var meta = new ArrayList<>(storyService.collectMetasFromFile(storyFile).entrySet());
 
-        String metaName = TagNameUtil.determineTagOrMetaName(meta.get(0).getKey());
+        String metaName = TagNameUtil.determineTagOrMetaName(meta.getFirst().getKey());
 
         assertThat(metaName).isEqualTo("Suite:smoke regression");
     }

@@ -98,11 +98,11 @@ public final class Tag extends AbstractNodeType {
         featureFiles.removeIf(featureFile -> featureFile.getPath().equals(file.getPath()));
 
         if (featureFiles.size() == 1) {
-            featureFiles.get(0).resetDisplayName();
+            featureFiles.getFirst().resetDisplayName();
         } else if (featureFiles.size() > 1) {
             var featureFilesWithTheSameName = getFeatureFilesWithTheNameOf(file);
             if (featureFilesWithTheSameName.size() == 1) {
-                featureFilesWithTheSameName.get(0).resetDisplayName();
+                featureFilesWithTheSameName.getFirst().resetDisplayName();
             } else if (featureFilesWithTheSameName.size() > 1) {
                 updateDisplayNamesOf(featureFilesWithTheSameName, file);
             }

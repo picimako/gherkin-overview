@@ -63,7 +63,7 @@ public class CategoriesHolderTest extends BasePlatformTestCase {
     public void testFindTag() {
         DummyCategoriesHolder holder = new DummyCategoriesHolder(getProject());
 
-        assertThat(holder.findTag("tag2")).hasValue(holder.categories.get(2).getTags().get(0));
+        assertThat(holder.findTag("tag2")).hasValue(holder.categories.get(2).getTags().getFirst());
     }
 
     public void testNotFindTag() {

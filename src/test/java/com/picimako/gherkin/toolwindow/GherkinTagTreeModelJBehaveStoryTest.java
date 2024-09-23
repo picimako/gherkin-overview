@@ -175,7 +175,7 @@ public class GherkinTagTreeModelJBehaveStoryTest extends MediumBasePlatformTestC
         validateCategories(List.of("Other", "Test Suite", "Device", "Excluded", "Browser", "Analytics and SEO", "Jira"));
         validateCategoryToMetaMappings(expectedCategoryMetaMappings, root);
         validateTagToGherkinFileMappings(expectedMetaStoryFileMappings, root);
-        assertThat(root.getModules().get(0).getOther().get("desktop")).isEmpty();
+        assertThat(root.getModules().getFirst().getOther().get("desktop")).isEmpty();
     }
 
     public void testUpdateTreeModelWhenMetaKeyIsReplaced() {
@@ -210,8 +210,8 @@ public class GherkinTagTreeModelJBehaveStoryTest extends MediumBasePlatformTestC
         validateCategories(List.of("Other", "Test Suite", "Device", "Excluded", "Browser", "Work in Progress", "Jira"));
         validateCategoryToMetaMappings(expectedCategoryMetaMappings, root);
         validateTagToGherkinFileMappings(expectedMetaStoryFileMappings, root);
-        assertThat(root.getModules().get(0).getOther().get("sitemap")).isEmpty();
-        assertThat(root.getModules().get(0).findCategory("Work in Progress").get().get("WIP")).isNotEmpty();
+        assertThat(root.getModules().getFirst().getOther().get("sitemap")).isEmpty();
+        assertThat(root.getModules().getFirst().findCategory("Work in Progress").get().get("WIP")).isNotEmpty();
     }
 
     public void testTagOccurrenceIsUpdated() {
@@ -219,7 +219,7 @@ public class GherkinTagTreeModelJBehaveStoryTest extends MediumBasePlatformTestC
 
         Supplier<Integer> countGetter = () -> TagOccurrencesRegistry.getInstance(getProject())
             .getTagOccurrences()
-            .get(root.getModules().get(0).findTag("youtube").get().getFeatureFiles().get(0).getPath())
+            .get(root.getModules().getFirst().findTag("youtube").get().getFeatureFiles().getFirst().getPath())
             .get("youtube")
             .intValue();
 
@@ -228,7 +228,7 @@ public class GherkinTagTreeModelJBehaveStoryTest extends MediumBasePlatformTestC
         WriteAction.run(() -> CommandProcessor.getInstance().executeCommand(getProject(), () -> metaKey.delete(), "Delete", "group.id"));
         model.updateModelForFile(psitreeModelStory);
 
-        assertThat(countGetter.get()).isEqualTo(1);
+        assertThat(countGetter.get()).isOne();
     }
 
     /**
@@ -247,12 +247,12 @@ public class GherkinTagTreeModelJBehaveStoryTest extends MediumBasePlatformTestC
         WriteAction.run(() -> CommandProcessor.getInstance().executeCommand(getProject(), () -> metaKey.replace(wipMetaKey), "Replace", "group.id"));
         model.updateModelForFile(psitreeModelStory);
 
-        assertThat(root.getModules().get(0).findCategory("Jira")).isEmpty();
-        Optional<Category> trello = root.getModules().get(0).findCategory("Trello");
+        assertThat(root.getModules().getFirst().findCategory("Jira")).isEmpty();
+        Optional<Category> trello = root.getModules().getFirst().findCategory("Trello");
         assertSoftly(
             softly -> softly.assertThat(trello).isNotNull(),
             softly -> softly.assertThat(trello.get().get("TRELLO-9999")).isNotNull(),
-            softly -> softly.assertThat(trello.get().get("TRELLO-9999").get().getFeatureFiles().get(0).getDisplayName()).isEqualTo("TreeModel.story")
+            softly -> softly.assertThat(trello.get().get("TRELLO-9999").get().getFeatureFiles().getFirst().getDisplayName()).isEqualTo("TreeModel.story")
         );
     }
 
@@ -261,16 +261,16 @@ public class GherkinTagTreeModelJBehaveStoryTest extends MediumBasePlatformTestC
 
         GherkinTagTreeModel model = new ContentRootBasedGherkinTagTreeModel(getProject());
         model.buildModel();
-        Tag samename = ((ModelDataRoot) model.getRoot()).getModules().get(0).findTag("samename").get();
+        Tag samename = ((ModelDataRoot) model.getRoot()).getModules().getFirst().findTag("samename").get();
 
-        assertThat(samename.getFeatureFiles().get(0).getDisplayName()).isEqualTo("story_with_same_name.story");
+        assertThat(samename.getFeatureFiles().getFirst().getDisplayName()).isEqualTo("story_with_same_name.story");
 
         PsiFile evenmoremore = myFixture.configureByFile("nested/evenmore/evenmoremore/story_with_same_name.story");
 
         model.updateModelForFile(evenmoremore);
 
         assertSoftly(
-            softly -> softly.assertThat(samename.getFeatureFiles().get(0).getDisplayName()).isEqualTo("story_with_same_name.story [nested]"),
+            softly -> softly.assertThat(samename.getFeatureFiles().getFirst().getDisplayName()).isEqualTo("story_with_same_name.story [nested]"),
             softly -> softly.assertThat(samename.getFeatureFiles().get(1).getDisplayName()).isEqualTo("story_with_same_name.story [nested/evenmore/evenmoremore]")
         );
     }
@@ -285,7 +285,7 @@ public class GherkinTagTreeModelJBehaveStoryTest extends MediumBasePlatformTestC
     private void validateCategoryToMetaMappings(Map<String, List<String>> expectedCategoryMetaMappings, ModelDataRoot root) {
         SoftAssertions softly = new SoftAssertions();
         expectedCategoryMetaMappings.forEach((category, tags) -> softly
-            .assertThat(root.getModules().get(0).findCategory(category).get().getTags())
+            .assertThat(root.getModules().getFirst().findCategory(category).get().getTags())
             .extracting(Tag::getDisplayName)
             .containsExactlyInAnyOrderElementsOf(tags));
         softly.assertAll();
@@ -293,7 +293,7 @@ public class GherkinTagTreeModelJBehaveStoryTest extends MediumBasePlatformTestC
 
     private void validateTagToGherkinFileMappings(Map<String, List<VirtualFile>> expectedTagStoryFileMappings, ModelDataRoot root) {
         SoftAssertions softly = new SoftAssertions();
-        Map<String, Tag> tags = root.getContentRoots().get(0).getCategories().stream()
+        Map<String, Tag> tags = root.getContentRoots().getFirst().getCategories().stream()
             .flatMap(category -> category.getTags().stream())
             .collect(toMap(Tag::getDisplayName, Function.identity()));
         expectedTagStoryFileMappings.forEach((tag, gherkinFiles) -> {

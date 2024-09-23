@@ -97,14 +97,13 @@ final class ContentRootBasedGherkinTagTreeModel extends GherkinTagTreeModel {
     public int getIndexOfChild(Object parent, Object child) {
         int indexOfChild = 0;
         if (parent != null && child != null) {
-            if (parent instanceof ModelDataRoot) {
-                indexOfChild = data.getContentRootsByLayout().indexOf(child);
-            } else if (parent instanceof ContentRoot) {
-                indexOfChild = asContentRoot(parent).getCategories().indexOf(child);
-            } else if (parent instanceof Category) {
-                indexOfChild = asCategory(parent).getTags().indexOf(child);
-            } else if (parent instanceof Tag) {
-                indexOfChild = asTag(parent).getFeatureFiles().indexOf(child);
+            switch (parent) {
+                case ModelDataRoot __ -> indexOfChild = data.getContentRootsByLayout().indexOf(child);
+                case ContentRoot __ -> indexOfChild = asContentRoot(parent).getCategories().indexOf(child);
+                case Category __ -> indexOfChild = asCategory(parent).getTags().indexOf(child);
+                case Tag __ -> indexOfChild = asTag(parent).getFeatureFiles().indexOf(child);
+                default -> {
+                }
             }
         } else {
             indexOfChild = -1;
