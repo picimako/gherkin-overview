@@ -36,7 +36,7 @@ import java.util.Optional;
  * <p>
  * This action is disabled for JBehave Story metas for now, or when there is more than one caret placed in the current editor.
  */
-public class SelectFocusedTagAction extends AnActionButton {
+public final class SelectFocusedTagAction extends AnActionButton {
 
     public SelectFocusedTagAction() {
         super(

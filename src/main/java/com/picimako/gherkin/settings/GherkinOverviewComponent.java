@@ -27,7 +27,7 @@ import com.picimako.gherkin.resources.GherkinBundle;
  *
  * @since 0.1.0
  */
-public class GherkinOverviewComponent {
+public final class GherkinOverviewComponent {
 
     @Getter
     private final JPanel settingsPanel;

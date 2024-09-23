@@ -23,7 +23,7 @@ import com.picimako.gherkin.resources.GherkinBundle;
  * <p>
  * Moving tables row up and down is not yet supported by this implementation.
  */
-public class GherkinMappingsTable extends ListTableWithButtons<CategoryAndTags> {
+public final class GherkinMappingsTable extends ListTableWithButtons<CategoryAndTags> {
 
     /**
      * Actions in addition to the default Add and Remove.

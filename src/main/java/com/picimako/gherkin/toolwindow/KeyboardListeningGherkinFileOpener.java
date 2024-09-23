@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
  * Currently the open action is bound to the Enter key.
  */
 @RequiredArgsConstructor
-public class KeyboardListeningGherkinFileOpener extends KeyAdapter {
+public final class KeyboardListeningGherkinFileOpener extends KeyAdapter {
 
     @NotNull
     private final Project project;

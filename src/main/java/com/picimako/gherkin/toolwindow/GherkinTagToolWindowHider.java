@@ -18,7 +18,7 @@ import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 /**
  * A wrapper panel that shows a pre-defined text when there is no Gherkin tag defined in a project.
  */
-public class GherkinTagToolWindowHider extends JBPanelWithEmptyText {
+public final class GherkinTagToolWindowHider extends JBPanelWithEmptyText {
 
     private static final BiPredicate<ModelDataRoot, Project> IS_TAG_PRESENT_IN_PROJECT =
         (modelRoot, proj) -> GherkinTagsToolWindowSettings.getInstance(proj).layout == LayoutType.NO_GROUPING

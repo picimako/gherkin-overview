@@ -19,6 +19,7 @@ public final class ProjectBDDTypeService {
     public boolean isProjectContainGherkinFile;
     public boolean isProjectContainJBehaveStoryFile;
 
+    @SuppressWarnings("unused")
     public ProjectBDDTypeService(Project project) {
     }
 

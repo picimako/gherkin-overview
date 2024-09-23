@@ -36,7 +36,7 @@ import org.jetbrains.annotations.VisibleForTesting;
  * so that users don't have to restart the IDE themselves to have the data updated, and there is no need for a manual
  * "rebuild model manually" feature to be implemented in the tool window.
  */
-public class GherkinOverviewProjectConfigurable implements Configurable {
+public final class GherkinOverviewProjectConfigurable implements Configurable {
 
     private final Project project;
     private GherkinOverviewComponent component;

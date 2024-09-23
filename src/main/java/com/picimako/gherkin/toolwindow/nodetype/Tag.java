@@ -27,7 +27,7 @@ import com.picimako.gherkin.toolwindow.TagOccurrencesRegistry;
  * One or multiple Gherkin files (as {@link FeatureFile}s) may be bound to a tag, meaning the tag is present in all
  * bound Gherkin files. It may be present one or more times in one file.
  */
-public class Tag extends AbstractNodeType {
+public final class Tag extends AbstractNodeType {
 
     @Getter
     private final List<FeatureFile> featureFiles = new SmartList<>();

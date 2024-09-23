@@ -11,7 +11,11 @@ import com.intellij.openapi.project.Project;
  */
 @Service(Service.Level.PROJECT)
 public final class OverviewPanelDisposalService implements Disposable {
-    
+
+    @SuppressWarnings("unused")
+    public OverviewPanelDisposalService(Project project) {
+    }
+
     @Override
     public void dispose() {
     }

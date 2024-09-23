@@ -28,7 +28,7 @@ import java.util.List;
  * @see GherkinTagOverviewPanel
  * @since 0.1.0
  */
-public class GherkinTagToolWindowFactory implements ToolWindowFactory {
+public final class GherkinTagToolWindowFactory implements ToolWindowFactory {
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {

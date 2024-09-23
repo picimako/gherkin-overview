@@ -9,5 +9,5 @@ package com.picimako.gherkin;
  * @see DefaultJBehaveStoryService
  * @since 0.2.0
  */
-public class NoopJBehaveStoryService implements JBehaveStoryService {
+public final class NoopJBehaveStoryService implements JBehaveStoryService {
 }

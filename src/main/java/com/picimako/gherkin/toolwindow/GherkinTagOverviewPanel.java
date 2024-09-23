@@ -23,7 +23,7 @@ import java.util.Map;
  * The underlying tree component is also extended with action listeners, so that e.g. hitting Enter or double-clicking on
  * Gherkin and Story file nodes open the selected file.
  */
-public class GherkinTagOverviewPanel extends JPanel {
+public final class GherkinTagOverviewPanel extends JPanel {
 
     private static final String TAG_ACTIONS_GROUP = "gherkin.overview.tag.TagActionsGroup";
     private final TreeModelFactory treeModelFactory = new TreeModelFactory();

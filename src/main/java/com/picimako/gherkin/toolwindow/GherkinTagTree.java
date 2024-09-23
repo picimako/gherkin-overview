@@ -28,7 +28,7 @@ import com.picimako.gherkin.toolwindow.nodetype.Tag;
 /**
  * A custom JTree implementation for rendering the elements of the Gherkin tag tree.
  */
-public class GherkinTagTree extends JTree {
+public final class GherkinTagTree extends JTree {
 
     public GherkinTagTree(TreeModel model, Project project) {
         super(model);

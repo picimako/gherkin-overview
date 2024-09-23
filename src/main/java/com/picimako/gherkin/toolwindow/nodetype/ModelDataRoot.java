@@ -31,7 +31,7 @@ import com.picimako.gherkin.toolwindow.ProjectBDDTypeService;
  * Represents the root element of the tree in the Gherkin Tags tool window.
  */
 @Getter
-public class ModelDataRoot extends AbstractNodeType implements CategoriesHolder {
+public final class ModelDataRoot extends AbstractNodeType implements CategoriesHolder {
 
     private static final String ROOTLESS_CONTENT_ROOT_NAME = "Rootless";
 

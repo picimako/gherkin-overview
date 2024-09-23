@@ -53,7 +53,7 @@ import com.picimako.gherkin.toolwindow.nodetype.Tag;
  * @see GherkinTagTree
  * @see GherkinPsiChangeListener
  */
-public abstract class GherkinTagTreeModel implements TreeModel, Disposable {
+abstract class GherkinTagTreeModel implements TreeModel, Disposable {
 
     private final Project project;
     private final TagCategoryRegistry registry;

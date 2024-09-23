@@ -20,7 +20,7 @@ import org.jetbrains.annotations.TestOnly;
  * identified by the IDE.
  */
 @Getter
-public class ContentRoot extends AbstractNodeType implements CategoriesHolder {
+public final class ContentRoot extends AbstractNodeType implements CategoriesHolder {
 
     private static final Map<Type, Icon> ICONS = Map.of(
         Type.MODULE, AllIcons.Actions.ModuleDirectory,

@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
  * In case of grouped layouts in the tool window, Category objects with the same name but with different/overlapping tags
  * may be assigned to different modules, content roots, etc.
  */
-public class Category extends AbstractNodeType {
+public final class Category extends AbstractNodeType {
 
     static final String OTHER_CATEGORY_NAME = "Other";
     @Getter

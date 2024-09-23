@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
     name = "Gherkin Overview Application-level Mappings",
     storages = {@Storage(value = "GherkinOverviewAppSettings.xml", exportable = true)}
 )
-public class GherkinOverviewApplicationState implements PersistentStateComponent<GherkinOverviewApplicationState> {
+public final class GherkinOverviewApplicationState implements PersistentStateComponent<GherkinOverviewApplicationState> {
 
     /**
      * Contains the application level category to tags mappings.

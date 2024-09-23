@@ -25,7 +25,7 @@ import com.picimako.gherkin.toolwindow.nodetype.Tag;
  *              - Gherkin file  <-- One or more {@link FeatureFile}s.
  * </pre>
  */
-public class ProjectSpecificGherkinTagTreeModel extends GherkinTagTreeModel {
+public final class ProjectSpecificGherkinTagTreeModel extends GherkinTagTreeModel {
 
     public ProjectSpecificGherkinTagTreeModel(Project project) {
         super(project);
