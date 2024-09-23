@@ -11,14 +11,14 @@ import java.util.Properties;
 /**
  * Loads the default application-level category-tag mappings.
  */
-public final class DefaultMappingsLoader {
+final class DefaultMappingsLoader {
 
     /**
      * Loads the default application-level category-tag mappings.
      *
      * @throws RuntimeException if the mapping could not be loaded
      */
-    public static List<CategoryAndTags> loadDefaultApplicationLevelMappings() {
+    static List<CategoryAndTags> loadDefaultApplicationLevelMappings() {
         try (InputStream mappingsResource = GherkinOverviewComponent.class.getResourceAsStream("/mapping/default_app_level_mappings.properties")) {
             final var categoriesAndTags = new ArrayList<CategoryAndTags>();
             var defaultAppLevelMappings = new Properties();

@@ -28,12 +28,12 @@ import org.jetbrains.annotations.NotNull;
  * After toggling actions the model data and/or the tool window UI is updated to reflect the changes.
  */
 @RequiredArgsConstructor
-public final class ToolWindowAppearanceActionGroupCreator {
+final class ToolWindowAppearanceActionGroupCreator {
 
     private final Runnable updateUICallback;
     private final Runnable updateModelCallback;
 
-    public DefaultActionGroup create() {
+    DefaultActionGroup create() {
         DefaultActionGroup group = new DefaultActionGroup();
         group.getTemplatePresentation().setText(GherkinBundle.message("gherkin.overview.toolwindow.statistics.button.tooltip"));
         group.getTemplatePresentation().setDescription(GherkinBundle.message("gherkin.overview.toolwindow.statistics.button.description"));

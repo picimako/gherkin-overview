@@ -23,13 +23,13 @@ import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
  * If a Gherkin/Story file changes, this listener updates the calls updates on the model data and UI of the Gherkin tag tool window
  * according to the changes in the file.
  */
-public final class GherkinPsiChangeListener extends PsiTreeChangeAdapter {
+final class GherkinPsiChangeListener extends PsiTreeChangeAdapter {
 
     private final GherkinTagTree tree;
     private final Project project;
     private final JBehaveStoryService storyService;
 
-    public GherkinPsiChangeListener(GherkinTagTree tree, Project project) {
+    GherkinPsiChangeListener(GherkinTagTree tree, Project project) {
         this.tree = tree;
         this.project = project;
         storyService = project.getService(JBehaveStoryService.class);

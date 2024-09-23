@@ -27,7 +27,7 @@ import com.picimako.gherkin.BDDUtil;
  * Thus, more frequent tool window updates and model rebuilds are expected mostly during various folder related changes.
  */
 @RequiredArgsConstructor
-public final class FileAndFolderChangeListener implements BulkFileListener {
+final class FileAndFolderChangeListener implements BulkFileListener {
 
     private final Runnable rebuildModel;
     private final Project project;

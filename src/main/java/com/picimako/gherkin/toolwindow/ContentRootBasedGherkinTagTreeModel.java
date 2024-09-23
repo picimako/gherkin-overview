@@ -31,13 +31,13 @@ import com.picimako.gherkin.toolwindow.nodetype.Tag;
  *                  - Gherkin file
  * </pre>
  */
-public final class ContentRootBasedGherkinTagTreeModel extends GherkinTagTreeModel {
+final class ContentRootBasedGherkinTagTreeModel extends GherkinTagTreeModel {
 
-    public ContentRootBasedGherkinTagTreeModel(Project project) {
+    ContentRootBasedGherkinTagTreeModel(Project project) {
         super(project);
     }
 
-    public ContentRootBasedGherkinTagTreeModel(ModelDataRoot data, Project project) {
+    ContentRootBasedGherkinTagTreeModel(ModelDataRoot data, Project project) {
         super(data, project);
     }
 

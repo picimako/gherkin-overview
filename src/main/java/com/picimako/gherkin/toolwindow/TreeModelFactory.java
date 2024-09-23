@@ -12,7 +12,7 @@ import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 /**
  * Creates models for the {@link javax.swing.JTree} component in the Gherkin Tags tool window.
  */
-public final class TreeModelFactory {
+final class TreeModelFactory {
     private static final Map<LayoutType, Function<Project, GherkinTagTreeModel>> MODELS = Map.of(
         LayoutType.NO_GROUPING, ProjectSpecificGherkinTagTreeModel::new,
         LayoutType.GROUP_BY_MODULES, ContentRootBasedGherkinTagTreeModel::new
@@ -32,7 +32,7 @@ public final class TreeModelFactory {
      * Creates a model, based on the layout type set in the tool window, without a predefined {@link ModelDataRoot}.
      * This method is used for the initial building of the tree.
      */
-    public GherkinTagTreeModel createTreeModel(Project project) {
+    GherkinTagTreeModel createTreeModel(Project project) {
         return MODELS.get(GherkinTagsToolWindowSettings.getInstance(project).layout).apply(project);
     }
 
@@ -43,7 +43,7 @@ public final class TreeModelFactory {
      * @param data    the already built model data
      * @param project the project
      */
-    public GherkinTagTreeModel createTreeModel(ModelDataRoot data, Project project) {
+    GherkinTagTreeModel createTreeModel(ModelDataRoot data, Project project) {
         return COPIED_MODELS.get(GherkinTagsToolWindowSettings.getInstance(project).layout).apply(data, project);
     }
 }

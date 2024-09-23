@@ -27,7 +27,7 @@ import com.picimako.gherkin.resources.GherkinBundle;
  *
  * @since 0.1.0
  */
-public final class GherkinOverviewComponent {
+final class GherkinOverviewComponent {
 
     @Getter
     private final JPanel settingsPanel;
@@ -48,7 +48,7 @@ public final class GherkinOverviewComponent {
      * @param appSettingsMappings     the application level mappings loaded from the IDE settings
      * @param projectSettingsMappings the project level mappings loaded from the project settings
      */
-    public GherkinOverviewComponent(@Nullable List<CategoryAndTags> appSettingsMappings, List<CategoryAndTags> projectSettingsMappings, Project project) {
+    GherkinOverviewComponent(@Nullable List<CategoryAndTags> appSettingsMappings, List<CategoryAndTags> projectSettingsMappings, Project project) {
         this.project = project;
         applicationLevelMappingsTable.withExtraActions(() ->
             new AnActionButton[]{
@@ -138,27 +138,27 @@ public final class GherkinOverviewComponent {
 
     // ---- Getter, setter, retriever methods ----
 
-    public boolean isUseProjectLevelMappings() {
+    boolean isUseProjectLevelMappings() {
         return useProjectLevelMappingsCheckbox.isSelected();
     }
 
-    public void setUseProjectLevelMappings(boolean value) {
+    void setUseProjectLevelMappings(boolean value) {
         useProjectLevelMappingsCheckbox.setSelected(value);
     }
 
-    public List<CategoryAndTags> getProjectLevelMappings() {
+    List<CategoryAndTags> getProjectLevelMappings() {
         return projectLevelMappingsTable.getTableView().getTableViewModel().getItems();
     }
 
-    public void setProjectLevelMappings(List<CategoryAndTags> mappings) {
+    void setProjectLevelMappings(List<CategoryAndTags> mappings) {
         projectLevelMappingsTable.setValues(mappings);
     }
 
-    public List<CategoryAndTags> getApplicationLevelMappings() {
+    List<CategoryAndTags> getApplicationLevelMappings() {
         return applicationLevelMappingsTable.getTableView().getTableViewModel().getItems();
     }
 
-    public void setApplicationLevelMappings(@Nullable List<CategoryAndTags> mappings) {
+    void setApplicationLevelMappings(@Nullable List<CategoryAndTags> mappings) {
         if (mappings != null) {
             applicationLevelMappingsTable.setValues(mappings);
         }
@@ -166,7 +166,7 @@ public final class GherkinOverviewComponent {
 
     // ---- Extra table actions ----
 
-    public static final class ExtraActionButton extends AnActionButton {
+    static final class ExtraActionButton extends AnActionButton {
         private final Runnable action;
 
         public ExtraActionButton(@NlsContexts.Button String text, @NlsContexts.Tooltip String description, @Nullable Icon icon, Runnable action) {

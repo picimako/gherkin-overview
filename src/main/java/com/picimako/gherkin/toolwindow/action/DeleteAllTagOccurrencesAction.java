@@ -40,6 +40,7 @@ public class DeleteAllTagOccurrencesAction extends AnAction {
     private final Project project;
 
     public DeleteAllTagOccurrencesAction(Project project) {
+        //TODO: AllIcons.Actions.Gc
         super(GherkinBundle.message("gherkin.overview.toolwindow.delete.tags"), "", CollaborationToolsIcons.Delete);
         this.project = project;
     }

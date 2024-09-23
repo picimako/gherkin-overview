@@ -29,7 +29,7 @@ import java.awt.*;
  * </ul>
  */
 @RequiredArgsConstructor
-public final class MouseListeningPopupMenuInvoker extends PopupHandler {
+final class MouseListeningPopupMenuInvoker extends PopupHandler {
     @NotNull
     private final ToolWindowPopupMenuInvoker menuInvoker;
 

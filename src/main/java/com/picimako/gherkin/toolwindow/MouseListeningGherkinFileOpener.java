@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
  * Currently the open action is bound to the double-click event.
  */
 @RequiredArgsConstructor
-public final class MouseListeningGherkinFileOpener extends DoubleClickListener {
+final class MouseListeningGherkinFileOpener extends DoubleClickListener {
 
     private final Project project;
     private final GherkinTagTree tree;

@@ -10,10 +10,10 @@ import com.intellij.openapi.project.Project;
  * No-op light service with the sole purpose of acting as a parent disposable of {@link GherkinPsiChangeListener} in {@link GherkinTagOverviewPanel}.
  */
 @Service(Service.Level.PROJECT)
-public final class OverviewPanelDisposalService implements Disposable {
+final class OverviewPanelDisposalService implements Disposable {
 
     @SuppressWarnings("unused")
-    public OverviewPanelDisposalService(Project project) {
+    OverviewPanelDisposalService(Project project) {
     }
 
     @Override
