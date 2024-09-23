@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.NlsContexts;
 import com.intellij.openapi.wm.ToolWindow;
@@ -133,8 +133,12 @@ public final class GherkinOverviewProjectConfigurable implements Configurable {
         if (gherkinTagsToolWindow != null) {
             GherkinTagToolWindowHider hider = getToolWindowHider(gherkinTagsToolWindow);
             GherkinTagOverviewPanel toolWindowPanel = (GherkinTagOverviewPanel) hider.getComponent(0);
-            toolWindowPanel.rebuildModel();
-            hider.setContentVisibilityBasedOn((ModelDataRoot) toolWindowPanel.getTree().getModel().getRoot());
+            if (ApplicationManager.getApplication().isUnitTestMode()) {
+                toolWindowPanel.rebuildModel();
+                hider.setContentVisibilityBasedOn((ModelDataRoot) toolWindowPanel.getTree().getModel().getRoot());
+            } else {
+                toolWindowPanel.rebuildModel(() -> hider.setContentVisibilityBasedOn((ModelDataRoot) toolWindowPanel.getTree().getModel().getRoot()));
+            }
         }
     }
 

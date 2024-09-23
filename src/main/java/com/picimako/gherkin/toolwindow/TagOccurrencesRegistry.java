@@ -61,17 +61,20 @@ public final class TagOccurrencesRegistry implements Disposable {
      * Updates the tags' occurrence counts for only the provided file.
      */
     public void updateOccurrenceCounts(@NotNull VirtualFile file) {
-        tagOccurrences.get(file.getPath()).clear();
+        var occurrences = tagOccurrences.get(file.getPath());
+        if (occurrences != null) occurrences.clear();
         calculateCounts(file);
     }
 
     private void calculateCounts(@NotNull VirtualFile file) {
         if (!file.exists() || !file.isValid()) return;
 
+        var counts = tagOccurrences.get(file.getPath());
+        if (counts == null) return;
+
         PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
         if (psiFile == null) return;
 
-        var counts = tagOccurrences.get(file.getPath());
         PsiTreeUtil.processElements(psiFile, element -> {
             if (!element.equals(psiFile)) { //the file itself is definitely not a tag/meta, so can be skipped
                 String tagOrMetaName = determineTagOrMetaName(element);

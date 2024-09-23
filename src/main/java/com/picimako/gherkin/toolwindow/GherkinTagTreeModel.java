@@ -16,12 +16,10 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.SlowOperations;
 import com.intellij.util.SmartList;
 import org.jetbrains.plugins.cucumber.psi.GherkinTag;
 
@@ -101,8 +99,8 @@ abstract class GherkinTagTreeModel implements TreeModel, Disposable {
             final List<PsiFile> storyFiles = new SmartList<>();
             //NOTE: Handling the whole logic in one stream() call chain may not return and process all Gherkin files in the project, hence the separation
             //NOTE2: Reading the Gherkin and Story files in separate read actions is in place to ensure that all files are read consistently.
-            SlowOperations.allowSlowOperations(() -> DumbService.getInstance(project).runReadActionInSmartMode(() -> gherkinFiles.addAll(GherkinUtil.collectGherkinFilesFromProject(project))));
-            SlowOperations.allowSlowOperations(() -> DumbService.getInstance(project).runReadActionInSmartMode(() -> storyFiles.addAll(storyService.collectStoryFilesFromProject())));
+            gherkinFiles.addAll(GherkinUtil.collectGherkinFilesFromProject(project));
+            storyFiles.addAll(storyService.collectStoryFilesFromProject());
 
             ProjectBDDTypeService service = project.getService(ProjectBDDTypeService.class);
             service.isProjectContainGherkinFile = !gherkinFiles.isEmpty();
