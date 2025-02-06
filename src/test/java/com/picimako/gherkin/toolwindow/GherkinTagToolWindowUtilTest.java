@@ -3,10 +3,8 @@
 package com.picimako.gherkin.toolwindow;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.intellij.openapi.wm.ToolWindow;
-
 import com.picimako.gherkin.MediumBasePlatformTestCase;
 import com.picimako.gherkin.ToolWindowTestSupport;
 
@@ -24,9 +22,7 @@ public class GherkinTagToolWindowUtilTest extends MediumBasePlatformTestCase {
     }
 
     public void testDoesntReturnGherkinTagToolWindowIfNotRegistered() {
-        assertThatThrownBy(() -> GherkinTagToolWindowUtil.getGherkinTagsToolWindow(getProject()))
-            .isInstanceOf(Throwable.class)
-            .hasMessage("There is no tool window registered with the id: [gherkin.overview.tool.window.id]");
+        assertThat(GherkinTagToolWindowUtil.getGherkinTagsToolWindow(getProject())).isNull();
     }
 
     //getToolWindowHider

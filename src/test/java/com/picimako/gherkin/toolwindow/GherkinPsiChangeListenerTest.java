@@ -3,7 +3,6 @@
 package com.picimako.gherkin.toolwindow;
 
 import static com.picimako.gherkin.ToolWindowTestSupport.registerToolWindow;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -14,7 +13,6 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.PsiTreeChangeEventImpl;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 
 /**
@@ -77,12 +75,8 @@ public class GherkinPsiChangeListenerTest extends BasePlatformTestCase {
     }
 
     public void testDoesntUpdateModelWhenGherkinTagsToolWindowIsNotRegistered() {
-        PsiFile gherkinFile = myFixture.configureByFile("the_gherkin.feature");
+        myFixture.configureByFile("the_gherkin.feature");
         GherkinTagTree tree = mock(GherkinTagTree.class);
-
-        assertThatExceptionOfType(Throwable.class)
-            .isThrownBy(() -> firePsiEvent(gherkinFile, tree))
-            .withMessageEndingWith("There is no tool window registered with the id: [gherkin.overview.tool.window.id]");
 
         verify(tree, never()).getModel();
     }

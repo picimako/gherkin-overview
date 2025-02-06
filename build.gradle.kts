@@ -103,7 +103,7 @@ intellijPlatform {
 intellijPlatformTesting {
     val runTestsInIJCommunity by intellijPlatformTesting.testIde.registering {
         type = IntelliJPlatformType.IntellijIdeaCommunity
-        version = "2024.2.1"
+        version = "2024.3"
         task {
             useJUnit {
                 isScanForTestClasses = false
