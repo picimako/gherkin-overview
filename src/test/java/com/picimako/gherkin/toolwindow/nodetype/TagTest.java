@@ -2,23 +2,22 @@
 
 package com.picimako.gherkin.toolwindow.nodetype;
 
-import static com.picimako.gherkin.SoftAsserts.assertSoftly;
 import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.List;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
+import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
+import com.picimako.gherkin.toolwindow.StatisticsType;
+import com.picimako.gherkin.toolwindow.TagOccurrencesRegistry;
 import org.jetbrains.plugins.cucumber.psi.GherkinElementFactory;
 import org.jetbrains.plugins.cucumber.psi.GherkinFeature;
 import org.jetbrains.plugins.cucumber.psi.GherkinFile;
 
-import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
-import com.picimako.gherkin.toolwindow.StatisticsType;
-import com.picimako.gherkin.toolwindow.TagOccurrencesRegistry;
+import java.util.List;
 
 /**
  * Unit test for {@link Tag}.
@@ -101,18 +100,18 @@ public class TagTest extends BasePlatformTestCase {
 
         tag.add(evenMore);
 
-        assertSoftly(
-            softly -> softly.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested]"),
-            softly -> softly.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested/evenmore]")
-        );
+        assertSoftly(s -> {
+            s.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested]");
+            s.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested/evenmore]");
+        });
 
         tag.add(evenMoreMore);
 
-        assertSoftly(
-            softly -> softly.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested]"),
-            softly -> softly.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested/evenmore]"),
-            softly -> softly.assertThat(featureFiles.get(2).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested/evenmore/evenmoremore]")
-        );
+        assertSoftly(s -> {
+            s.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested]");
+            s.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested/evenmore]");
+            s.assertThat(featureFiles.get(2).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested/evenmore/evenmoremore]");
+        });
     }
 
     //updateDisplayNames
@@ -124,20 +123,20 @@ public class TagTest extends BasePlatformTestCase {
         Tag tag = new Tag("smoke", nested.getVirtualFile(), getProject()).add(evenmoremore.getVirtualFile());
 
         List<FeatureFile> featureFiles = tag.getFeatureFiles();
-        assertSoftly(
-            softly -> softly.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Same name]"),
-            softly -> softly.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Almost same name]")
-        );
+        assertSoftly(s -> {
+            s.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Same name]");
+            s.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Almost same name]");
+        });
 
         GherkinFeature feature = GherkinElementFactory.createFeatureFromText(getProject(), "Feature: Same name");
         WriteAction.run(() -> CommandProcessor.getInstance().executeCommand(getProject(), () -> ((GherkinFile) evenmoremore).getFeatures()[0].replace(feature), "Replace", "group.id"));
 
         tag.updateDisplayNames(evenmoremore.getVirtualFile());
 
-        assertSoftly(
-            softly -> softly.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested]"),
-            softly -> softly.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested/evenmore/evenmoremore]")
-        );
+        assertSoftly(s -> {
+            s.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested]");
+            s.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested/evenmore/evenmoremore]");
+        });
     }
 
     public void testUpdatesDisplayNameWithPathForMoreThanTwoStoryFilesInATagWithTheSameName() {
@@ -153,10 +152,10 @@ public class TagTest extends BasePlatformTestCase {
 
         tag.updateDisplayNames(evenmoremore.getVirtualFile());
 
-        assertSoftly(
-            softly -> softly.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("story_with_same_name.story [nested]"),
-            softly -> softly.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("story_with_same_name.story [nested/evenmore/evenmoremore]")
-        );
+        assertSoftly(s -> {
+            s.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("story_with_same_name.story [nested]");
+            s.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("story_with_same_name.story [nested/evenmore/evenmoremore]");
+        });
     }
 
     public void testUpdatesDisplayNameWithFeatureNameForMoreThanTwoFeatureFilesInATagWithTheSameName() {
@@ -166,20 +165,20 @@ public class TagTest extends BasePlatformTestCase {
         Tag tag = new Tag("smoke", nested.getVirtualFile(), getProject()).add(evenmore.getVirtualFile());
 
         List<FeatureFile> featureFiles = tag.getFeatureFiles();
-        assertSoftly(
-            softly -> softly.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested]"),
-            softly -> softly.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested/evenmore]")
-        );
+        assertSoftly(s -> {
+            s.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested]");
+            s.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested/evenmore]");
+        });
 
         GherkinFeature feature = GherkinElementFactory.createFeatureFromText(getProject(), "Feature: Not same name");
         WriteAction.run(() -> CommandProcessor.getInstance().executeCommand(getProject(), () -> ((GherkinFile) nested).getFeatures()[0].replace(feature), "Replace", "group.id"));
 
         tag.updateDisplayNames(nested.getVirtualFile());
 
-        assertSoftly(
-            softly -> softly.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Not same name]"),
-            softly -> softly.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Same name]")
-        );
+        assertSoftly(s -> {
+            s.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Not same name]");
+            s.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Same name]");
+        });
     }
 
     //remove
@@ -212,10 +211,10 @@ public class TagTest extends BasePlatformTestCase {
 
         Tag tag = new Tag("smoke", nested, getProject()).add(aGherkin).add(evenmoremore);
 
-        assertSoftly(
-            softly -> softly.assertThat(tag.getFeatureFiles().getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Same name]"),
-            softly -> softly.assertThat(tag.getFeatureFiles().get(2).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Almost same name]")
-        );
+        assertSoftly(s -> {
+            s.assertThat(tag.getFeatureFiles().getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Same name]");
+            s.assertThat(tag.getFeatureFiles().get(2).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Almost same name]");
+        });
 
         tag.remove(nested);
 
@@ -230,17 +229,17 @@ public class TagTest extends BasePlatformTestCase {
         Tag tag = new Tag("smoke", nested, getProject()).add(evenMore).add(evenmoremore);
 
         List<FeatureFile> featureFiles = tag.getFeatureFiles();
-        assertSoftly(
-            softly -> softly.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested]"),
-            softly -> softly.assertThat(featureFiles.get(2).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested/evenmore/evenmoremore]")
-        );
+        assertSoftly(s -> {
+            s.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested]");
+            s.assertThat(featureFiles.get(2).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested/evenmore/evenmoremore]");
+        });
 
         tag.remove(nested);
 
-        assertSoftly(
-            softly -> softly.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Same name]"),
-            softly -> softly.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Almost same name]")
-        );
+        assertSoftly(s -> {
+            s.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Same name]");
+            s.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Almost same name]");
+        });
     }
 
     //sort

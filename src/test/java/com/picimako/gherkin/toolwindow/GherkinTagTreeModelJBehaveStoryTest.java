@@ -2,11 +2,11 @@
 
 package com.picimako.gherkin.toolwindow;
 
-import static com.picimako.gherkin.SoftAsserts.assertSoftly;
 import static com.picimako.gherkin.toolwindow.BDDTestSupport.getFirstMetaKeyForName;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toMap;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -249,11 +249,11 @@ public class GherkinTagTreeModelJBehaveStoryTest extends MediumBasePlatformTestC
 
         assertThat(root.getModules().getFirst().findCategory("Jira")).isEmpty();
         Optional<Category> trello = root.getModules().getFirst().findCategory("Trello");
-        assertSoftly(
-            softly -> softly.assertThat(trello).isNotNull(),
-            softly -> softly.assertThat(trello.get().get("TRELLO-9999")).isNotNull(),
-            softly -> softly.assertThat(trello.get().get("TRELLO-9999").get().getFeatureFiles().getFirst().getDisplayName()).isEqualTo("TreeModel.story")
-        );
+        assertSoftly(s -> {
+            s.assertThat(trello).isNotNull();
+            s.assertThat(trello.get().get("TRELLO-9999")).isNotNull();
+            s.assertThat(trello.get().get("TRELLO-9999").get().getFeatureFiles().getFirst().getDisplayName()).isEqualTo("TreeModel.story");
+        });
     }
 
     public void testUpdatesDisplayNamesOfFeatureFilesForFilesWithSameNameUnderATag() {
@@ -269,10 +269,10 @@ public class GherkinTagTreeModelJBehaveStoryTest extends MediumBasePlatformTestC
 
         model.updateModelForFile(evenmoremore);
 
-        assertSoftly(
-            softly -> softly.assertThat(samename.getFeatureFiles().getFirst().getDisplayName()).isEqualTo("story_with_same_name.story [nested]"),
-            softly -> softly.assertThat(samename.getFeatureFiles().get(1).getDisplayName()).isEqualTo("story_with_same_name.story [nested/evenmore/evenmoremore]")
-        );
+        assertSoftly(s -> {
+            s.assertThat(samename.getFeatureFiles().getFirst().getDisplayName()).isEqualTo("story_with_same_name.story [nested]");
+            s.assertThat(samename.getFeatureFiles().get(1).getDisplayName()).isEqualTo("story_with_same_name.story [nested/evenmore/evenmoremore]");
+        });
     }
 
     private void validateCategories(List<String> categories) {

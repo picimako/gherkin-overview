@@ -2,8 +2,8 @@
 
 package com.picimako.gherkin.toolwindow.nodetype;
 
-import static com.picimako.gherkin.SoftAsserts.assertSoftly;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.intellij.openapi.application.WriteAction;
 
@@ -252,11 +252,11 @@ public class ModelDataRootTest extends MediumBasePlatformTestCase {
         modelDataRoot.sort();
 
         var categories = modelDataRoot.getCategories();
-        assertSoftly(
-            softly -> softly.assertThat(categories).containsExactly(component, modelDataRoot.getOther(), testSuite),
-            softly -> softly.assertThat(categories.get(2).getTags()).containsExactly(e2e, smoke),
-            softly -> softly.assertThat(categories.get(2).getTags().get(1).getGherkinFiles()).containsExactly(aGherkinFile, theGherkinFile)
-        );
+        assertSoftly(s -> {
+            s.assertThat(categories).containsExactly(component, modelDataRoot.getOther(), testSuite);
+            s.assertThat(categories.get(2).getTags()).containsExactly(e2e, smoke);
+            s.assertThat(categories.get(2).getTags().get(1).getGherkinFiles()).containsExactly(aGherkinFile, theGherkinFile);
+        });
     }
 
     public void testSortBaseOnContentRootData() {
@@ -284,12 +284,12 @@ public class ModelDataRootTest extends MediumBasePlatformTestCase {
         modelDataRoot.add(projectModule).add(projectModule2);
         modelDataRoot.sort();
 
-        assertSoftly(
-            softly -> softly.assertThat(modelDataRoot.getModules()).containsExactly(projectModule, projectModule2),
-            softly -> softly.assertThat(projectModule.getCategories()).containsExactly(component, projectModule.getOther(), testSuite),
-            softly -> softly.assertThat(modelDataRoot.getContentRoot("features").get().getCategories().get(2).getTags()).containsExactly(e2e, smoke),
-            softly -> softly.assertThat(modelDataRoot.getContentRoot("features").get().getCategories().get(2).getTags().get(1).getGherkinFiles()).containsExactly(aGherkin, theGherkin)
-        );
+        assertSoftly(s -> {
+            s.assertThat(modelDataRoot.getModules()).containsExactly(projectModule, projectModule2);
+            s.assertThat(projectModule.getCategories()).containsExactly(component, projectModule.getOther(), testSuite);
+            s.assertThat(modelDataRoot.getContentRoot("features").get().getCategories().get(2).getTags()).containsExactly(e2e, smoke);
+            s.assertThat(modelDataRoot.getContentRoot("features").get().getCategories().get(2).getTags().get(1).getGherkinFiles()).containsExactly(aGherkin, theGherkin);
+        });
     }
 
     //toString

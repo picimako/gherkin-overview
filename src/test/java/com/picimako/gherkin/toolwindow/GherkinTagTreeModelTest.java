@@ -2,11 +2,11 @@
 
 package com.picimako.gherkin.toolwindow;
 
-import static com.picimako.gherkin.SoftAsserts.assertSoftly;
 import static com.picimako.gherkin.toolwindow.BDDTestSupport.getFirstGherkinTagForName;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toMap;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -230,11 +230,11 @@ public class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
 
         assertThat(root.getModules().getFirst().findCategory("Jira")).isEmpty();
         Optional<Category> trello = root.getModules().getFirst().findCategory("Trello");
-        assertSoftly(
-            softly -> softly.assertThat(trello).isNotNull(),
-            softly -> softly.assertThat(trello.get().get("TRELLO-9999")).isNotNull(),
-            softly -> softly.assertThat(trello.get().get("TRELLO-9999").get().getFeatureFiles().getFirst().getDisplayName()).isEqualTo("the_gherkin.feature")
-        );
+        assertSoftly(s -> {
+            s.assertThat(trello).isNotNull();
+            s.assertThat(trello.get().get("TRELLO-9999")).isNotNull();
+            s.assertThat(trello.get().get("TRELLO-9999").get().getFeatureFiles().getFirst().getDisplayName()).isEqualTo("the_gherkin.feature");
+        });
     }
 
     public void testUpdatesDisplayNamesOfFeatureFilesForFilesWithSameNameUnderATag() {

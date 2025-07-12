@@ -2,8 +2,8 @@
 
 package com.picimako.gherkin.toolwindow;
 
-import static com.picimako.gherkin.SoftAsserts.assertSoftly;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.util.List;
 
@@ -21,14 +21,14 @@ public class TagCategoryRegistryTest extends BasePlatformTestCase {
     public void testLoadApplicationLevelMappings() {
         TagCategoryRegistry registry = new TagCategoryRegistry(getProject());
 
-        assertSoftly(
-            softly -> softly.assertThat(registry.categoryOf("desktop")).isEqualTo("Device"),
-            softly -> softly.assertThat(registry.categoryOf("firefox")).isEqualTo("Browser"),
-            softly -> softly.assertThat(registry.categoryOf("skip")).isEqualTo("Excluded"),
-            softly -> softly.assertThat(registry.categoryOf("meta")).isEqualTo("Analytics and SEO"),
-            softly -> softly.assertThat(registry.categoryOf("WIP")).isEqualTo("Work in Progress"),
-            softly -> softly.assertThat(registry.categoryOf("jumped")).isNull()
-        );
+        assertSoftly(s -> {
+            s.assertThat(registry.categoryOf("desktop")).isEqualTo("Device");
+            s.assertThat(registry.categoryOf("firefox")).isEqualTo("Browser");
+            s.assertThat(registry.categoryOf("skip")).isEqualTo("Excluded");
+            s.assertThat(registry.categoryOf("meta")).isEqualTo("Analytics and SEO");
+            s.assertThat(registry.categoryOf("WIP")).isEqualTo("Work in Progress");
+            s.assertThat(registry.categoryOf("jumped")).isNull();
+        });
     }
 
     public void testAddProjectLevelMappingsToApplicationLevelOnes() {
@@ -37,15 +37,15 @@ public class TagCategoryRegistryTest extends BasePlatformTestCase {
 
         TagCategoryRegistry registry = new TagCategoryRegistry(getProject());
 
-        assertSoftly(
-            softly -> softly.assertThat(registry.categoryOf("desktop")).isEqualTo("Device"),
-            softly -> softly.assertThat(registry.categoryOf("firefox")).isEqualTo("Browser"),
-            softly -> softly.assertThat(registry.categoryOf("skip")).isEqualTo("Excluded"),
-            softly -> softly.assertThat(registry.categoryOf("meta")).isEqualTo("Analytics and SEO"),
-            softly -> softly.assertThat(registry.categoryOf("WIP")).isEqualTo("Work in Progress"),
-            softly -> softly.assertThat(registry.categoryOf("jumped")).isEqualTo("Excluded"),
-            softly -> softly.assertThat(registry.categoryOf("hopped")).isEqualTo("Excluded")
-        );
+        assertSoftly(s -> {
+            s.assertThat(registry.categoryOf("desktop")).isEqualTo("Device");
+            s.assertThat(registry.categoryOf("firefox")).isEqualTo("Browser");
+            s.assertThat(registry.categoryOf("skip")).isEqualTo("Excluded");
+            s.assertThat(registry.categoryOf("meta")).isEqualTo("Analytics and SEO");
+            s.assertThat(registry.categoryOf("WIP")).isEqualTo("Work in Progress");
+            s.assertThat(registry.categoryOf("jumped")).isEqualTo("Excluded");
+            s.assertThat(registry.categoryOf("hopped")).isEqualTo("Excluded");
+        });
     }
 
     public void testOverrideApplicationLevelCategoryWithProjectLevelOnes() {
@@ -56,16 +56,16 @@ public class TagCategoryRegistryTest extends BasePlatformTestCase {
 
         TagCategoryRegistry registry = new TagCategoryRegistry(getProject());
 
-        assertSoftly(
-            softly -> softly.assertThat(registry.categoryOf("desktop")).isEqualTo("Device"),
-            softly -> softly.assertThat(registry.categoryOf("firefox")).isEqualTo("Browser"),
-            softly -> softly.assertThat(registry.categoryOf("skip")).isEqualTo("Excluded"),
-            softly -> softly.assertThat(registry.categoryOf("meta")).isEqualTo("Analytics and SEO"),
-            softly -> softly.assertThat(registry.categoryOf("WIP")).isEqualTo("Work in Progress"),
-            softly -> softly.assertThat(registry.categoryOf("ignore")).isEqualTo("Ignored"),
-            softly -> softly.assertThat(registry.categoryOf("sanity")).isEqualTo("Test Pack"),
-            softly -> softly.assertThat(registry.categoryOf("e2e")).isEqualTo("Test Pack")
-        );
+        assertSoftly(s -> {
+            s.assertThat(registry.categoryOf("desktop")).isEqualTo("Device");
+            s.assertThat(registry.categoryOf("firefox")).isEqualTo("Browser");
+            s.assertThat(registry.categoryOf("skip")).isEqualTo("Excluded");
+            s.assertThat(registry.categoryOf("meta")).isEqualTo("Analytics and SEO");
+            s.assertThat(registry.categoryOf("WIP")).isEqualTo("Work in Progress");
+            s.assertThat(registry.categoryOf("ignore")).isEqualTo("Ignored");
+            s.assertThat(registry.categoryOf("sanity")).isEqualTo("Test Pack");
+            s.assertThat(registry.categoryOf("e2e")).isEqualTo("Test Pack");
+        });
     }
 
     //putMappingsFrom
@@ -78,12 +78,12 @@ public class TagCategoryRegistryTest extends BasePlatformTestCase {
 
         registry.putMappingsFrom(mappings);
 
-        assertSoftly(
-            softly -> softly.assertThat(registry.categoryOf("jumped")).isEqualTo("Excluded"),
-            softly -> softly.assertThat(registry.categoryOf("hopped")).isEqualTo("Excluded"),
-            softly -> softly.assertThat(registry.categoryOf("sanity")).isEqualTo("Test Pack"),
-            softly -> softly.assertThat(registry.categoryOf("e2e")).isEqualTo("Test Pack")
-        );
+        assertSoftly(s -> {
+            s.assertThat(registry.categoryOf("jumped")).isEqualTo("Excluded");
+            s.assertThat(registry.categoryOf("hopped")).isEqualTo("Excluded");
+            s.assertThat(registry.categoryOf("sanity")).isEqualTo("Test Pack");
+            s.assertThat(registry.categoryOf("e2e")).isEqualTo("Test Pack");
+        });
     }
 
     //categoryOf

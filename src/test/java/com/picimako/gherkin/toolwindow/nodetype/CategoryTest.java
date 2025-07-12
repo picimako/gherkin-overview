@@ -2,8 +2,8 @@
 
 package com.picimako.gherkin.toolwindow.nodetype;
 
-import static com.picimako.gherkin.SoftAsserts.assertSoftly;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
@@ -71,11 +71,10 @@ public class CategoryTest extends BasePlatformTestCase {
 
         category.addTagOrFileToTag("regression", aGherkin);
 
-        assertSoftly(
-            softly -> softly.assertThat(category.getTags()).hasSize(2),
-            softly -> softly.assertThat(category.getTags().get(1).getGherkinFiles()).containsOnly(aGherkin)
-        );
-
+        assertSoftly(s -> {
+            s.assertThat(category.getTags()).hasSize(2);
+            s.assertThat(category.getTags().get(1).getGherkinFiles()).containsOnly(aGherkin);
+        });
     }
 
     //isOther

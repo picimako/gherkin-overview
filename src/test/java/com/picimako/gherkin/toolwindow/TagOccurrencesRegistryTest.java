@@ -2,8 +2,8 @@
 
 package com.picimako.gherkin.toolwindow;
 
-import static com.picimako.gherkin.SoftAsserts.assertSoftly;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.intellij.mock.MockVirtualFile;
 import com.intellij.openapi.application.WriteAction;
@@ -34,11 +34,11 @@ public class TagOccurrencesRegistryTest extends BasePlatformTestCase {
 
         var registry = initRegistryAndCalculateCounts(2, virtualFile, virtualFile2);
 
-        assertSoftly(
-            softly -> softly.assertThat(registry.getCountFor(virtualFile.getPath(), "disabled")).isOne(),
-            softly -> softly.assertThat(registry.getCountFor(virtualFile2.getPath(), "tablet")).isEqualTo(2),
-            softly -> softly.assertThat(registry.getCountFor(virtualFile2.getPath(), "youtube")).isEqualTo(3)
-        );
+        assertSoftly(s -> {
+            s.assertThat(registry.getCountFor(virtualFile.getPath(), "disabled")).isOne();
+            s.assertThat(registry.getCountFor(virtualFile2.getPath(), "tablet")).isEqualTo(2);
+            s.assertThat(registry.getCountFor(virtualFile2.getPath(), "youtube")).isEqualTo(3);
+        });
     }
 
     public void testCalculatesCountsForMetas() {
@@ -47,11 +47,11 @@ public class TagOccurrencesRegistryTest extends BasePlatformTestCase {
 
         var registry = initRegistryAndCalculateCounts(2, virtualFile, virtualFile2);
 
-        assertSoftly(
-            softly -> softly.assertThat(registry.getCountFor(virtualFile.getPath(), "Disabled")).isEqualTo(2),
-            softly -> softly.assertThat(registry.getCountFor(virtualFile2.getPath(), "Device:tablet")).isEqualTo(2),
-            softly -> softly.assertThat(registry.getCountFor(virtualFile2.getPath(), "Media:youtube vimeo")).isEqualTo(3)
-        );
+        assertSoftly(s -> {
+            s.assertThat(registry.getCountFor(virtualFile.getPath(), "Disabled")).isEqualTo(2);
+            s.assertThat(registry.getCountFor(virtualFile2.getPath(), "Device:tablet")).isEqualTo(2);
+            s.assertThat(registry.getCountFor(virtualFile2.getPath(), "Media:youtube vimeo")).isEqualTo(3);
+        });
     }
 
     public void testDoesntCalculateCountsForNonExistentFile() {

@@ -2,12 +2,9 @@
 
 package com.picimako.gherkin.settings;
 
-import static com.picimako.gherkin.SoftAsserts.assertSoftly;
 import static com.picimako.gherkin.ToolWindowTestSupport.getToolWindowModel;
 import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.List;
-import java.util.Optional;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.picimako.gherkin.MediumBasePlatformTestCase;
 import com.picimako.gherkin.ToolWindowTestSupport;
@@ -17,6 +14,9 @@ import com.picimako.gherkin.toolwindow.StatisticsType;
 import com.picimako.gherkin.toolwindow.TagCategoryRegistry;
 import com.picimako.gherkin.toolwindow.nodetype.Category;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Unit test for {@link GherkinOverviewProjectConfigurable}.
@@ -97,13 +97,13 @@ public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTe
         var projectSettings = GherkinOverviewProjectState.getInstance(getProject());
         var registry = TagCategoryRegistry.getInstance(getProject());
 
-        assertSoftly(
-            softly -> softly.assertThat(appSettings.mappings).containsExactly(breakpoint),
-            softly -> softly.assertThat(projectSettings.useProjectLevelMappings).isFalse(),
-            softly -> softly.assertThat(projectSettings.mappings).containsExactly(media),
-            softly -> softly.assertThat(registry.categoryOf("small")).isEqualTo("Breakpoint"),
-            softly -> softly.assertThat(registry.categoryOf("image")).isNull()
-        );
+        assertSoftly(s -> {
+            s.assertThat(appSettings.mappings).containsExactly(breakpoint);
+            s.assertThat(projectSettings.useProjectLevelMappings).isFalse();
+            s.assertThat(projectSettings.mappings).containsExactly(media);
+            s.assertThat(registry.categoryOf("small")).isEqualTo("Breakpoint");
+            s.assertThat(registry.categoryOf("image")).isNull();
+        });
     }
 
     public void testAppliesSettingsWithProjectLevelMappings() {
@@ -120,13 +120,13 @@ public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTe
         var projectSettings = GherkinOverviewProjectState.getInstance(getProject());
         var registry = TagCategoryRegistry.getInstance(getProject());
 
-        assertSoftly(
-            softly -> softly.assertThat(appSettings.mappings).containsExactly(breakpoint),
-            softly -> softly.assertThat(projectSettings.useProjectLevelMappings).isTrue(),
-            softly -> softly.assertThat(projectSettings.mappings).containsExactly(media),
-            softly -> softly.assertThat(registry.categoryOf("small")).isEqualTo("Breakpoint"),
-            softly -> softly.assertThat(registry.categoryOf("image")).isEqualTo("Media")
-        );
+        assertSoftly(s -> {
+            s.assertThat(appSettings.mappings).containsExactly(breakpoint);
+            s.assertThat(projectSettings.useProjectLevelMappings).isTrue();
+            s.assertThat(projectSettings.mappings).containsExactly(media);
+            s.assertThat(registry.categoryOf("small")).isEqualTo("Breakpoint");
+            s.assertThat(registry.categoryOf("image")).isEqualTo("Media");
+        });
     }
 
     public void testRebuildsModelIfAppLevelMappingsChanged() {
@@ -178,11 +178,11 @@ public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTe
 
         configurable.reset();
 
-        assertSoftly(
-            softly -> softly.assertThat(configurable.getComponent().isUseProjectLevelMappings()).isFalse(),
-            softly -> softly.assertThat(configurable.getComponent().getApplicationLevelMappings()).doesNotContain(breakpoint),
-            softly -> softly.assertThat(configurable.getComponent().getProjectLevelMappings()).isEmpty()
-        );
+        assertSoftly(s -> {
+            s.assertThat(getComponent().isUseProjectLevelMappings()).isFalse();
+            s.assertThat(getComponent().getApplicationLevelMappings()).doesNotContain(breakpoint);
+            s.assertThat(getComponent().getProjectLevelMappings()).isEmpty();
+        });
     }
 
     //Helper methods

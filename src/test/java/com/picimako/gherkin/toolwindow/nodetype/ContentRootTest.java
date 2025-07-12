@@ -2,8 +2,8 @@
 
 package com.picimako.gherkin.toolwindow.nodetype;
 
-import static com.picimako.gherkin.SoftAsserts.assertSoftly;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
@@ -132,17 +132,17 @@ public class ContentRootTest extends BasePlatformTestCase {
     public void testSortTagsAndCategories() {
         ContentRoot module = setupModule();
 
-        assertSoftly(
-            softly -> softly.assertThat(module.getCategories()).extracting(Category::getDisplayName).containsExactly("Other", "Test Suite", "Component"),
-            softly -> softly.assertThat(module.findCategory("Test Suite").get().getTags()).extracting(Tag::getDisplayName).containsExactly("smoke", "E2E")
-        );
+        assertSoftly(s -> {
+            s.assertThat(module.getCategories()).extracting(Category::getDisplayName).containsExactly("Other", "Test Suite", "Component");
+            s.assertThat(module.findCategory("Test Suite").get().getTags()).extracting(Tag::getDisplayName).containsExactly("smoke", "E2E");
+        });
 
         module.sort();
 
-        assertSoftly(
-            softly -> softly.assertThat(module.getCategories()).extracting(Category::getDisplayName).containsExactly("Component", "Other", "Test Suite"),
-            softly -> softly.assertThat(module.findCategory("Test Suite").get().getTags()).extracting(Tag::getDisplayName).containsExactly("E2E", "smoke")
-        );
+        assertSoftly(s -> {
+            s.assertThat(module.getCategories()).extracting(Category::getDisplayName).containsExactly("Component", "Other", "Test Suite");
+            s.assertThat(module.findCategory("Test Suite").get().getTags()).extracting(Tag::getDisplayName).containsExactly("E2E", "smoke");
+        });
     }
 
     // toString
