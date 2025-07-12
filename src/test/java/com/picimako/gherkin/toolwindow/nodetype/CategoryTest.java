@@ -4,26 +4,35 @@ package com.picimako.gherkin.toolwindow.nodetype;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.junit.jupiter.params.provider.Arguments.argumentSet;
+
+import java.util.stream.Stream;
 
 import com.intellij.openapi.vfs.VirtualFile;
 import com.picimako.gherkin.GherkinOverviewTestBase;
 import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
 import com.picimako.gherkin.toolwindow.StatisticsType;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * Unit test for {@link Category}.
  */
-public class CategoryTest extends GherkinOverviewTestBase {
+final class CategoryTest extends GherkinOverviewTestBase {
 
     //get
 
-    public void testReturnOptionalWithTagForName() {
+    @Test
+    void returnOptionalWithTagForName() {
         assertThat(createCategory().get("regression"))
             .hasValueSatisfying(tag -> assertThat(tag.getDisplayName()).isEqualTo("regression"));
     }
 
-    public void testReturnEmptyOptionalForNotFoundTagName() {
-        VirtualFile theGherkin = myFixture.configureByFile("the_gherkin.feature").getVirtualFile();
+    @Test
+    void returnEmptyOptionalForNotFoundTagName() {
+        VirtualFile theGherkin = configureVirtualFile("the_gherkin.feature");
 
         Category category = new Category("Test Suite", getProject())
             .add(new Tag("smoke", theGherkin, getProject()));
@@ -33,19 +42,22 @@ public class CategoryTest extends GherkinOverviewTestBase {
 
     //hasTag
 
-    public void testHasTag() {
+    @Test
+    void hasTag() {
         assertThat(createCategory().hasTag()).isTrue();
     }
 
-    public void testDoesntHaveTag() {
+    @Test
+    void doesntHaveTag() {
         assertThat(new Category("test suite", getProject()).hasTag()).isFalse();
     }
 
     //addTagOrFileToTag
 
-    public void testAddFeatureFileToTagIfTagExists() {
-        VirtualFile theGherkin = myFixture.configureByFile("the_gherkin.feature").getVirtualFile();
-        VirtualFile aGherkin = myFixture.configureByFile("A_gherkin.feature").getVirtualFile();
+    @Test
+    void addFeatureFileToTagIfTagExists() {
+        VirtualFile theGherkin = configureVirtualFile("the_gherkin.feature");
+        VirtualFile aGherkin = configureVirtualFile("A_gherkin.feature");
 
         Tag tag;
         Category category = new Category("Test Suite", getProject())
@@ -56,9 +68,10 @@ public class CategoryTest extends GherkinOverviewTestBase {
         assertThat(tag.getGherkinFiles()).containsExactly(theGherkin, aGherkin);
     }
 
-    public void testCreateTagInitializedWithFeatureFileIfTagDoesntExist() {
-        VirtualFile theGherkin = myFixture.configureByFile("the_gherkin.feature").getVirtualFile();
-        VirtualFile aGherkin = myFixture.configureByFile("A_gherkin.feature").getVirtualFile();
+    @Test
+    void createTagInitializedWithFeatureFileIfTagDoesntExist() {
+        VirtualFile theGherkin = configureVirtualFile("the_gherkin.feature");
+        VirtualFile aGherkin = configureVirtualFile("A_gherkin.feature");
 
         Category category = new Category("Test Suite", getProject())
             .add(new Tag("smoke", theGherkin, getProject()));
@@ -73,22 +86,26 @@ public class CategoryTest extends GherkinOverviewTestBase {
 
     //isOther
 
-    public void testBeOtherCategory() {
+    @Test
+    void beOtherCategory() {
         assertThat(Category.createOther(getProject()).isOther()).isTrue();
     }
 
-    public void testNotBeOtherCategory() {
+    @Test
+    void notBeOtherCategory() {
         assertThat(new Category("Not other", getProject()).isOther()).isFalse();
     }
 
     //isNotOtherAndDoesntHaveAnyTag
 
-    public void testOther() {
+    @Test
+    void other() {
         assertThat(Category.createOther(getProject()).isNotOtherAndDoesntHaveAnyTag()).isFalse();
     }
 
-    public void testNotOtherWithNotEmptyTags() {
-        VirtualFile aGherkin = myFixture.configureByFile("A_gherkin.feature").getVirtualFile();
+    @Test
+    void notOtherWithNotEmptyTags() {
+        VirtualFile aGherkin = configureVirtualFile("A_gherkin.feature");
 
         Category notOther = new Category("Not other", getProject())
             .add(new Tag("tag", aGherkin, getProject()));
@@ -96,13 +113,15 @@ public class CategoryTest extends GherkinOverviewTestBase {
         assertThat(notOther.isNotOtherAndDoesntHaveAnyTag()).isFalse();
     }
 
-    public void testNotOtherWithEmptyTags() {
+    @Test
+    void notOtherWithEmptyTags() {
         assertThat(new Category("Not other", getProject()).isNotOtherAndDoesntHaveAnyTag()).isTrue();
     }
 
     //sort
 
-    public void testSortMoreThanOneTags() {
+    @Test
+    void sortMoreThanOneTags() {
         Category category = createCategory();
 
         assertThat(category.getTags()).extracting(AbstractNodeType::getDisplayName).containsExactly("smoke", "regression");
@@ -114,27 +133,25 @@ public class CategoryTest extends GherkinOverviewTestBase {
 
     //toString
 
-    public void testShowSimplifiedStatistics() {
-        GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = StatisticsType.SIMPLIFIED;
+    @ParameterizedTest
+    @MethodSource("toStrings")
+    void testToString(StatisticsType statisticsType, String toString) {
+        GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = statisticsType;
 
-        assertThat(createCategory()).hasToString("Test Suite (2)");
+        assertThat(createCategory()).hasToString(toString);
     }
 
-    public void testShowDetailedStatistics() {
-        GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = StatisticsType.DETAILED;
-
-        assertThat(createCategory()).hasToString("Test Suite - 2 for 2 distinct tags");
-    }
-
-    public void testNotShowStatistics() {
-        GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = StatisticsType.DISABLED;
-
-        assertThat(createCategory()).hasToString("Test Suite");
+    private static Stream<Arguments> toStrings() {
+        return Stream.of(
+            argumentSet("returns disabled toString()", StatisticsType.DISABLED, "Test Suite"),
+            argumentSet("builds simplified toString()", StatisticsType.SIMPLIFIED, "Test Suite (2)"),
+            argumentSet("builds detailed toString()", StatisticsType.DETAILED, "Test Suite - 2 for 2 distinct tags")
+        );
     }
 
     private Category createCategory() {
-        VirtualFile theGherkin = myFixture.configureByFile("the_gherkin.feature").getVirtualFile();
-        VirtualFile aGherkin = myFixture.configureByFile("A_gherkin.feature").getVirtualFile();
+        VirtualFile theGherkin = getFixture().configureByFile("the_gherkin.feature").getVirtualFile();
+        VirtualFile aGherkin = getFixture().configureByFile("A_gherkin.feature").getVirtualFile();
 
         return new Category("Test Suite", getProject())
             .add(new Tag("smoke", aGherkin, getProject()))

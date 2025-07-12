@@ -15,76 +15,81 @@ import com.picimako.gherkin.ToolWindowTestSupport;
 import com.picimako.gherkin.toolwindow.GherkinTagOverviewPanel;
 import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
 import com.picimako.gherkin.toolwindow.LayoutType;
+import org.junit.jupiter.api.Test;
 
 /**
  * Integration test for {@link SelectFocusedTagAction}.
  */
-public class SelectFocusedTagActionNoGroupingTest extends GherkinOverviewTestBase {
+final class SelectFocusedTagActionNoGroupingTest extends GherkinOverviewTestBase {
 
-    @Override
-    protected LightProjectDescriptor getProjectDescriptor() {
-        //Returning a new project descriptor, so that a new Project is created for each
-        // test method, thus having a clean data setup (i.e. Tags tool window) for each test.
-        return new LightProjectDescriptor();
+    //Returning a new project descriptor, so that a new Project is created for each
+    // test method, thus having a clean data setup (i.e. Tags tool window) for each test.
+    public SelectFocusedTagActionNoGroupingTest() {
+        super(new LightProjectDescriptor());
     }
 
     //Availability
 
-    public void testNotAvailableForNoEditorOpen() {
+    @Test
+    void notAvailableForNoEditorOpen() {
         GherkinTagsToolWindowSettings.getInstance(getProject()).layout = LayoutType.NO_GROUPING;
 
-        var event = doTestActionEvent();
-        new SelectFocusedTagAction().updateButton(event);
+        var event = updateActionButton();
 
         assertThat(event.getPresentation().isEnabled()).isFalse();
     }
 
-//    public void testNotAvailableForNoCaret() {
+//    @Test
+//    void notAvailableForNoCaret() {
 //    }
 
-    public void testNotAvailableForMoreThanOneCaret() {
+    @Test
+    void notAvailableForMoreThanOneCaret() {
         GherkinTagsToolWindowSettings.getInstance(getProject()).layout = LayoutType.NO_GROUPING;
 
-        myFixture.configureByFile("A_gherkin.feature");
+        getFixture().configureByFile("A_gherkin.feature");
         //Add a second caret
-        FileEditorManager.getInstance(getProject()).getSelectedTextEditor().getCaretModel().addCaret(new VisualPosition(3, 4));
+        invokeAndWait(() ->
+            FileEditorManager.getInstance(getProject()).getSelectedTextEditor()
+                .getCaretModel()
+                .addCaret(new VisualPosition(3, 4)));
 
-        var event = doTestActionEvent();
-        new SelectFocusedTagAction().updateButton(event);
+        var event = updateActionButton();
 
         assertThat(event.getPresentation().isEnabled()).isFalse();
     }
 
-    public void testNotAvailableForNonGherkinTagUnderTheCaret() {
+    @Test
+    void notAvailableForNonGherkinTagUnderTheCaret() {
         GherkinTagsToolWindowSettings.getInstance(getProject()).layout = LayoutType.NO_GROUPING;
 
-        myFixture.configureByText(
+        getFixture().configureByText(
             "non_tag_under_caret.feature",
             "Feature: Some featur<caret>e");
 
-        var event = doTestActionEvent();
-        new SelectFocusedTagAction().updateButton(event);
+        var event = updateActionButton();
 
         assertThat(event.getPresentation().isEnabled()).isFalse();
     }
 
-    public void testAvailableForGherkinTag() {
+    @Test
+    void availableForGherkinTag() {
         GherkinTagsToolWindowSettings.getInstance(getProject()).layout = LayoutType.NO_GROUPING;
 
-        myFixture.configureByText(
+        getFixture().configureByText(
             "tag_under_caret.feature",
             "@some<caret>Tag\n" +
                 "Feature: Some feature");
 
-        var event = doTestActionEvent();
-        new SelectFocusedTagAction().updateButton(event);
+        var event = updateActionButton();
 
         assertThat(event.getPresentation().isEnabled()).isTrue();
     }
 
     //Performing the action
 
-    public void testSelectsTagInCustomCategoryInProject() {
+    @Test
+    void selectsTagInCustomCategoryInProject() {
         GherkinTagsToolWindowSettings.getInstance(getProject()).layout = LayoutType.NO_GROUPING;
 
         validateTagSelection(
@@ -94,7 +99,8 @@ public class SelectFocusedTagActionNoGroupingTest extends GherkinOverviewTestBas
         );
     }
 
-    public void testSelectsTagInOtherInProject() {
+    @Test
+    void selectsTagInOtherInProject() {
         GherkinTagsToolWindowSettings.getInstance(getProject()).layout = LayoutType.NO_GROUPING;
 
         validateTagSelection(
@@ -104,7 +110,8 @@ public class SelectFocusedTagActionNoGroupingTest extends GherkinOverviewTestBas
         );
     }
 
-    public void testSelectsRegexBasedTagInProject() {
+    @Test
+    void selectsRegexBasedTagInProject() {
         GherkinTagsToolWindowSettings.getInstance(getProject()).layout = LayoutType.NO_GROUPING;
 
         validateTagSelection(
@@ -114,7 +121,8 @@ public class SelectFocusedTagActionNoGroupingTest extends GherkinOverviewTestBas
         );
     }
 
-    public void testSelectsTagInCustomCategoryInContentRoot() {
+    @Test
+    void selectsTagInCustomCategoryInContentRoot() {
         GherkinTagsToolWindowSettings.getInstance(getProject()).layout = LayoutType.GROUP_BY_MODULES;
 
         validateTagSelection(
@@ -124,7 +132,8 @@ public class SelectFocusedTagActionNoGroupingTest extends GherkinOverviewTestBas
         );
     }
 
-    public void testSelectsTagInOtherInContentRoot() {
+    @Test
+    void selectsTagInOtherInContentRoot() {
         GherkinTagsToolWindowSettings.getInstance(getProject()).layout = LayoutType.GROUP_BY_MODULES;
 
         validateTagSelection(
@@ -134,7 +143,8 @@ public class SelectFocusedTagActionNoGroupingTest extends GherkinOverviewTestBas
         );
     }
 
-    public void testSelectsRegexBasedTagInContentRoot() {
+    @Test
+    void selectsRegexBasedTagInContentRoot() {
         GherkinTagsToolWindowSettings.getInstance(getProject()).layout = LayoutType.GROUP_BY_MODULES;
 
         validateTagSelection(
@@ -146,6 +156,12 @@ public class SelectFocusedTagActionNoGroupingTest extends GherkinOverviewTestBas
 
     //Helpers
 
+    private AnActionEvent updateActionButton() {
+        var event = doTestActionEvent();
+        new SelectFocusedTagAction().updateButton(event);
+        return event;
+    }
+
     private AnActionEvent doTestActionEvent() {
         return TestActionEvent.createTestEvent(dataId -> {
             if (CommonDataKeys.PROJECT.is(dataId)) return getProject();
@@ -154,12 +170,12 @@ public class SelectFocusedTagActionNoGroupingTest extends GherkinOverviewTestBas
     }
 
     private void validateTagSelection(String featureFileText, String selectionPathString) {
-        myFixture.configureByText("the_gherkin.feature", featureFileText);
+        getFixture().configureByText("the_gherkin.feature", featureFileText);
         var gherkinTagsPanel = new GherkinTagOverviewPanel(getProject());
         ToolWindowTestSupport.registerToolWindow(gherkinTagsPanel, getProject());
 
         var event = doTestActionEvent();
-        new SelectFocusedTagAction().actionPerformed(event);
+        invokeAndWait(() -> new SelectFocusedTagAction().actionPerformed(event));
 
         var selectionPath = gherkinTagsPanel.getTree().getSelectionPath();
         assertThat(selectionPath).hasToString(selectionPathString);

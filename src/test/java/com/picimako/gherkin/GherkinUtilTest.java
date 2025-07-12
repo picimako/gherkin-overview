@@ -7,16 +7,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 
 import com.intellij.psi.PsiFile;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit test for {@link GherkinUtil}.
  */
-public class GherkinUtilTest extends GherkinOverviewTestBase {
+final class GherkinUtilTest extends GherkinOverviewTestBase {
 
     //collectGherkinTagsFromFile
 
-    public void testCollectGherkinTagsFromFile() {
-        PsiFile gherkinFile = myFixture.configureByText("gherkin.feature",
+    @Test
+    void collectGherkinTagsFromFile() {
+        PsiFile gherkinFile = getFixture().configureByText("gherkin.feature",
             """
                 @smoke
                 Feature: A feature
@@ -32,8 +34,9 @@ public class GherkinUtilTest extends GherkinOverviewTestBase {
         assertThat(tags).containsExactly("smoke", "regression", "jira", "trello");
     }
 
-    public void testCollectNoGherkinTagsFromFileWithNoTags() {
-        PsiFile gherkinFile = myFixture.configureByText("gherkin.feature", "Feature: A feature");
+    @Test
+    void collectNoGherkinTagsFromFileWithNoTags() {
+        PsiFile gherkinFile = getFixture().configureByText("gherkin.feature", "Feature: A feature");
 
         List<String> tags = GherkinUtil.collectGherkinTagsFromFile(gherkinFile);
 
@@ -42,26 +45,30 @@ public class GherkinUtilTest extends GherkinOverviewTestBase {
 
     //isGherkinFile
 
-    public void testIsAGherkinPsiFile() {
-        PsiFile gherkinFile = myFixture.configureByText("gherkin.feature", "");
+    @Test
+    void isAGherkinPsiFile() {
+        PsiFile gherkinFile = getFixture().configureByText("gherkin.feature", "");
 
         assertThat(GherkinUtil.isGherkinFile(gherkinFile)).isTrue();
     }
 
-    public void testIsNotAGherkinPsiFile() {
-        PsiFile storyFile = myFixture.configureByText("story.story", "");
+    @Test
+    void isNotAGherkinPsiFile() {
+        PsiFile storyFile = getFixture().configureByText("story.story", "");
 
         assertThat(GherkinUtil.isGherkinFile(storyFile)).isFalse();
     }
 
-    public void testIsAGherkinVirtualFile() {
-        PsiFile gherkinFile = myFixture.configureByText("gherkin.feature", "");
+    @Test
+    void isAGherkinVirtualFile() {
+        PsiFile gherkinFile = getFixture().configureByText("gherkin.feature", "");
 
         assertThat(GherkinUtil.isGherkinFile(gherkinFile.getVirtualFile())).isTrue();
     }
 
-    public void testIsNotAGherkinVirtualFile() {
-        PsiFile storyFile = myFixture.configureByText("story.story", "");
+    @Test
+    void isNotAGherkinVirtualFile() {
+        PsiFile storyFile = getFixture().configureByText("story.story", "");
 
         assertThat(GherkinUtil.isGherkinFile(storyFile.getVirtualFile())).isFalse();
     }

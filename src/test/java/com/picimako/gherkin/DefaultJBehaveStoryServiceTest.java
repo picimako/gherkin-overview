@@ -6,24 +6,26 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.psi.PsiElement;
 import com.picimako.gherkin.toolwindow.BDDTestSupport;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit test for {@link DefaultJBehaveStoryService}.
  */
-public class DefaultJBehaveStoryServiceTest extends GherkinOverviewTestBase {
+final class DefaultJBehaveStoryServiceTest extends GherkinOverviewTestBase {
 
     private JBehaveStoryService storyService;
 
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
+    @BeforeEach
+    void setUp() {
         storyService = new DefaultJBehaveStoryService(getProject());
     }
 
     //collectMetasFromFile
 
-    public void testCollectMetasFromFile() {
-        var storyFile = myFixture.configureByText("story.story",
+    @Test
+    void collectMetasFromFile() {
+        var storyFile = getFixture().configureByText("story.story",
             """
                 Meta:
                 @Suite smoke
@@ -42,8 +44,9 @@ public class DefaultJBehaveStoryServiceTest extends GherkinOverviewTestBase {
         assertThat(metas.entrySet()).hasSize(4);
     }
 
-    public void testCollectNoMetasFromFileWithNoMetas() {
-        var storyFile = myFixture.configureByText("story.story", "Scenario:");
+    @Test
+    void collectNoMetasFromFileWithNoMetas() {
+        var storyFile = getFixture().configureByText("story.story", "Scenario:");
         var metas = storyService.collectMetasFromFile(storyFile);
 
         assertThat(metas.isEmpty()).isTrue();
@@ -51,8 +54,9 @@ public class DefaultJBehaveStoryServiceTest extends GherkinOverviewTestBase {
 
     //collectMetasFromFileAsList
 
-    public void testCollectMetasFromFileAsList() {
-        var storyFile = myFixture.configureByText("story.story",
+    @Test
+    void collectMetasFromFileAsList() {
+        var storyFile = getFixture().configureByText("story.story",
             """
                 Meta:
                 @Suite smoke
@@ -71,8 +75,9 @@ public class DefaultJBehaveStoryServiceTest extends GherkinOverviewTestBase {
         assertThat(metas).contains("Suite:smoke", "Browser:firefox chrome", "Jira", "Suite:smoke");
     }
 
-    public void testCollectNoMetasFromFileWithNoMetasAsList() {
-        var storyFile = myFixture.configureByText("story.story", "Scenario:");
+    @Test
+    void collectNoMetasFromFileWithNoMetasAsList() {
+        var storyFile = getFixture().configureByText("story.story", "Scenario:");
         var metas = storyService.collectMetasFromFileAsList(storyFile);
 
         assertThat(metas).isEmpty();
@@ -80,16 +85,18 @@ public class DefaultJBehaveStoryServiceTest extends GherkinOverviewTestBase {
 
     //collectMetaTextsForMetaKeyAsList
 
-    public void testCollectsMetaTextsForMetaKeyAsList() {
-        var storyFile = myFixture.configureByFile("Another story.story");
+    @Test
+    void collectsMetaTextsForMetaKeyAsList() {
+        var storyFile = getFixture().configureByFile("Another story.story");
         var metaTexts = storyService.collectMetaTextsForMetaKeyAsList(BDDTestSupport.getFirstMetaKeyForName(storyFile, "@Media"));
 
-        assertThat(metaTexts).isNotEmpty();
-        assertThat(metaTexts).extracting(PsiElement::getText).containsExactly("youtube", "vimeo");
+        assertThat(metaTexts).isNotEmpty()
+            .extracting(PsiElement::getText).containsExactly("youtube", "vimeo");
     }
 
-    public void testReturnsEmptyListIfThereIsNoMetaTextForMetaKey() {
-        var storyFile = myFixture.configureByFile("Story.story");
+    @Test
+    void returnsEmptyListIfThereIsNoMetaTextForMetaKey() {
+        var storyFile = getFixture().configureByFile("Story.story");
         var metaTexts = storyService.collectMetaTextsForMetaKeyAsList(BDDTestSupport.getFirstMetaKeyForName(storyFile, "@Disabled"));
 
         assertThat(metaTexts).isEmpty();

@@ -9,48 +9,53 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.picimako.gherkin.GherkinOverviewTestBase;
 import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
 import com.picimako.gherkin.toolwindow.StatisticsType;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit test for {@link ContentRoot}.
  */
-public class ContentRootTest extends GherkinOverviewTestBase {
+final class ContentRootTest extends GherkinOverviewTestBase {
 
     // findCategory
 
-    public void testReturnNoCategoryForNullCategoryName() {
+    @Test
+    void returnNoCategoryForNullCategoryName() {
         ContentRoot module = ContentRoot.createModule("module", getProject());
 
         assertThat(module.findCategory(null)).isEmpty();
     }
 
-    public void testReturnNoCategoryForNonExistentCategoryName() {
+    @Test
+    void returnNoCategoryForNonExistentCategoryName() {
         ContentRoot module = ContentRoot.createModule("module", getProject())
             .addCategory(new Category("aCategory", getProject()));
 
         assertThat(module.findCategory("nonexistent")).isEmpty();
     }
 
-    public void testReturnCategory() {
+    @Test
+    void returnCategory() {
         ContentRoot module = ContentRoot.createModule("module", getProject())
             .addCategory(new Category("Test Suite", getProject()))
             .addCategory(new Category("Component", getProject()));
 
         Category category = module.findCategory("Component").get();
 
-        assertThat(category).isNotNull();
-        assertThat(category.getDisplayName()).isEqualTo("Component");
+        assertThat(category).isNotNull().extracting(Category::getDisplayName).isEqualTo("Component");
     }
 
     // findCategoryOrOther
 
-    public void testReturnOtherCategoryForNullCategoryName() {
+    @Test
+    void returnOtherCategoryForNullCategoryName() {
         ContentRoot module = ContentRoot.createModule("module", getProject());
 
         assertThat(module.findCategoryOrOther(null)).isNotNull();
         assertThat(module.findCategoryOrOther("non-existent").getDisplayName()).isEqualTo("Other");
     }
 
-    public void testReturnOtherCategoryForNonExistentCategoryName() {
+    @Test
+    void returnOtherCategoryForNonExistentCategoryName() {
         ContentRoot module = ContentRoot.createModule("module", getProject())
             .addCategory(new Category("aCategory", getProject()));
 
@@ -58,21 +63,22 @@ public class ContentRootTest extends GherkinOverviewTestBase {
         assertThat(module.findCategoryOrOther("non-existent").getDisplayName()).isEqualTo("Other");
     }
 
-    public void testReturnCategoryForName() {
+    @Test
+    void returnCategoryForName() {
         ContentRoot module = ContentRoot.createModule("module", getProject())
             .addCategory(new Category("Test Suite", getProject()))
             .addCategory(new Category("Component", getProject()));
 
         Category category = module.findCategoryOrOther("Component");
 
-        assertThat(category).isNotNull();
-        assertThat(category.getDisplayName()).isEqualTo("Component");
+        assertThat(category).isNotNull().extracting(Category::getDisplayName).isEqualTo("Component");
     }
 
     //findTag
 
-    public void testReturnsTag() {
-        VirtualFile theGherkin = myFixture.configureByFile("the_gherkin.feature").getVirtualFile();
+    @Test
+    void returnsTag() {
+        VirtualFile theGherkin = configureVirtualFile("the_gherkin.feature");
 
         Category category = new Category("Test Suite", getProject())
             .add(new Tag("regression", theGherkin, getProject()))
@@ -83,8 +89,9 @@ public class ContentRootTest extends GherkinOverviewTestBase {
         assertThat(module.findTag("e2e")).hasValueSatisfying(tag -> assertThat(tag.displayName).isEqualTo("e2e"));
     }
 
-    public void testReturnsNoTag() {
-        VirtualFile theGherkin = myFixture.configureByFile("the_gherkin.feature").getVirtualFile();
+    @Test
+    void returnsNoTag() {
+        VirtualFile theGherkin = configureVirtualFile("the_gherkin.feature");
 
         Category category = new Category("Test Suite", getProject())
             .add(new Tag("regression", theGherkin, getProject()))
@@ -97,8 +104,9 @@ public class ContentRootTest extends GherkinOverviewTestBase {
 
     //hasFileMapped
 
-    public void testHasFileMapped() {
-        VirtualFile theGherkin = myFixture.configureByFile("the_gherkin.feature").getVirtualFile();
+    @Test
+    void hasFileMapped() {
+        VirtualFile theGherkin = configureVirtualFile("the_gherkin.feature");
 
         Category category = new Category("Test Suite", getProject())
             .add(new Tag("regression", theGherkin, getProject()))
@@ -109,9 +117,10 @@ public class ContentRootTest extends GherkinOverviewTestBase {
         assertThat(module.hasFileMapped(theGherkin)).isTrue();
     }
 
-    public void testDoesntHaveFileMapped() {
-        VirtualFile theGherkin = myFixture.configureByFile("the_gherkin.feature").getVirtualFile();
-        VirtualFile aGherkin = myFixture.configureByFile("A_gherkin.feature").getVirtualFile();
+    @Test
+    void doesntHaveFileMapped() {
+        VirtualFile theGherkin = configureVirtualFile("the_gherkin.feature");
+        VirtualFile aGherkin = configureVirtualFile("A_gherkin.feature");
 
         Category category = new Category("Test Suite", getProject())
             .add(new Tag("regression", theGherkin, getProject()))
@@ -124,7 +133,8 @@ public class ContentRootTest extends GherkinOverviewTestBase {
 
     //sort
 
-    public void testSortTagsAndCategories() {
+    @Test
+    void sortTagsAndCategories() {
         ContentRoot module = setupModule();
 
         assertSoftly(s -> {
@@ -142,7 +152,8 @@ public class ContentRootTest extends GherkinOverviewTestBase {
 
     // toString
 
-    public void testReturnToStringWithSimplifiedStatistics() {
+    @Test
+    void returnToStringWithSimplifiedStatistics() {
         GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = StatisticsType.SIMPLIFIED;
 
         ContentRoot module = setupModule();
@@ -150,7 +161,8 @@ public class ContentRootTest extends GherkinOverviewTestBase {
         assertThat(module).hasToString("module - 4 tags, 2 .feature files");
     }
 
-    public void testReturnToStringWithDetailedStatistics() {
+    @Test
+    void returnToStringWithDetailedStatistics() {
         GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = StatisticsType.DETAILED;
 
         ContentRoot module = setupModule();
@@ -158,7 +170,8 @@ public class ContentRootTest extends GherkinOverviewTestBase {
         assertThat(module).hasToString("module - 4 distinct tags in 2 .feature files");
     }
 
-    public void testReturnToStringWithoutStatistics() {
+    @Test
+    void returnToStringWithoutStatistics() {
         GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = StatisticsType.DISABLED;
 
         ContentRoot module = setupModule();
@@ -168,8 +181,8 @@ public class ContentRootTest extends GherkinOverviewTestBase {
 
     private ContentRoot setupModule() {
         ContentRoot module = ContentRoot.createModule("module", getProject());
-        VirtualFile theGherkin = myFixture.configureByFile("the_gherkin.feature").getVirtualFile();
-        VirtualFile aGherkin = myFixture.configureByFile("A_gherkin.feature").getVirtualFile();
+        VirtualFile theGherkin = configureVirtualFile("the_gherkin.feature");
+        VirtualFile aGherkin = configureVirtualFile("A_gherkin.feature");
 
         Category testSuite = new Category("Test Suite", getProject())
             .add(new Tag("smoke", theGherkin, getProject()).add(aGherkin))

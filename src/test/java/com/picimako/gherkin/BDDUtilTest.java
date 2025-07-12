@@ -4,48 +4,35 @@ package com.picimako.gherkin;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
 /**
  * Unit test for {@link BDDUtil}.
  */
-public class BDDUtilTest extends GherkinOverviewTestBase {
+final class BDDUtilTest extends GherkinOverviewTestBase {
 
-    //isABDDFile(PsiFile)
+    @ParameterizedTest
+    @CsvSource(value = {
+        "gherkin.feature, true",
+        "story.story, true",
+        "SomeClass.java, false"
+    })
+    void testIsBddPsiFile(String fileName, boolean shouldBeABddFile) {
+        var file = getFixture().configureByText(fileName, "");
 
-    public void testIsABDDFileGherkin() {
-        var gherkinFile = myFixture.configureByText("gherkin.feature", "");
-
-        assertThat(BDDUtil.isABDDFile(gherkinFile)).isTrue();
+        assertThat(BDDUtil.isABDDFile(file)).isEqualTo(shouldBeABddFile);
     }
 
-    public void testIsABDDFileStory() {
-        var storyFile = myFixture.configureByText("story.story", "");
+    @ParameterizedTest
+    @CsvSource(value = {
+        "gherkin.feature, true",
+        "story.story, true",
+        "SomeClass.java, false"
+    })
+    void testIsBddVirtualFile(String fileName, boolean shouldBeABddFile) {
+        var file = getFixture().configureByText(fileName, "");
 
-        assertThat(BDDUtil.isABDDFile(storyFile)).isTrue();
-    }
-
-    public void testIsNotABDDFile() {
-        var javaFile = myFixture.configureByText("SomeClass.java", "");
-
-        assertThat(BDDUtil.isABDDFile(javaFile)).isFalse();
-    }
-
-    //isABDDFile(VirtualFile)
-
-    public void testIsABDDVirtualFileGherkin() {
-        var gherkinFile = myFixture.configureByText("gherkin.feature", "");
-
-        assertThat(BDDUtil.isABDDFile(gherkinFile.getVirtualFile(), getProject())).isTrue();
-    }
-
-    public void testIsABDDVirtualFileStory() {
-        var storyFile = myFixture.configureByText("story.story", "");
-
-        assertThat(BDDUtil.isABDDFile(storyFile.getVirtualFile(), getProject())).isTrue();
-    }
-
-    public void testIsNotABDDVirtualFile() {
-        var javaFile = myFixture.configureByText("SomeClass.java", "");
-
-        assertThat(BDDUtil.isABDDFile(javaFile.getVirtualFile(), getProject())).isFalse();
+        assertThat(BDDUtil.isABDDFile(file.getVirtualFile(), getProject())).isEqualTo(shouldBeABddFile);
     }
 }

@@ -8,40 +8,45 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.picimako.gherkin.GherkinOverviewTestBase;
 import org.jetbrains.plugins.cucumber.psi.GherkinTag;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit test for {@link BDDTestSupport}.
  */
-public class BDDTestSupportTest extends GherkinOverviewTestBase {
+final class BDDTestSupportTest extends GherkinOverviewTestBase {
 
-    public void testShouldReturnFirstGherkinTagForName() {
-        PsiFile psiFile = myFixture.configureByFile("the_gherkin.feature");
+    @Test
+    void shouldReturnFirstGherkinTagForName() {
+        PsiFile psiFile = getFixture().configureByFile("the_gherkin.feature");
 
         GherkinTag tag = BDDTestSupport.getFirstGherkinTagForName(psiFile, "@regression");
 
-        assertThat(tag).isNotNull();
-        assertThat(tag.getName()).isEqualTo("@regression");
+        assertThat(tag).isNotNull()
+            .extracting(GherkinTag::getName).isEqualTo("@regression");
     }
 
-    public void testShouldReturnFirstMetaKeyForName() {
-        PsiFile psiFile = myFixture.configureByFile("Story.story");
+    @Test
+    void shouldReturnFirstMetaKeyForName() {
+        PsiFile psiFile = getFixture().configureByFile("Story.story");
 
         PsiElement metaKey = BDDTestSupport.getFirstMetaKeyForName(psiFile, "@Disabled");
 
-        assertThat(metaKey).isNotNull();
-        assertThat(metaKey.getText()).isEqualTo("@Disabled");
+        assertThat(metaKey).isNotNull()
+            .extracting(PsiElement::getText).isEqualTo("@Disabled");
     }
 
-    public void testShouldReturnNoGherkinTagIfFileDoesntContainTagForName() {
-        PsiFile psiFile = myFixture.configureByFile("the_gherkin.feature");
+    @Test
+    void shouldReturnNoGherkinTagIfFileDoesntContainTagForName() {
+        PsiFile psiFile = getFixture().configureByFile("the_gherkin.feature");
 
         GherkinTag tag = BDDTestSupport.getFirstGherkinTagForName(psiFile, "@nonexistent");
 
         assertThat(tag).isNull();
     }
 
-    public void testShouldReturnNoMetaKeyIfFileDoesntContainMetaKeyForName() {
-        PsiFile psiFile = myFixture.configureByFile("Story.story");
+    @Test
+    void shouldReturnNoMetaKeyIfFileDoesntContainMetaKeyForName() {
+        PsiFile psiFile = getFixture().configureByFile("Story.story");
 
         PsiElement tag = BDDTestSupport.getFirstMetaKeyForName(psiFile, "@nonexistent");
 

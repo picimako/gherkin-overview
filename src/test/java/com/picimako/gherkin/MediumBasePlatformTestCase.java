@@ -17,8 +17,7 @@ public abstract class MediumBasePlatformTestCase extends GherkinOverviewTestBase
      * <p>
      * See last sentence at <a href="https://plugins.jetbrains.com/docs/intellij/light-and-heavy-tests.html#light-tests">Light tests</a>.
      */
-    @Override
-    protected LightProjectDescriptor getProjectDescriptor() {
-        return new LightProjectDescriptor();
+    public MediumBasePlatformTestCase() {
+        super(new LightProjectDescriptor());
     }
 }

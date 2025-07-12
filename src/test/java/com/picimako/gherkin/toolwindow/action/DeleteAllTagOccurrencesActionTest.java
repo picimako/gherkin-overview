@@ -9,7 +9,7 @@ import javax.swing.tree.TreePath;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.psi.PsiManager;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.TestActionEvent;
 import com.picimako.gherkin.GherkinOverviewTestBase;
 import com.picimako.gherkin.toolwindow.GherkinTagTree;
@@ -17,28 +17,36 @@ import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
 import com.picimako.gherkin.toolwindow.LayoutType;
 import com.picimako.gherkin.toolwindow.ProjectSpecificGherkinTagTreeModel;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Integration test for {@link DeleteAllTagOccurrencesAction}.
  */
-public class DeleteAllTagOccurrencesActionTest extends GherkinOverviewTestBase {
+final class DeleteAllTagOccurrencesActionTest extends GherkinOverviewTestBase {
 
     private GherkinTagTree tree;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @BeforeEach
+    void setUp() {
         GherkinTagsToolWindowSettings.getInstance(getProject()).layout = LayoutType.NO_GROUPING;
+    }
+
+    @AfterEach
+    void tearDown() {
+        tree = null;
     }
 
     //Tags
 
-    public void testDeletesSingleTagFromSingleFile() {
+    @Test
+    void deletesSingleTagFromSingleFile() {
         initBDDFileAndTreeWithSelectedNodeToDelete("delete_tag.feature", "vimeo");
 
         new DeleteAllTagOccurrencesAction(getProject()).actionPerformed(doTestActionEvent());
 
-        myFixture.checkResult(
+        getFixture().checkResult(
             """
                 @e2e @regression @youtube @desktop @sitemap @JIRA-1234
                 Feature: Videos
@@ -48,12 +56,13 @@ public class DeleteAllTagOccurrencesActionTest extends GherkinOverviewTestBase {
                 """);
     }
 
-    public void testDeletesMultipleTagsFromSingleFile() {
+    @Test
+    void deletesMultipleTagsFromSingleFile() {
         initBDDFileAndTreeWithSelectedNodeToDelete("delete_tag.feature", "youtube");
 
         new DeleteAllTagOccurrencesAction(getProject()).actionPerformed(doTestActionEvent());
 
-        myFixture.checkResult(
+        getFixture().checkResult(
             """
                 @e2e @regression  @desktop @sitemap @JIRA-1234
                 Feature: Videos
@@ -63,13 +72,15 @@ public class DeleteAllTagOccurrencesActionTest extends GherkinOverviewTestBase {
                 """);
     }
 
-    public void testDeletesMultipleTagsFromMultipleFiles() {
-        var delete_tag_more = PsiManager.getInstance(getProject()).findFile(myFixture.copyFileToProject("delete_tag_more.feature"));
+    @Test
+    void deletesMultipleTagsFromMultipleFiles() {
+        VirtualFile file = getFixture().copyFileToProject("delete_tag_more.feature");
+        var delete_tag_more = findPsiFile(file);
         initBDDFileAndTreeWithSelectedNodeToDelete("delete_tag.feature", "youtube");
 
         new DeleteAllTagOccurrencesAction(getProject()).actionPerformed(doTestActionEvent());
 
-        myFixture.checkResult(
+        getFixture().checkResult(
             """
                 @e2e @regression  @desktop @sitemap @JIRA-1234
                 Feature: Videos
@@ -89,12 +100,13 @@ public class DeleteAllTagOccurrencesActionTest extends GherkinOverviewTestBase {
 
     //Metas
 
-    public void testDeletesSingleMetaKeyFromSingleFile() {
+    @Test
+    void deletesSingleMetaKeyFromSingleFile() {
         initBDDFileAndTreeWithSelectedNodeToDelete("delete_tag.story", "Single");
 
         new DeleteAllTagOccurrencesAction(getProject()).actionPerformed(doTestActionEvent());
 
-        myFixture.checkResult(
+        getFixture().checkResult(
             """
                 Meta:
                 @Single key
@@ -113,12 +125,13 @@ public class DeleteAllTagOccurrencesActionTest extends GherkinOverviewTestBase {
                 """);
     }
 
-    public void testDeletesSingleMetaKeyAndTextFromSingleFile() {
+    @Test
+    void deletesSingleMetaKeyAndTextFromSingleFile() {
         initBDDFileAndTreeWithSelectedNodeToDelete("delete_tag.story", "Single:key");
 
         new DeleteAllTagOccurrencesAction(getProject()).actionPerformed(doTestActionEvent());
 
-        myFixture.checkResult(
+        getFixture().checkResult(
             """
                 Meta:
                 @Single
@@ -137,12 +150,13 @@ public class DeleteAllTagOccurrencesActionTest extends GherkinOverviewTestBase {
                 """);
     }
 
-    public void testDeletesMultipleMetaKeyAndTextFromSingleFile() {
+    @Test
+    void deletesMultipleMetaKeyAndTextFromSingleFile() {
         initBDDFileAndTreeWithSelectedNodeToDelete("delete_tag.story", "Device:tablet");
 
         new DeleteAllTagOccurrencesAction(getProject()).actionPerformed(doTestActionEvent());
 
-        myFixture.checkResult(
+        getFixture().checkResult(
             """
                 Meta:
                 @Single
@@ -160,12 +174,13 @@ public class DeleteAllTagOccurrencesActionTest extends GherkinOverviewTestBase {
                 """);
     }
 
-    public void testDeletesMultipleMetasFromSingleFile() {
+    @Test
+    void deletesMultipleMetasFromSingleFile() {
         initBDDFileAndTreeWithSelectedNodeToDelete("delete_tag.story", "Media:youtube vimeo");
 
         new DeleteAllTagOccurrencesAction(getProject()).actionPerformed(doTestActionEvent());
 
-        myFixture.checkResult(
+        getFixture().checkResult(
             """
                 Meta:
                 @Single
@@ -182,13 +197,15 @@ public class DeleteAllTagOccurrencesActionTest extends GherkinOverviewTestBase {
                 """);
     }
 
-    public void testDeletesMultipleMetasFromMultipleFiles() {
-        var delete_tag_more = PsiManager.getInstance(getProject()).findFile(myFixture.copyFileToProject("delete_tag_more.story"));
+    @Test
+    void deletesMultipleMetasFromMultipleFiles() {
+        VirtualFile file = getFixture().copyFileToProject("delete_tag_more.story");
+        var delete_tag_more = findPsiFile(file);
         initBDDFileAndTreeWithSelectedNodeToDelete("delete_tag.story", "Media:youtube vimeo");
 
         new DeleteAllTagOccurrencesAction(getProject()).actionPerformed(doTestActionEvent());
 
-        myFixture.checkResult(
+        getFixture().checkResult(
             """
                 Meta:
                 @Single
@@ -220,19 +237,13 @@ public class DeleteAllTagOccurrencesActionTest extends GherkinOverviewTestBase {
                 """);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        tree = null;
-        super.tearDown();
-    }
-
     //Helpers
 
     /**
      * Initializes the BDD resource {@code file} from which tags with {@code tagName} will be deleted.
      */
     private void initBDDFileAndTreeWithSelectedNodeToDelete(String file, String tagName) {
-        myFixture.configureByFile(file);
+        getFixture().configureByFile(file);
         initGherkinTagTreeAndSetSelectionTo(tagName);
     }
 

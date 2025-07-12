@@ -4,6 +4,7 @@ package com.picimako.gherkin.toolwindow;
 
 import static com.github.kumaraman21.intellijbehave.highlighter.StoryTokenType.META_KEY;
 
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.LeafPsiElement;
@@ -28,13 +29,13 @@ public final class BDDTestSupport {
     @Nullable
     public static GherkinTag getFirstGherkinTagForName(PsiFile psiFile, String tagName) {
         GherkinTag[] tag = new GherkinTag[1];
-        PsiTreeUtil.processElements(psiFile, GherkinTag.class, element -> {
+        ReadAction.run(() -> PsiTreeUtil.processElements(psiFile, GherkinTag.class, element -> {
             if (tagName.equals(element.getName())) {
                 tag[0] = element;
                 return false;
             }
             return true;
-        });
+        }));
         return tag[0];
     }
 
@@ -49,13 +50,13 @@ public final class BDDTestSupport {
     @Nullable
     public static PsiElement getFirstMetaKeyForName(PsiFile psiFile, String metaKeyName) {
         PsiElement[] metaKey = new PsiElement[1];
-        PsiTreeUtil.processElements(psiFile, LeafPsiElement.class, potentialMetaKey -> {
+        ReadAction.run(() -> PsiTreeUtil.processElements(psiFile, LeafPsiElement.class, potentialMetaKey -> {
             if (new DefaultJBehaveStoryService(psiFile.getProject()).is(potentialMetaKey, META_KEY) && metaKeyName.equals(potentialMetaKey.getText())) {
                 metaKey[0] = potentialMetaKey;
                 return false;
             }
             return true;
-        });
+        }));
         return metaKey[0];
     }
 

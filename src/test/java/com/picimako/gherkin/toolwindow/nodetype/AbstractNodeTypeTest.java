@@ -3,39 +3,38 @@
 package com.picimako.gherkin.toolwindow.nodetype;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.params.provider.Arguments.argumentSet;
 
-import com.intellij.testFramework.LightPlatform4TestCase;
+import java.util.stream.Stream;
 
+import com.picimako.gherkin.GherkinOverviewTestBase;
 import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
 import com.picimako.gherkin.toolwindow.StatisticsType;
-import org.junit.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * Unit test for {@link AbstractNodeType}.
  */
-public class AbstractNodeTypeTest extends LightPlatform4TestCase {
+final class AbstractNodeTypeTest extends GherkinOverviewTestBase {
 
     //getToString
 
-    @Test
-    public void shouldReturnDisabledToString() {
-        GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = StatisticsType.DISABLED;
+    @ParameterizedTest
+    @MethodSource("toStrings")
+    void testToString(StatisticsType statisticsType, String toString) {
+        GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = statisticsType;
 
-        assertThat(getToString()).isEqualTo("Node name");
+        assertThat(getToString()).isEqualTo(toString);
     }
 
-    @Test
-    public void shouldBuildSimplifiedToString() {
-        GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = StatisticsType.SIMPLIFIED;
-
-        assertThat(getToString()).isEqualTo("simplified");
-    }
-
-    @Test
-    public void shouldBuildDetailedToString() {
-        GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = StatisticsType.DETAILED;
-
-        assertThat(getToString()).isEqualTo("detailed");
+    private static Stream<Arguments> toStrings() {
+        return Stream.of(
+            argumentSet("returns disabled toString()", StatisticsType.DISABLED, "Node name"),
+            argumentSet("builds simplified toString()", StatisticsType.SIMPLIFIED, "simplified"),
+            argumentSet("builds detailed toString()", StatisticsType.DETAILED, "detailed")
+        );
     }
 
     private String getToString() {

@@ -3,23 +3,31 @@
 package com.picimako.gherkin.toolwindow.nodetype;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.params.provider.Arguments.argumentSet;
+
+import java.util.stream.Stream;
 
 import com.intellij.openapi.vfs.VirtualFile;
 import com.picimako.gherkin.MediumBasePlatformTestCase;
 import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
 import com.picimako.gherkin.toolwindow.StatisticsType;
 import com.picimako.gherkin.toolwindow.TagOccurrencesRegistry;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * Unit test for {@link FeatureFile}.
  */
-public class FeatureFileTest extends MediumBasePlatformTestCase {
+final class FeatureFileTest extends MediumBasePlatformTestCase {
 
     private FeatureFile featureFile;
 
     //FeatureFile()
 
-    public void testCalculatesTagOccurrenceCountsUponInstantiation() {
+    @Test
+    void calculatesTagOccurrenceCountsUponInstantiation() {
         var registry = TagOccurrencesRegistry.getInstance(getProject());
         registry.init(1);
 
@@ -33,13 +41,15 @@ public class FeatureFileTest extends MediumBasePlatformTestCase {
 
     //hasFileName
 
-    public void testHasFileName() {
+    @Test
+    void hasFileName() {
         setupTestObjects();
 
         assertThat(featureFile.hasFileName("the_gherkin.feature")).isTrue();
     }
 
-    public void testDoesntHaveFileName() {
+    @Test
+    void doesntHaveFileName() {
         setupTestObjects();
 
         assertThat(featureFile.hasFileName("not-matching.feature")).isFalse();
@@ -47,7 +57,8 @@ public class FeatureFileTest extends MediumBasePlatformTestCase {
 
     //setDisplayNameWithFeatureName
 
-    public void testSetsDisplayNameWithFeatureName() {
+    @Test
+    void setsDisplayNameWithFeatureName() {
         setupTestObjects();
 
         featureFile.setDisplayNameWithFeatureName("Smoke testing");
@@ -56,7 +67,8 @@ public class FeatureFileTest extends MediumBasePlatformTestCase {
 
     //setDisplayNameWithPath
 
-    public void testSetsDisplayNameWithProjectRootPath() {
+    @Test
+    void setsDisplayNameWithProjectRootPath() {
         setupTestObjects();
 
         featureFile.setDisplayNameWithPath();
@@ -64,10 +76,11 @@ public class FeatureFileTest extends MediumBasePlatformTestCase {
         assertThat(featureFile.displayName).isEqualTo("the_gherkin.feature [/]");
     }
 
-    public void testSetsDisplayNameWithRelativePath() {
+    @Test
+    void setsDisplayNameWithRelativePath() {
         setupTestObjects();
 
-        VirtualFile evenmore = myFixture.copyFileToProject("nested/evenmore/gherkin_with_same_name.feature");
+        VirtualFile evenmore = getFixture().copyFileToProject("nested/evenmore/gherkin_with_same_name.feature");
         FeatureFile nestedFeature = new FeatureFile(evenmore, "youtube", getProject());
 
         nestedFeature.setDisplayNameWithPath();
@@ -77,30 +90,26 @@ public class FeatureFileTest extends MediumBasePlatformTestCase {
 
     //toString
 
-    public void testShouldShowSimplifiedStatistics() {
-        GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = StatisticsType.SIMPLIFIED;
+    @ParameterizedTest
+    @MethodSource("toStrings")
+    void testToString(StatisticsType statisticsType, String toString) {
+        GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = statisticsType;
         setupTestObjects();
 
-        assertThat(featureFile).hasToString("the_gherkin.feature (2)");
+        assertThat(featureFile).hasToString(toString);
     }
 
-    public void testShouldShowDetailedStatistics() {
-        GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = StatisticsType.DETAILED;
-        setupTestObjects();
-
-        assertThat(featureFile).hasToString("the_gherkin.feature - 2 occurrences");
-    }
-
-    public void testShouldNotShowStatistics() {
-        GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = StatisticsType.DISABLED;
-        setupTestObjects();
-
-        assertThat(featureFile).hasToString("the_gherkin.feature");
+    private static Stream<Arguments> toStrings() {
+        return Stream.of(
+            argumentSet("returns disabled toString()", StatisticsType.DISABLED, "the_gherkin.feature"),
+            argumentSet("builds simplified toString()", StatisticsType.SIMPLIFIED, "the_gherkin.feature (2)"),
+            argumentSet("builds detailed toString()", StatisticsType.DETAILED, "the_gherkin.feature - 2 occurrences")
+        );
     }
 
     private void setupTestObjects() {
         TagOccurrencesRegistry.getInstance(getProject()).init(1);
-        VirtualFile theGherkin = myFixture.configureByFile("the_gherkin.feature").getVirtualFile();
+        VirtualFile theGherkin = configureVirtualFile("the_gherkin.feature");
         featureFile = new FeatureFile(theGherkin, "youtube", getProject());
     }
 }

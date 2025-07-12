@@ -2,6 +2,7 @@
 
 package com.picimako.gherkin;
 
+import static com.intellij.openapi.application.ReadAction.compute;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
@@ -10,36 +11,38 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.picimako.gherkin.toolwindow.TagNameUtil;
 import org.jetbrains.plugins.cucumber.psi.GherkinTag;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit test for {@link TagNameUtil}.
  */
-public class TagNameUtilTest extends GherkinOverviewTestBase {
-    
+final class TagNameUtilTest extends GherkinOverviewTestBase {
     private JBehaveStoryService storyService;
     
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
+    @BeforeEach
+    void setUp() {
         storyService = new DefaultJBehaveStoryService(getProject());
     }
 
     //tagNameFrom
 
-    public void testReturnTagName() {
-        PsiFile gherkinFile = myFixture.configureByText("gherkin.feature",
+    @Test
+    void returnTagName() {
+        PsiFile gherkinFile = getFixture().configureByText("gherkin.feature",
             "@smoke\n" +
                 "Feature: A feature");
 
-        GherkinTag tag = PsiTreeUtil.findChildOfType(gherkinFile, GherkinTag.class);
+        GherkinTag tag = compute(() -> PsiTreeUtil.findChildOfType(gherkinFile, GherkinTag.class));
 
         assertThat(TagNameUtil.tagNameFrom(tag)).isEqualTo("smoke");
     }
 
     //metaNameFrom
 
-    public void testReturnMetaNameForKeyAndText() {
-        PsiFile storyFile = myFixture.configureByText("story.story",
+    @Test
+    void returnMetaNameForKeyAndText() {
+        PsiFile storyFile = getFixture().configureByText("story.story",
             """
                 Meta:
                 @Suite smoke
@@ -53,8 +56,9 @@ public class TagNameUtilTest extends GherkinOverviewTestBase {
         assertThat(metaName).isEqualTo("Suite:smoke");
     }
 
-    public void testReturnMetaNameForKeyOnly() {
-        PsiFile storyFile = myFixture.configureByText("story.story",
+    @Test
+    void returnMetaNameForKeyOnly() {
+        PsiFile storyFile = getFixture().configureByText("story.story",
             """
                 Meta:
                 @Jira
@@ -70,12 +74,13 @@ public class TagNameUtilTest extends GherkinOverviewTestBase {
     //determineTagOrMetaName
 
 
-    public void testDeterminesTagName() {
-        PsiFile gherkinFile = myFixture.configureByText("gherkin.feature",
+    @Test
+    void determinesTagName() {
+        PsiFile gherkinFile = getFixture().configureByText("gherkin.feature",
             "@smoke\n" +
                 "Feature: A feature");
 
-        GherkinTag tag = PsiTreeUtil.findChildOfType(gherkinFile, GherkinTag.class);
+        GherkinTag tag = compute(() -> PsiTreeUtil.findChildOfType(gherkinFile, GherkinTag.class));
 
         String tagName = TagNameUtil.determineTagOrMetaName(tag);
 
@@ -83,8 +88,9 @@ public class TagNameUtilTest extends GherkinOverviewTestBase {
 
     }
 
-    public void testDeterminesMetaName() {
-        PsiFile storyFile = myFixture.configureByText("story.story",
+    @Test
+    void determinesMetaName() {
+        PsiFile storyFile = getFixture().configureByText("story.story",
             """
                 Meta:
                 @Suite smoke regression
@@ -97,8 +103,9 @@ public class TagNameUtilTest extends GherkinOverviewTestBase {
         assertThat(metaName).isEqualTo("Suite:smoke regression");
     }
 
-    public void testReturnsNullForNonTagAndNonMetaElement() {
-        PsiFile storyFile = myFixture.configureByText("story.story", "");
+    @Test
+    void returnsNullForNonTagAndNonMetaElement() {
+        PsiFile storyFile = getFixture().configureByText("story.story", "");
 
         String metaName = TagNameUtil.determineTagOrMetaName(storyFile);
 

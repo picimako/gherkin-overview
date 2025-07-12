@@ -14,55 +14,60 @@ import com.picimako.gherkin.toolwindow.nodetype.FeatureFile;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 import com.picimako.gherkin.toolwindow.nodetype.Tag;
 import icons.CucumberIcons;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit test for {@link GherkinTagTree.GherkinTagsNodeRenderer}.
  */
-public class GherkinTagsNodeRendererTest extends GherkinOverviewTestBase {
-
+final class GherkinTagsNodeRendererTest extends GherkinOverviewTestBase {
     private GherkinTagTree tree;
     private GherkinTagTree.GherkinTagsNodeRenderer renderer;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @BeforeEach
+    void setUp() {
         tree = new GherkinTagTree(new ProjectSpecificGherkinTagTreeModel(getProject()), getProject());
         renderer = new GherkinTagTree.GherkinTagsNodeRenderer(getProject());
     }
 
-    public void testRenderCellForModelDataRoot() {
+    @Test
+    void renderCellForModelDataRoot() {
         renderer.customizeCellRenderer(tree, new ModelDataRoot(getProject()), true, true, false, 0, false);
 
         assertThat(renderer.getIcon()).isEqualTo(PlatformIcons.FOLDER_ICON);
         assertThat(renderer.getCharSequence(true)).isEqualTo("Gherkin Tags");
     }
 
-    public void testRenderCellForModule() {
+    @Test
+    void renderCellForModule() {
         renderer.customizeCellRenderer(tree, ContentRoot.createModule("module name", getProject()), true, true, false, 0, false);
 
         assertThat(renderer.getIcon()).isEqualTo(AllIcons.Actions.ModuleDirectory);
         assertThat(renderer.getCharSequence(true)).isEqualTo("module name");
     }
 
-    public void testRenderCellForCategory() {
+    @Test
+    void renderCellForCategory() {
         renderer.customizeCellRenderer(tree, new Category("Test Suite", getProject()), true, true, false, 0, false);
 
         assertThat(renderer.getIcon()).isEqualTo(PlatformIcons.LIBRARY_ICON);
         assertThat(renderer.getCharSequence(true)).isEqualTo("Test Suite");
     }
 
-    public void testRenderCellForTag() {
+    @Test
+    void renderCellForTag() {
         TagOccurrencesRegistry.getInstance(getProject()).init(1);
-        VirtualFile theGherkin = myFixture.configureByFile("the_gherkin.feature").getVirtualFile();
+        VirtualFile theGherkin = configureVirtualFile("the_gherkin.feature");
         renderer.customizeCellRenderer(tree, new Tag("regression", theGherkin, getProject()), true, true, false, 0, false);
 
         assertThat(renderer.getIcon()).isEqualTo(AllIcons.Gutter.ExtAnnotation);
         assertThat(renderer.getCharSequence(true)).isEqualTo("regression");
     }
 
-    public void testRenderCellForGherkinFile() {
+    @Test
+    void renderCellForGherkinFile() {
         TagOccurrencesRegistry.getInstance(getProject()).init(1);
-        VirtualFile theGherkin = myFixture.configureByFile("the_gherkin.feature").getVirtualFile();
+        VirtualFile theGherkin = configureVirtualFile("the_gherkin.feature");
         FeatureFile featureFile = new FeatureFile(theGherkin, "parent", getProject());
 
         renderer.customizeCellRenderer(tree, featureFile, true, true, true, 0, false);

@@ -6,26 +6,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.intellij.mock.MockVirtualFile;
-import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.picimako.gherkin.GherkinOverviewTestBase;
+import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.cucumber.psi.GherkinTag;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit test for {@link TagOccurrencesRegistry}.
  */
-public class TagOccurrencesRegistryTest extends GherkinOverviewTestBase {
+final class TagOccurrencesRegistryTest extends GherkinOverviewTestBase {
 
     //calculateOccurrenceCounts
 
-    public void testCalculatesCounts() {
-        VirtualFile virtualFile = myFixture.configureByFile("A_gherkin.feature").getVirtualFile();
-        VirtualFile virtualFile2 = myFixture.configureByFile("for_statistics.feature").getVirtualFile();
+    @Test
+    void calculatesCounts() {
+        VirtualFile virtualFile = configureVirtualFile("A_gherkin.feature");
+        VirtualFile virtualFile2 = configureVirtualFile("for_statistics.feature");
 
         var registry = initRegistryAndCalculateCounts(2, virtualFile, virtualFile2);
 
@@ -36,9 +37,10 @@ public class TagOccurrencesRegistryTest extends GherkinOverviewTestBase {
         });
     }
 
-    public void testCalculatesCountsForMetas() {
-        VirtualFile virtualFile = myFixture.configureByFile("Story.story").getVirtualFile();
-        VirtualFile virtualFile2 = myFixture.configureByFile("Another story.story").getVirtualFile();
+    @Test
+    void calculatesCountsForMetas() {
+        VirtualFile virtualFile = configureVirtualFile("Story.story");
+        VirtualFile virtualFile2 = configureVirtualFile("Another story.story");
 
         var registry = initRegistryAndCalculateCounts(2, virtualFile, virtualFile2);
 
@@ -49,7 +51,8 @@ public class TagOccurrencesRegistryTest extends GherkinOverviewTestBase {
         });
     }
 
-    public void testDoesntCalculateCountsForNonExistentFile() {
+    @Test
+    void doesntCalculateCountsForNonExistentFile() {
         var nonExistentFile = new InvalidatableMockVirtualFile("some_non_existent_gherkin.feature", false, false);
 
         var registry = initRegistryAndCalculateCounts(2, nonExistentFile);
@@ -57,7 +60,8 @@ public class TagOccurrencesRegistryTest extends GherkinOverviewTestBase {
         assertThat(registry.getTagOccurrences().get(nonExistentFile.getPath())).isEmpty();
     }
 
-    public void testDoesntCalculateCountsForInvalidFile() {
+    @Test
+    void doesntCalculateCountsForInvalidFile() {
         var invalidFile = new InvalidatableMockVirtualFile("some_invalid_gherkin.feature", true, false);
 
         var registry = initRegistryAndCalculateCounts(2, invalidFile);
@@ -67,8 +71,9 @@ public class TagOccurrencesRegistryTest extends GherkinOverviewTestBase {
 
     //updateOccurrenceCounts
 
-    public void testUpdatesCounts() {
-        PsiFile psiFile = myFixture.configureByFile("for_statistics.feature");
+    @Test
+    void updatesCounts() {
+        PsiFile psiFile = getFixture().configureByFile("for_statistics.feature");
         VirtualFile virtualFile = psiFile.getVirtualFile();
 
         var registry = initRegistryAndCalculateCounts(1, virtualFile);
@@ -76,14 +81,15 @@ public class TagOccurrencesRegistryTest extends GherkinOverviewTestBase {
         assertThat(registry.getCountFor(virtualFile.getPath(), "youtube")).isEqualTo(3);
 
         GherkinTag tag = BDDTestSupport.getFirstGherkinTagForName(psiFile, "@youtube");
-        WriteAction.run(() -> CommandProcessor.getInstance().executeCommand(getProject(), () -> tag.delete(), "Delete", "group.id"));
+        executeCommandProcessorCommand(tag::delete, "Delete", "group.id");
         registry.updateOccurrenceCounts(virtualFile);
 
         assertThat(registry.getCountFor(virtualFile.getPath(), "youtube")).isEqualTo(2);
     }
 
-    public void testUpdatesCountsForMetas() {
-        PsiFile psiFile = myFixture.configureByFile("Story.story");
+    @Test
+    void updatesCountsForMetas() {
+        PsiFile psiFile = getFixture().configureByFile("Story.story");
         VirtualFile virtualFile = psiFile.getVirtualFile();
 
         var registry = initRegistryAndCalculateCounts(1, virtualFile);
@@ -91,13 +97,14 @@ public class TagOccurrencesRegistryTest extends GherkinOverviewTestBase {
         assertThat(registry.getCountFor(virtualFile.getPath(), "Disabled")).isEqualTo(2);
 
         PsiElement meta = BDDTestSupport.getFirstMetaKeyForName(psiFile, "@Disabled");
-        WriteAction.run(() -> CommandProcessor.getInstance().executeCommand(getProject(), () -> meta.delete(), "Delete", "group.id"));
+        executeCommandProcessorCommand(meta::delete, "Delete", "group.id");
         registry.updateOccurrenceCounts(virtualFile);
 
         assertThat(registry.getCountFor(virtualFile.getPath(), "Disabled")).isOne();
     }
 
-    public void testDoesntUpdateCountsForFileBecameNonExistent() {
+    @Test
+    void doesntUpdateCountsForFileBecameNonExistent() {
         var toBecomeNonExistentFile = new InvalidatableMockVirtualFile("some_to_become_non_existent_gherkin.feature", true, true);
 
         var registry = initRegistryAndCalculateCounts(2, toBecomeNonExistentFile);
@@ -108,7 +115,8 @@ public class TagOccurrencesRegistryTest extends GherkinOverviewTestBase {
         assertThat(registry.getTagOccurrences().get(toBecomeNonExistentFile.getPath())).isEmpty();
     }
 
-    public void testDoesntUpdateCountsForFileBecameInvalid() {
+    @Test
+    void doesntUpdateCountsForFileBecameInvalid() {
         var toBecomeInvalidFile = new InvalidatableMockVirtualFile("some_to_become_invalid_gherkin.feature", true, true);
 
         var registry = initRegistryAndCalculateCounts(2, toBecomeInvalidFile);
@@ -121,47 +129,52 @@ public class TagOccurrencesRegistryTest extends GherkinOverviewTestBase {
 
     //getCountFor
 
-    public void testReturnsCountFor() {
-        myFixture.configureByFile("the_gherkin.feature");
-        myFixture.configureByFile("A_gherkin.feature");
-        VirtualFile virtualFile = myFixture.configureByFile("for_statistics.feature").getVirtualFile();
+    @Test
+    void returnsCountFor() {
+        getFixture().configureByFile("the_gherkin.feature");
+        getFixture().configureByFile("A_gherkin.feature");
+        VirtualFile virtualFile = configureVirtualFile("for_statistics.feature");
 
         var registry = initRegistryAndCalculateCounts(2, virtualFile);
 
         assertThat(registry.getCountFor(virtualFile.getPath(), "tablet")).isEqualTo(2);
     }
 
-    public void testReturnsCountForMetas() {
-        myFixture.configureByFile("Story.story");
-        VirtualFile virtualFile = myFixture.configureByFile("Another story.story").getVirtualFile();
+    @Test
+    void returnsCountForMetas() {
+        getFixture().configureByFile("Story.story");
+        VirtualFile virtualFile = configureVirtualFile("Another story.story");
 
         var registry = initRegistryAndCalculateCounts(1, virtualFile);
 
         assertThat(registry.getCountFor(virtualFile.getPath(), "Media:youtube vimeo")).isEqualTo(3);
     }
 
-    public void testReturnsZeroAsCountForNonMappedTag() {
-        myFixture.configureByFile("the_gherkin.feature");
-        myFixture.configureByFile("A_gherkin.feature");
-        VirtualFile virtualFile = myFixture.configureByFile("for_statistics.feature").getVirtualFile();
+    @Test
+    void returnsZeroAsCountForNonMappedTag() {
+        getFixture().configureByFile("the_gherkin.feature");
+        getFixture().configureByFile("A_gherkin.feature");
+        VirtualFile virtualFile = configureVirtualFile("for_statistics.feature");
 
         var registry = initRegistryAndCalculateCounts(3, virtualFile);
 
         assertThat(registry.getCountFor(virtualFile.getPath(), "landing")).isZero();
     }
 
-    public void testReturnsZeroAsCountForNonMappedTagForMetas() {
-        myFixture.configureByFile("Story.story");
-        VirtualFile virtualFile = myFixture.configureByFile("Another story.story").getVirtualFile();
+    @Test
+    void returnsZeroAsCountForNonMappedTagForMetas() {
+        getFixture().configureByFile("Story.story");
+        VirtualFile virtualFile = configureVirtualFile("Another story.story");
 
         var registry = initRegistryAndCalculateCounts(2, virtualFile);
 
         assertThat(registry.getCountFor(virtualFile.getPath(), "landing")).isZero();
     }
 
-    public void testReturnsZeroAsCountForNonMappedFilePath() {
-        PsiFile psiFile = myFixture.configureByFile("Story.story");
-        VirtualFile virtualFile = myFixture.configureByFile("Another story.story").getVirtualFile();
+    @Test
+    void returnsZeroAsCountForNonMappedFilePath() {
+        PsiFile psiFile = getFixture().configureByFile("Story.story");
+        VirtualFile virtualFile = configureVirtualFile("Another story.story");
 
         var registry = initRegistryAndCalculateCounts(2, virtualFile);
 
@@ -170,9 +183,10 @@ public class TagOccurrencesRegistryTest extends GherkinOverviewTestBase {
 
     //remove
 
-    public void testRemovesMappingForFilePath() {
-        VirtualFile virtualFile = myFixture.configureByFile("A_gherkin.feature").getVirtualFile();
-        VirtualFile virtualFile2 = myFixture.configureByFile("for_statistics.feature").getVirtualFile();
+    @Test
+    void removesMappingForFilePath() {
+        VirtualFile virtualFile = configureVirtualFile("A_gherkin.feature");
+        VirtualFile virtualFile2 = configureVirtualFile("for_statistics.feature");
 
         var registry = initRegistryAndCalculateCounts(2, virtualFile, virtualFile2);
 
@@ -183,9 +197,10 @@ public class TagOccurrencesRegistryTest extends GherkinOverviewTestBase {
         assertThat(registry.getTagOccurrences()).hasSize(1);
     }
 
-    public void testRemovesMappingForFilePathForMetas() {
-        VirtualFile virtualFile = myFixture.configureByFile("Story.story").getVirtualFile();
-        VirtualFile virtualFile2 = myFixture.configureByFile("Another story.story").getVirtualFile();
+    @Test
+    void removesMappingForFilePathForMetas() {
+        VirtualFile virtualFile = configureVirtualFile("Story.story");
+        VirtualFile virtualFile2 = configureVirtualFile("Another story.story");
 
         var registry = initRegistryAndCalculateCounts(2, virtualFile, virtualFile2);
 
@@ -211,6 +226,7 @@ public class TagOccurrencesRegistryTest extends GherkinOverviewTestBase {
     @Setter
     private static final class InvalidatableMockVirtualFile extends MockVirtualFile {
         private boolean isExist;
+        @Getter
         private boolean isValid;
 
         public InvalidatableMockVirtualFile(String name, boolean isExist, boolean isValid) {
@@ -222,11 +238,6 @@ public class TagOccurrencesRegistryTest extends GherkinOverviewTestBase {
         @Override
         public boolean exists() {
             return isExist;
-        }
-
-        @Override
-        public boolean isValid() {
-            return isValid;
         }
 
         @Override
