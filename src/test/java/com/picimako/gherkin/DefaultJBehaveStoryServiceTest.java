@@ -4,13 +4,8 @@ package com.picimako.gherkin;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Collection;
-import java.util.List;
-
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-
 import com.picimako.gherkin.toolwindow.BDDTestSupport;
 
 /**
@@ -34,7 +29,7 @@ public class DefaultJBehaveStoryServiceTest extends BasePlatformTestCase {
     //collectMetasFromFile
 
     public void testCollectMetasFromFile() {
-        PsiFile storyFile = myFixture.configureByText("story.story",
+        var storyFile = myFixture.configureByText("story.story",
             """
                 Meta:
                 @Suite smoke
@@ -54,8 +49,7 @@ public class DefaultJBehaveStoryServiceTest extends BasePlatformTestCase {
     }
 
     public void testCollectNoMetasFromFileWithNoMetas() {
-        PsiFile storyFile = myFixture.configureByText("story.story", "Scenario:");
-
+        var storyFile = myFixture.configureByText("story.story", "Scenario:");
         var metas = storyService.collectMetasFromFile(storyFile);
 
         assertThat(metas.isEmpty()).isTrue();
@@ -64,7 +58,7 @@ public class DefaultJBehaveStoryServiceTest extends BasePlatformTestCase {
     //collectMetasFromFileAsList
 
     public void testCollectMetasFromFileAsList() {
-        PsiFile storyFile = myFixture.configureByText("story.story",
+        var storyFile = myFixture.configureByText("story.story",
             """
                 Meta:
                 @Suite smoke
@@ -78,15 +72,14 @@ public class DefaultJBehaveStoryServiceTest extends BasePlatformTestCase {
 
                 Scenario:""");
 
-        List<String> metas = storyService.collectMetasFromFileAsList(storyFile);
+        var metas = storyService.collectMetasFromFileAsList(storyFile);
 
         assertThat(metas).contains("Suite:smoke", "Browser:firefox chrome", "Jira", "Suite:smoke");
     }
 
     public void testCollectNoMetasFromFileWithNoMetasAsList() {
-        PsiFile storyFile = myFixture.configureByText("story.story", "Scenario:");
-
-        List<String> metas = storyService.collectMetasFromFileAsList(storyFile);
+        var storyFile = myFixture.configureByText("story.story", "Scenario:");
+        var metas = storyService.collectMetasFromFileAsList(storyFile);
 
         assertThat(metas).isEmpty();
     }
@@ -94,18 +87,16 @@ public class DefaultJBehaveStoryServiceTest extends BasePlatformTestCase {
     //collectMetaTextsForMetaKeyAsList
 
     public void testCollectsMetaTextsForMetaKeyAsList() {
-        PsiFile storyFile = myFixture.configureByFile("Another story.story");
-        Collection<PsiElement> metaTexts = storyService.collectMetaTextsForMetaKeyAsList(
-            BDDTestSupport.getFirstMetaKeyForName(storyFile, "@Media"));
+        var storyFile = myFixture.configureByFile("Another story.story");
+        var metaTexts = storyService.collectMetaTextsForMetaKeyAsList(BDDTestSupport.getFirstMetaKeyForName(storyFile, "@Media"));
 
         assertThat(metaTexts).isNotEmpty();
         assertThat(metaTexts).extracting(PsiElement::getText).containsExactly("youtube", "vimeo");
     }
 
     public void testReturnsEmptyListIfThereIsNoMetaTextForMetaKey() {
-        PsiFile storyFile = myFixture.configureByFile("Story.story");
-        Collection<PsiElement> metaTexts = storyService.collectMetaTextsForMetaKeyAsList(
-            BDDTestSupport.getFirstMetaKeyForName(storyFile, "@Disabled"));
+        var storyFile = myFixture.configureByFile("Story.story");
+        var metaTexts = storyService.collectMetaTextsForMetaKeyAsList(BDDTestSupport.getFirstMetaKeyForName(storyFile, "@Disabled"));
 
         assertThat(metaTexts).isEmpty();
     }

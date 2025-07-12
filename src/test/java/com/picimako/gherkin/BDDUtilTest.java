@@ -4,7 +4,6 @@ package com.picimako.gherkin;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 
 /**
@@ -15,41 +14,40 @@ public class BDDUtilTest extends BasePlatformTestCase {
     //isABDDFile(PsiFile)
 
     public void testIsABDDFileGherkin() {
-        PsiFile gherkinFile = myFixture.configureByText("gherkin.feature", "");
+        var gherkinFile = myFixture.configureByText("gherkin.feature", "");
 
         assertThat(BDDUtil.isABDDFile(gherkinFile)).isTrue();
     }
 
     public void testIsABDDFileStory() {
-        PsiFile storyFile = myFixture.configureByText("story.story", "");
+        var storyFile = myFixture.configureByText("story.story", "");
 
         assertThat(BDDUtil.isABDDFile(storyFile)).isTrue();
     }
 
     public void testIsNotABDDFile() {
-        PsiFile storyFile = myFixture.configureByText("SomeClass.java", "");
+        var javaFile = myFixture.configureByText("SomeClass.java", "");
 
-        assertThat(BDDUtil.isABDDFile(storyFile)).isFalse();
+        assertThat(BDDUtil.isABDDFile(javaFile)).isFalse();
     }
 
     //isABDDFile(VirtualFile)
 
     public void testIsABDDVirtualFileGherkin() {
-        PsiFile gherkinFile = myFixture.configureByText("gherkin.feature", "");
+        var gherkinFile = myFixture.configureByText("gherkin.feature", "");
 
         assertThat(BDDUtil.isABDDFile(gherkinFile.getVirtualFile(), getProject())).isTrue();
     }
 
     public void testIsABDDVirtualFileStory() {
-        PsiFile storyFile = myFixture.configureByText("story.story", "");
+        var storyFile = myFixture.configureByText("story.story", "");
 
         assertThat(BDDUtil.isABDDFile(storyFile.getVirtualFile(), getProject())).isTrue();
     }
 
     public void testIsNotABDDVirtualFile() {
-        PsiFile storyFile = myFixture.configureByText("SomeClass.java", "");
+        var javaFile = myFixture.configureByText("SomeClass.java", "");
 
-        assertThat(BDDUtil.isABDDFile(storyFile.getVirtualFile(), getProject())).isFalse();
+        assertThat(BDDUtil.isABDDFile(javaFile.getVirtualFile(), getProject())).isFalse();
     }
-
 }
