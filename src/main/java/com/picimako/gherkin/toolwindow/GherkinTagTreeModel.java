@@ -16,6 +16,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.psi.PsiFile;
@@ -120,7 +121,7 @@ abstract class GherkinTagTreeModel implements TreeModel, Disposable {
 
     private void persistGherkinTags(List<PsiFile> gherkinFiles) {
         for (PsiFile file : gherkinFiles) {
-            Collection<GherkinTag> gherkinTags = PsiTreeUtil.findChildrenOfType(file, GherkinTag.class);
+            Collection<GherkinTag> gherkinTags = ReadAction.compute(() -> PsiTreeUtil.findChildrenOfType(file, GherkinTag.class));
             for (GherkinTag gherkinTag : gherkinTags) {
                 addToContentRootAndCategory(tagNameFrom(gherkinTag), file);
             }

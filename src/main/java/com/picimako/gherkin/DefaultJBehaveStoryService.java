@@ -4,6 +4,7 @@ package com.picimako.gherkin;
 
 import static com.github.kumaraman21.intellijbehave.highlighter.StoryTokenType.META_KEY;
 import static com.github.kumaraman21.intellijbehave.highlighter.StoryTokenType.META_TEXT;
+import static com.intellij.openapi.application.ReadAction.compute;
 import static com.picimako.gherkin.toolwindow.TagNameUtil.metaNameFrom;
 import static java.util.stream.Collectors.toList;
 
@@ -15,6 +16,7 @@ import com.github.kumaraman21.intellijbehave.language.JBehaveIcons;
 import com.github.kumaraman21.intellijbehave.language.StoryFileType;
 import com.github.kumaraman21.intellijbehave.language.StoryLanguage;
 import com.github.kumaraman21.intellijbehave.parser.StoryFile;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -42,7 +44,6 @@ import javax.swing.*;
  * @since 0.2.0
  */
 public final class DefaultJBehaveStoryService implements JBehaveStoryService {
-
     private final Project project;
 
     //Project service
@@ -54,10 +55,10 @@ public final class DefaultJBehaveStoryService implements JBehaveStoryService {
     @Override
     public List<PsiFile> collectStoryFilesFromProject() {
         if (FileTypeManager.getInstance().findFileTypeByLanguage(StoryLanguage.STORY_LANGUAGE) != null) {
-            return FileTypeIndex.getFiles(StoryFileType.STORY_FILE_TYPE, GlobalSearchScope.projectScope(project))
+            return compute(() -> FileTypeIndex.getFiles(StoryFileType.STORY_FILE_TYPE, GlobalSearchScope.projectScope(project))
                 .stream()
                 .map(file -> PsiManager.getInstance(project).findFile(file))
-                .collect(toList());
+                .collect(toList()));
         }
         return Collections.emptyList();
     }
@@ -66,14 +67,14 @@ public final class DefaultJBehaveStoryService implements JBehaveStoryService {
     public MultiMap<PsiElement, PsiElement> collectMetasFromFile(PsiFile file) {
         //meta key -> 0 or more meta text elements
         final var storyMetas = MultiMap.<PsiElement, PsiElement>create();
-        PsiTreeUtil.processElements(file, LeafPsiElement.class, potentialMetaKey -> {
+        ReadAction.run(() -> PsiTreeUtil.processElements(file, LeafPsiElement.class, potentialMetaKey -> {
             if (isMetaKey(potentialMetaKey)) {
                 //This makes sure that Keys are always stored, since they are valid metas with or without meta texts
                 storyMetas.put(potentialMetaKey, new SmartList<>());
                 collectMetaTextsForMetaKeyAsMap(storyMetas, potentialMetaKey);
             }
             return true;
-        });
+        }));
         return storyMetas;
     }
 

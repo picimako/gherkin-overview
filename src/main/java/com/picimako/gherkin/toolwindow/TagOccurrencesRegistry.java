@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -72,10 +73,10 @@ public final class TagOccurrencesRegistry implements Disposable {
         var counts = tagOccurrences.get(file.getPath());
         if (counts == null) return;
 
-        PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
+        PsiFile psiFile = ReadAction.compute(() -> PsiManager.getInstance(project).findFile(file));
         if (psiFile == null) return;
 
-        PsiTreeUtil.processElements(psiFile, element -> {
+        ReadAction.run(() -> PsiTreeUtil.processElements(psiFile, element -> {
             if (!element.equals(psiFile)) { //the file itself is definitely not a tag/meta, so can be skipped
                 String tagOrMetaName = determineTagOrMetaName(element);
                 if (tagOrMetaName != null) {
@@ -87,7 +88,7 @@ public final class TagOccurrencesRegistry implements Disposable {
                 }
             }
             return true; //continue execution, so that all tags/metas are counted
-        });
+        }));
     }
 
     /**

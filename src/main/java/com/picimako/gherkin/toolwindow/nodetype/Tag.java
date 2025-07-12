@@ -2,6 +2,7 @@
 
 package com.picimako.gherkin.toolwindow.nodetype;
 
+import static com.intellij.openapi.application.ReadAction.compute;
 import static com.picimako.gherkin.GherkinUtil.isGherkinFile;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
@@ -124,14 +125,14 @@ public final class Tag extends AbstractNodeType {
      */
     private void updateDisplayNamesOf(List<FeatureFile> featureFilesWithTheSameName, @NotNull VirtualFile file) {
         if (isGherkinFile(file)) {
-            var distinctFeatureNames = featureFilesWithTheSameName.stream()
+            var distinctFeatureNames = compute(() -> featureFilesWithTheSameName.stream()
                 .map(featureFile -> PsiManager.getInstance(project).findFile(featureFile.getFile()))
                 .filter(Objects::nonNull)
                 .map(psiFile -> ((GherkinFile) psiFile).getFeatures())
                 .filter(features -> features.length > 0)
                 .map(features -> features[0].getFeatureName()) //regardless of the number of Feature keywords in the file, it always takes the first one if there is at least one
                 .distinct()
-                .toList();
+                .toList());
 
             if (distinctFeatureNames.size() == featureFilesWithTheSameName.size()) {
                 for (int i = 0; i < distinctFeatureNames.size(); i++) {
