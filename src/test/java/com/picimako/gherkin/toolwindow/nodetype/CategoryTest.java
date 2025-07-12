@@ -150,8 +150,8 @@ final class CategoryTest extends GherkinOverviewTestBase {
     }
 
     private Category createCategory() {
-        VirtualFile theGherkin = getFixture().configureByFile("the_gherkin.feature").getVirtualFile();
-        VirtualFile aGherkin = getFixture().configureByFile("A_gherkin.feature").getVirtualFile();
+        VirtualFile theGherkin = configureVirtualFile("the_gherkin.feature");
+        VirtualFile aGherkin = configureVirtualFile("A_gherkin.feature");
 
         return new Category("Test Suite", getProject())
             .add(new Tag("smoke", aGherkin, getProject()))

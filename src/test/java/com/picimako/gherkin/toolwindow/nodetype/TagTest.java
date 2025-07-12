@@ -95,9 +95,9 @@ final class TagTest extends GherkinOverviewTestBase {
 
     @Test
     void addsFeatureFileWithRelativePathInNameAndUpdatesPreviouslyAddedFeatureFileNames() {
-        VirtualFile nested = getFixture().copyFileToProject("nested/gherkin_with_same_name.feature");
-        VirtualFile evenMore = getFixture().copyFileToProject("nested/evenmore/gherkin_with_same_name.feature");
-        VirtualFile evenMoreMore = getFixture().copyFileToProject("nested/evenmore/evenmoremore/gherkin_with_same_name.feature");
+        VirtualFile nested = copyFileToProject("nested/gherkin_with_same_name.feature");
+        VirtualFile evenMore = copyFileToProject("nested/evenmore/gherkin_with_same_name.feature");
+        VirtualFile evenMoreMore = copyFileToProject("nested/evenmore/evenmoremore/gherkin_with_same_name.feature");
 
         Tag tag = new Tag("smoke", nested, getProject());
 
@@ -124,8 +124,8 @@ final class TagTest extends GherkinOverviewTestBase {
 
     @Test
     void updatesDisplayNameWithPathForMoreThanTwoFeatureFilesInATagWithTheSameName() {
-        PsiFile nested = getFixture().configureByFile("nested/gherkin_with_same_name.feature");
-        PsiFile evenmoremore = getFixture().configureByFile("nested/evenmore/evenmoremore/gherkin_with_same_name.feature");
+        PsiFile nested = configureByFile("nested/gherkin_with_same_name.feature");
+        PsiFile evenmoremore = configureByFile("nested/evenmore/evenmoremore/gherkin_with_same_name.feature");
 
         Tag tag = new Tag("smoke", nested.getVirtualFile(), getProject()).add(evenmoremore.getVirtualFile());
 
@@ -148,14 +148,14 @@ final class TagTest extends GherkinOverviewTestBase {
 
     @Test
     void updatesDisplayNameWithPathForMoreThanTwoStoryFilesInATagWithTheSameName() {
-        PsiFile nested = getFixture().configureByFile("nested/story_with_same_name.story");
+        PsiFile nested = configureByFile("nested/story_with_same_name.story");
 
         Tag tag = new Tag("smoke", nested.getVirtualFile(), getProject());
 
         List<FeatureFile> featureFiles = tag.getFeatureFiles();
         assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("story_with_same_name.story");
 
-        PsiFile evenmoremore = getFixture().configureByFile("nested/evenmore/evenmoremore/story_with_same_name.story");
+        PsiFile evenmoremore = configureByFile("nested/evenmore/evenmoremore/story_with_same_name.story");
         tag.add(evenmoremore.getVirtualFile());
 
         tag.updateDisplayNames(evenmoremore.getVirtualFile());
@@ -168,8 +168,8 @@ final class TagTest extends GherkinOverviewTestBase {
 
     @Test
     void updatesDisplayNameWithFeatureNameForMoreThanTwoFeatureFilesInATagWithTheSameName() {
-        PsiFile nested = getFixture().configureByFile("nested/gherkin_with_same_name.feature");
-        PsiFile evenmore = getFixture().configureByFile("nested/evenmore/gherkin_with_same_name.feature");
+        PsiFile nested = configureByFile("nested/gherkin_with_same_name.feature");
+        PsiFile evenmore = configureByFile("nested/evenmore/gherkin_with_same_name.feature");
 
         Tag tag = new Tag("smoke", nested.getVirtualFile(), getProject()).add(evenmore.getVirtualFile());
 
@@ -203,8 +203,8 @@ final class TagTest extends GherkinOverviewTestBase {
 
     @Test
     void uponRemovalWithOneRemainingFileRestoresDisplayNameToFileName() {
-        VirtualFile nested = getFixture().copyFileToProject("nested/gherkin_with_same_name.feature");
-        VirtualFile evenMore = getFixture().copyFileToProject("nested/evenmore/gherkin_with_same_name.feature");
+        VirtualFile nested = copyFileToProject("nested/gherkin_with_same_name.feature");
+        VirtualFile evenMore = copyFileToProject("nested/evenmore/gherkin_with_same_name.feature");
 
         Tag tag = new Tag("smoke", nested, getProject()).add(evenMore);
 
@@ -217,9 +217,9 @@ final class TagTest extends GherkinOverviewTestBase {
 
     @Test
     void uponRemovalWithOneFileRemainingWithTheSameNameRestoresDisplayNameToFileName() {
-        VirtualFile aGherkin = getFixture().copyFileToProject("A_gherkin.feature");
-        VirtualFile nested = getFixture().copyFileToProject("nested/gherkin_with_same_name.feature");
-        VirtualFile evenmoremore = getFixture().copyFileToProject("nested/evenmore/evenmoremore/gherkin_with_same_name.feature");
+        VirtualFile aGherkin = copyFileToProject("A_gherkin.feature");
+        VirtualFile nested = copyFileToProject("nested/gherkin_with_same_name.feature");
+        VirtualFile evenmoremore = copyFileToProject("nested/evenmore/evenmoremore/gherkin_with_same_name.feature");
 
         Tag tag = new Tag("smoke", nested, getProject()).add(aGherkin).add(evenmoremore);
 
@@ -235,9 +235,9 @@ final class TagTest extends GherkinOverviewTestBase {
 
     @Test
     void uponRemovalWithMultipleFilesRemainingWithTheSameNameUpdatesDisplayName() {
-        VirtualFile nested = getFixture().copyFileToProject("nested/gherkin_with_same_name.feature");
-        VirtualFile evenMore = getFixture().copyFileToProject("nested/evenmore/gherkin_with_same_name.feature");
-        VirtualFile evenmoremore = getFixture().copyFileToProject("nested/evenmore/evenmoremore/gherkin_with_same_name.feature");
+        VirtualFile nested = copyFileToProject("nested/gherkin_with_same_name.feature");
+        VirtualFile evenMore = copyFileToProject("nested/evenmore/gherkin_with_same_name.feature");
+        VirtualFile evenmoremore = copyFileToProject("nested/evenmore/evenmoremore/gherkin_with_same_name.feature");
 
         Tag tag = new Tag("smoke", nested, getProject()).add(evenMore).add(evenmoremore);
 

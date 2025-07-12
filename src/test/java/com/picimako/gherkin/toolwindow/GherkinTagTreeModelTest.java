@@ -51,7 +51,7 @@ final class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
     @BeforeEach
     void setUp() {
         GherkinTagsToolWindowSettings.getInstance(getProject()).layout = LayoutType.GROUP_BY_MODULES;
-        psiTheGherkin = getFixture().configureByFile("the_gherkin.feature");
+        psiTheGherkin = configureByFile("the_gherkin.feature");
         theGherkin = psiTheGherkin.getVirtualFile();
         aGherkin = configureVirtualFile("A_gherkin.feature");
         model = new ContentRootBasedGherkinTagTreeModel(getProject());
@@ -239,8 +239,8 @@ final class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
 
     @Test
     void updatesDisplayNamesOfFeatureFilesForFilesWithSameNameUnderATag() {
-        getFixture().configureByFile("nested/gherkin_with_same_name.feature");
-        PsiFile evenmoremore = getFixture().configureByFile("nested/evenmore/evenmoremore/gherkin_with_same_name.feature");
+        configureByFile("nested/gherkin_with_same_name.feature");
+        PsiFile evenmoremore = configureByFile("nested/evenmore/evenmoremore/gherkin_with_same_name.feature");
 
         GherkinTagTreeModel model = new ContentRootBasedGherkinTagTreeModel(getProject());
         model.buildModel();

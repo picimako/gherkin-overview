@@ -29,9 +29,7 @@ final class TagNameUtilTest extends GherkinOverviewTestBase {
 
     @Test
     void returnTagName() {
-        PsiFile gherkinFile = getFixture().configureByText("gherkin.feature",
-            "@smoke\n" +
-                "Feature: A feature");
+        PsiFile gherkinFile = configureByText("gherkin.feature", "@smoke\nFeature: A feature");
 
         GherkinTag tag = compute(() -> PsiTreeUtil.findChildOfType(gherkinFile, GherkinTag.class));
 
@@ -42,7 +40,7 @@ final class TagNameUtilTest extends GherkinOverviewTestBase {
 
     @Test
     void returnMetaNameForKeyAndText() {
-        PsiFile storyFile = getFixture().configureByText("story.story",
+        PsiFile storyFile = configureByText("story.story",
             """
                 Meta:
                 @Suite smoke
@@ -58,7 +56,7 @@ final class TagNameUtilTest extends GherkinOverviewTestBase {
 
     @Test
     void returnMetaNameForKeyOnly() {
-        PsiFile storyFile = getFixture().configureByText("story.story",
+        PsiFile storyFile = configureByText("story.story",
             """
                 Meta:
                 @Jira
@@ -76,7 +74,7 @@ final class TagNameUtilTest extends GherkinOverviewTestBase {
 
     @Test
     void determinesTagName() {
-        PsiFile gherkinFile = getFixture().configureByText("gherkin.feature",
+        PsiFile gherkinFile = configureByText("gherkin.feature",
             "@smoke\n" +
                 "Feature: A feature");
 
@@ -90,7 +88,7 @@ final class TagNameUtilTest extends GherkinOverviewTestBase {
 
     @Test
     void determinesMetaName() {
-        PsiFile storyFile = getFixture().configureByText("story.story",
+        PsiFile storyFile = configureByText("story.story",
             """
                 Meta:
                 @Suite smoke regression
@@ -105,7 +103,7 @@ final class TagNameUtilTest extends GherkinOverviewTestBase {
 
     @Test
     void returnsNullForNonTagAndNonMetaElement() {
-        PsiFile storyFile = getFixture().configureByText("story.story", "");
+        PsiFile storyFile = configureEmptyFile("story.story");
 
         String metaName = TagNameUtil.determineTagOrMetaName(storyFile);
 

@@ -23,7 +23,7 @@ final class GherkinPsiChangeListenerTest extends GherkinOverviewTestBase {
     @Test
     void updatesModelForGherkinFile() {
         registerToolWindow(getProject());
-        PsiFile gherkinFile = getFixture().configureByFile("the_gherkin.feature");
+        PsiFile gherkinFile = configureByFile("the_gherkin.feature");
         GherkinTagTree tree = mock();
         GherkinTagTreeModel model = mock();
         ModelDataRoot modelRoot = mock();
@@ -40,7 +40,7 @@ final class GherkinPsiChangeListenerTest extends GherkinOverviewTestBase {
     @Test
     void updatesModelForStoryFile() {
         registerToolWindow(getProject());
-        PsiFile storyFile = getFixture().configureByText("story.story", "");
+        PsiFile storyFile = configureEmptyFile("story.story");
         GherkinTagTree tree = mock(GherkinTagTree.class);
         GherkinTagTreeModel model = mock(ContentRootBasedGherkinTagTreeModel.class);
         ModelDataRoot modelRoot = mock(ModelDataRoot.class);
@@ -65,7 +65,7 @@ final class GherkinPsiChangeListenerTest extends GherkinOverviewTestBase {
 
     @Test
     void doesntUpdateModelForNonBddFile() {
-        PsiFile jsFile = getFixture().configureByFile("some_js_file.js");
+        PsiFile jsFile = configureByFile("some_js_file.js");
         GherkinTagTree tree = mock(GherkinTagTree.class);
 
         firePsiEvent(jsFile, tree);
@@ -75,7 +75,7 @@ final class GherkinPsiChangeListenerTest extends GherkinOverviewTestBase {
 
     @Test
     void doesntUpdateModelWhenGherkinTagsToolWindowIsNotRegistered() {
-        getFixture().configureByFile("the_gherkin.feature");
+        configureByFile("the_gherkin.feature");
         GherkinTagTree tree = mock(GherkinTagTree.class);
 
         verify(tree, never()).getModel();
@@ -84,8 +84,8 @@ final class GherkinPsiChangeListenerTest extends GherkinOverviewTestBase {
     @Test
     void updatesModelForDeletedFile() {
         registerToolWindow(getProject());
-        PsiFile gherkinFile = getFixture().configureByFile("the_gherkin.feature");
-        PsiFile childFile = getFixture().configureByFile("a_gherkin.feature");
+        PsiFile gherkinFile = configureByFile("the_gherkin.feature");
+        PsiFile childFile = configureByFile("a_gherkin.feature");
         GherkinTagTree tree = mock(GherkinTagTree.class);
         GherkinTagTreeModel model = mock(ContentRootBasedGherkinTagTreeModel.class);
         ModelDataRoot modelRoot = mock(ModelDataRoot.class);

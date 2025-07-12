@@ -136,7 +136,7 @@ final class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTes
 
     @Test
     void rebuildsModelIfAppLevelMappingsChanged() {
-        getFixture().configureByFile("the_gherkin.feature");
+        configureByFile("the_gherkin.feature");
         ToolWindowTestSupport.registerToolWindow(new GherkinTagOverviewPanel(getProject()), getProject());
         GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = StatisticsType.SIMPLIFIED;
         getComponent().setApplicationLevelMappings(List.of(new CategoryAndTags("Web Browser", "chrome,edge")));
@@ -150,7 +150,7 @@ final class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTes
 
     @Test
     void rebuildsModelIfProjectLevelMappingsChanged() {
-        getFixture().configureByFile("the_gherkin.feature");
+        configureByFile("the_gherkin.feature");
         ToolWindowTestSupport.registerToolWindow(new GherkinTagOverviewPanel(getProject()), getProject());
         GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = StatisticsType.SIMPLIFIED;
         getComponent().setUseProjectLevelMappings(true);
@@ -165,7 +165,7 @@ final class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTes
 
     @Test
     void doesntRebuildModelIfNoMappingHasChanged() {
-        getFixture().configureByFile("the_gherkin.feature");
+        configureByFile("the_gherkin.feature");
         ToolWindowTestSupport.registerToolWindow(new GherkinTagOverviewPanel(getProject()), getProject());
         GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = StatisticsType.SIMPLIFIED;
 

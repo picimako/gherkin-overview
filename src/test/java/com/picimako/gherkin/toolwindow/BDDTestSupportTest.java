@@ -17,7 +17,7 @@ final class BDDTestSupportTest extends GherkinOverviewTestBase {
 
     @Test
     void shouldReturnFirstGherkinTagForName() {
-        PsiFile psiFile = getFixture().configureByFile("the_gherkin.feature");
+        PsiFile psiFile = configureByFile("the_gherkin.feature");
 
         GherkinTag tag = BDDTestSupport.getFirstGherkinTagForName(psiFile, "@regression");
 
@@ -27,7 +27,7 @@ final class BDDTestSupportTest extends GherkinOverviewTestBase {
 
     @Test
     void shouldReturnFirstMetaKeyForName() {
-        PsiFile psiFile = getFixture().configureByFile("Story.story");
+        PsiFile psiFile = configureByFile("Story.story");
 
         PsiElement metaKey = BDDTestSupport.getFirstMetaKeyForName(psiFile, "@Disabled");
 
@@ -37,7 +37,7 @@ final class BDDTestSupportTest extends GherkinOverviewTestBase {
 
     @Test
     void shouldReturnNoGherkinTagIfFileDoesntContainTagForName() {
-        PsiFile psiFile = getFixture().configureByFile("the_gherkin.feature");
+        PsiFile psiFile = configureByFile("the_gherkin.feature");
 
         GherkinTag tag = BDDTestSupport.getFirstGherkinTagForName(psiFile, "@nonexistent");
 
@@ -46,7 +46,7 @@ final class BDDTestSupportTest extends GherkinOverviewTestBase {
 
     @Test
     void shouldReturnNoMetaKeyIfFileDoesntContainMetaKeyForName() {
-        PsiFile psiFile = getFixture().configureByFile("Story.story");
+        PsiFile psiFile = configureByFile("Story.story");
 
         PsiElement tag = BDDTestSupport.getFirstMetaKeyForName(psiFile, "@nonexistent");
 

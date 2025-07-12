@@ -25,7 +25,7 @@ final class DefaultJBehaveStoryServiceTest extends GherkinOverviewTestBase {
 
     @Test
     void collectMetasFromFile() {
-        var storyFile = getFixture().configureByText("story.story",
+        var storyFile = configureByText("story.story",
             """
                 Meta:
                 @Suite smoke
@@ -46,7 +46,7 @@ final class DefaultJBehaveStoryServiceTest extends GherkinOverviewTestBase {
 
     @Test
     void collectNoMetasFromFileWithNoMetas() {
-        var storyFile = getFixture().configureByText("story.story", "Scenario:");
+        var storyFile = configureByText("story.story", "Scenario:");
         var metas = storyService.collectMetasFromFile(storyFile);
 
         assertThat(metas.isEmpty()).isTrue();
@@ -56,7 +56,7 @@ final class DefaultJBehaveStoryServiceTest extends GherkinOverviewTestBase {
 
     @Test
     void collectMetasFromFileAsList() {
-        var storyFile = getFixture().configureByText("story.story",
+        var storyFile = configureByText("story.story",
             """
                 Meta:
                 @Suite smoke
@@ -77,7 +77,7 @@ final class DefaultJBehaveStoryServiceTest extends GherkinOverviewTestBase {
 
     @Test
     void collectNoMetasFromFileWithNoMetasAsList() {
-        var storyFile = getFixture().configureByText("story.story", "Scenario:");
+        var storyFile = configureByText("story.story", "Scenario:");
         var metas = storyService.collectMetasFromFileAsList(storyFile);
 
         assertThat(metas).isEmpty();
@@ -87,7 +87,7 @@ final class DefaultJBehaveStoryServiceTest extends GherkinOverviewTestBase {
 
     @Test
     void collectsMetaTextsForMetaKeyAsList() {
-        var storyFile = getFixture().configureByFile("Another story.story");
+        var storyFile = configureByFile("Another story.story");
         var metaTexts = storyService.collectMetaTextsForMetaKeyAsList(BDDTestSupport.getFirstMetaKeyForName(storyFile, "@Media"));
 
         assertThat(metaTexts).isNotEmpty()
@@ -96,7 +96,7 @@ final class DefaultJBehaveStoryServiceTest extends GherkinOverviewTestBase {
 
     @Test
     void returnsEmptyListIfThereIsNoMetaTextForMetaKey() {
-        var storyFile = getFixture().configureByFile("Story.story");
+        var storyFile = configureByFile("Story.story");
         var metaTexts = storyService.collectMetaTextsForMetaKeyAsList(BDDTestSupport.getFirstMetaKeyForName(storyFile, "@Disabled"));
 
         assertThat(metaTexts).isEmpty();

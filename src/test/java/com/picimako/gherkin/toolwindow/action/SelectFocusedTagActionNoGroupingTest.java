@@ -47,7 +47,7 @@ final class SelectFocusedTagActionNoGroupingTest extends GherkinOverviewTestBase
     void notAvailableForMoreThanOneCaret() {
         GherkinTagsToolWindowSettings.getInstance(getProject()).layout = LayoutType.NO_GROUPING;
 
-        getFixture().configureByFile("A_gherkin.feature");
+        configureByFile("A_gherkin.feature");
         //Add a second caret
         invokeAndWait(() ->
             FileEditorManager.getInstance(getProject()).getSelectedTextEditor()
@@ -63,7 +63,7 @@ final class SelectFocusedTagActionNoGroupingTest extends GherkinOverviewTestBase
     void notAvailableForNonGherkinTagUnderTheCaret() {
         GherkinTagsToolWindowSettings.getInstance(getProject()).layout = LayoutType.NO_GROUPING;
 
-        getFixture().configureByText(
+        configureByText(
             "non_tag_under_caret.feature",
             "Feature: Some featur<caret>e");
 
@@ -76,7 +76,7 @@ final class SelectFocusedTagActionNoGroupingTest extends GherkinOverviewTestBase
     void availableForGherkinTag() {
         GherkinTagsToolWindowSettings.getInstance(getProject()).layout = LayoutType.NO_GROUPING;
 
-        getFixture().configureByText(
+        configureByText(
             "tag_under_caret.feature",
             "@some<caret>Tag\n" +
                 "Feature: Some feature");
@@ -170,7 +170,7 @@ final class SelectFocusedTagActionNoGroupingTest extends GherkinOverviewTestBase
     }
 
     private void validateTagSelection(String featureFileText, String selectionPathString) {
-        getFixture().configureByText("the_gherkin.feature", featureFileText);
+        configureByText("the_gherkin.feature", featureFileText);
         var gherkinTagsPanel = new GherkinTagOverviewPanel(getProject());
         ToolWindowTestSupport.registerToolWindow(gherkinTagsPanel, getProject());
 

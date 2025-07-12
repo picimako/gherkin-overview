@@ -74,7 +74,7 @@ final class DeleteAllTagOccurrencesActionTest extends GherkinOverviewTestBase {
 
     @Test
     void deletesMultipleTagsFromMultipleFiles() {
-        VirtualFile file = getFixture().copyFileToProject("delete_tag_more.feature");
+        VirtualFile file = copyFileToProject("delete_tag_more.feature");
         var delete_tag_more = findPsiFile(file);
         initBDDFileAndTreeWithSelectedNodeToDelete("delete_tag.feature", "youtube");
 
@@ -199,7 +199,7 @@ final class DeleteAllTagOccurrencesActionTest extends GherkinOverviewTestBase {
 
     @Test
     void deletesMultipleMetasFromMultipleFiles() {
-        VirtualFile file = getFixture().copyFileToProject("delete_tag_more.story");
+        VirtualFile file = copyFileToProject("delete_tag_more.story");
         var delete_tag_more = findPsiFile(file);
         initBDDFileAndTreeWithSelectedNodeToDelete("delete_tag.story", "Media:youtube vimeo");
 
@@ -243,7 +243,7 @@ final class DeleteAllTagOccurrencesActionTest extends GherkinOverviewTestBase {
      * Initializes the BDD resource {@code file} from which tags with {@code tagName} will be deleted.
      */
     private void initBDDFileAndTreeWithSelectedNodeToDelete(String file, String tagName) {
-        getFixture().configureByFile(file);
+        configureByFile(file);
         initGherkinTagTreeAndSetSelectionTo(tagName);
     }
 

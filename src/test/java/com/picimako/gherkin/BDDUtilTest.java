@@ -19,7 +19,7 @@ final class BDDUtilTest extends GherkinOverviewTestBase {
         "SomeClass.java, false"
     })
     void testIsBddPsiFile(String fileName, boolean shouldBeABddFile) {
-        var file = getFixture().configureByText(fileName, "");
+        var file = configureEmptyFile(fileName);
 
         assertThat(BDDUtil.isABDDFile(file)).isEqualTo(shouldBeABddFile);
     }
@@ -31,7 +31,7 @@ final class BDDUtilTest extends GherkinOverviewTestBase {
         "SomeClass.java, false"
     })
     void testIsBddVirtualFile(String fileName, boolean shouldBeABddFile) {
-        var file = getFixture().configureByText(fileName, "");
+        var file = configureEmptyFile(fileName);
 
         assertThat(BDDUtil.isABDDFile(file.getVirtualFile(), getProject())).isEqualTo(shouldBeABddFile);
     }

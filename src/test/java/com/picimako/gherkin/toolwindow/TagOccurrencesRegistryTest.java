@@ -73,7 +73,7 @@ final class TagOccurrencesRegistryTest extends GherkinOverviewTestBase {
 
     @Test
     void updatesCounts() {
-        PsiFile psiFile = getFixture().configureByFile("for_statistics.feature");
+        PsiFile psiFile = configureByFile("for_statistics.feature");
         VirtualFile virtualFile = psiFile.getVirtualFile();
 
         var registry = initRegistryAndCalculateCounts(1, virtualFile);
@@ -89,7 +89,7 @@ final class TagOccurrencesRegistryTest extends GherkinOverviewTestBase {
 
     @Test
     void updatesCountsForMetas() {
-        PsiFile psiFile = getFixture().configureByFile("Story.story");
+        PsiFile psiFile = configureByFile("Story.story");
         VirtualFile virtualFile = psiFile.getVirtualFile();
 
         var registry = initRegistryAndCalculateCounts(1, virtualFile);
@@ -131,8 +131,8 @@ final class TagOccurrencesRegistryTest extends GherkinOverviewTestBase {
 
     @Test
     void returnsCountFor() {
-        getFixture().configureByFile("the_gherkin.feature");
-        getFixture().configureByFile("A_gherkin.feature");
+        configureByFile("the_gherkin.feature");
+        configureByFile("A_gherkin.feature");
         VirtualFile virtualFile = configureVirtualFile("for_statistics.feature");
 
         var registry = initRegistryAndCalculateCounts(2, virtualFile);
@@ -142,7 +142,7 @@ final class TagOccurrencesRegistryTest extends GherkinOverviewTestBase {
 
     @Test
     void returnsCountForMetas() {
-        getFixture().configureByFile("Story.story");
+        configureByFile("Story.story");
         VirtualFile virtualFile = configureVirtualFile("Another story.story");
 
         var registry = initRegistryAndCalculateCounts(1, virtualFile);
@@ -152,8 +152,8 @@ final class TagOccurrencesRegistryTest extends GherkinOverviewTestBase {
 
     @Test
     void returnsZeroAsCountForNonMappedTag() {
-        getFixture().configureByFile("the_gherkin.feature");
-        getFixture().configureByFile("A_gherkin.feature");
+        configureByFile("the_gherkin.feature");
+        configureByFile("A_gherkin.feature");
         VirtualFile virtualFile = configureVirtualFile("for_statistics.feature");
 
         var registry = initRegistryAndCalculateCounts(3, virtualFile);
@@ -163,7 +163,7 @@ final class TagOccurrencesRegistryTest extends GherkinOverviewTestBase {
 
     @Test
     void returnsZeroAsCountForNonMappedTagForMetas() {
-        getFixture().configureByFile("Story.story");
+        configureByFile("Story.story");
         VirtualFile virtualFile = configureVirtualFile("Another story.story");
 
         var registry = initRegistryAndCalculateCounts(2, virtualFile);
@@ -173,7 +173,7 @@ final class TagOccurrencesRegistryTest extends GherkinOverviewTestBase {
 
     @Test
     void returnsZeroAsCountForNonMappedFilePath() {
-        PsiFile psiFile = getFixture().configureByFile("Story.story");
+        PsiFile psiFile = configureByFile("Story.story");
         VirtualFile virtualFile = configureVirtualFile("Another story.story");
 
         var registry = initRegistryAndCalculateCounts(2, virtualFile);

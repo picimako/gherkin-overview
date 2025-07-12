@@ -172,7 +172,7 @@ final class ModelDataRootTest extends MediumBasePlatformTestCase {
     @Test
     void createsAndGetsModuleForName() {
         configureToolWindowLayout(LayoutType.GROUP_BY_MODULES);
-        var psiFile = getFixture().configureByFile("the_gherkin.feature");
+        var psiFile = configureByFile("the_gherkin.feature");
 
         var root = new ModelDataRoot(getProject()).findContentRootOrRootless(psiFile);
 
@@ -182,7 +182,7 @@ final class ModelDataRootTest extends MediumBasePlatformTestCase {
     @Test
     void getsAlreadyCreatedModuleForName() {
         configureToolWindowLayout(LayoutType.GROUP_BY_MODULES);
-        var psiFile = getFixture().configureByFile("the_gherkin.feature");
+        var psiFile = configureByFile("the_gherkin.feature");
 
         var modelDataRoot = new ModelDataRoot(getProject())
             .add(ContentRoot.createModule("light_idea_test_case", getProject()));
@@ -195,7 +195,7 @@ final class ModelDataRootTest extends MediumBasePlatformTestCase {
     @Test
     void getsLinkedModuleForDeletedVirtualFile() {
         configureToolWindowLayout(LayoutType.GROUP_BY_MODULES);
-        var psiFile = getFixture().configureByFile("the_gherkin.feature");
+        var psiFile = configureByFile("the_gherkin.feature");
 
         var modelDataRoot = new ModelDataRoot(getProject())
             .add(ContentRoot.createModule("light_idea_test_case", getProject())

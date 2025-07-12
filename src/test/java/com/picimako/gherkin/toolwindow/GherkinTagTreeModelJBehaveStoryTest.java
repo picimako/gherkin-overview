@@ -40,7 +40,7 @@ final class GherkinTagTreeModelJBehaveStoryTest extends MediumBasePlatformTestCa
     @BeforeEach
     void setUp() {
         GherkinTagsToolWindowSettings.getInstance(getProject()).layout = LayoutType.GROUP_BY_MODULES;
-        psitreeModelStory = getFixture().configureByFile("TreeModel.story");
+        psitreeModelStory = configureByFile("TreeModel.story");
         treeModelStory = psitreeModelStory.getVirtualFile();
         treeModel2Story = configureVirtualFile("TreeModel2.story");
         model = new ContentRootBasedGherkinTagTreeModel(getProject());
@@ -179,7 +179,7 @@ final class GherkinTagTreeModelJBehaveStoryTest extends MediumBasePlatformTestCa
     @Test
     void updateTreeModelWhenMetaKeyIsReplaced() {
         PsiElement sitemapMetaKey = getFirstMetaKeyForName(psitreeModelStory, "@sitemap");
-        PsiElement wipMetaKey = getFirstMetaKeyForName(getFixture().configureByFile("Another story.story"), "@WIP");
+        PsiElement wipMetaKey = getFirstMetaKeyForName(configureByFile("Another story.story"), "@WIP");
         executeCommandProcessorCommand(() -> sitemapMetaKey.replace(wipMetaKey), "Replace", "group.id");
         model.updateModelForFile(psitreeModelStory);
 
@@ -242,7 +242,7 @@ final class GherkinTagTreeModelJBehaveStoryTest extends MediumBasePlatformTestCa
     @Test
     void removeNodesForTagsMappedToMultipleDifferentCategories() {
         PsiElement metaKey = getFirstMetaKeyForName(psitreeModelStory, "@JIRA-1234");
-        PsiElement wipMetaKey = getFirstMetaKeyForName(getFixture().configureByFile("Another story.story"), "@TRELLO-9999");
+        PsiElement wipMetaKey = getFirstMetaKeyForName(configureByFile("Another story.story"), "@TRELLO-9999");
         var registry = TagCategoryRegistry.getInstance(getProject());
         registry.putMappingsFrom(singletonList(new CategoryAndTags("Trello", "#^[A-Z]+-[0-9]+$")));
 
@@ -260,7 +260,7 @@ final class GherkinTagTreeModelJBehaveStoryTest extends MediumBasePlatformTestCa
 
     @Test
     void updatesDisplayNamesOfFeatureFilesForFilesWithSameNameUnderATag() {
-        getFixture().configureByFile("nested/story_with_same_name.story");
+        configureByFile("nested/story_with_same_name.story");
 
         GherkinTagTreeModel model = new ContentRootBasedGherkinTagTreeModel(getProject());
         model.buildModel();
@@ -268,7 +268,7 @@ final class GherkinTagTreeModelJBehaveStoryTest extends MediumBasePlatformTestCa
 
         assertThat(samename.getFeatureFiles().getFirst().getDisplayName()).isEqualTo("story_with_same_name.story");
 
-        PsiFile evenmoremore = getFixture().configureByFile("nested/evenmore/evenmoremore/story_with_same_name.story");
+        PsiFile evenmoremore = configureByFile("nested/evenmore/evenmoremore/story_with_same_name.story");
 
         model.updateModelForFile(evenmoremore);
 

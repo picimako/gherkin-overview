@@ -80,7 +80,7 @@ final class FeatureFileTest extends MediumBasePlatformTestCase {
     void setsDisplayNameWithRelativePath() {
         setupTestObjects();
 
-        VirtualFile evenmore = getFixture().copyFileToProject("nested/evenmore/gherkin_with_same_name.feature");
+        VirtualFile evenmore = copyFileToProject("nested/evenmore/gherkin_with_same_name.feature");
         FeatureFile nestedFeature = new FeatureFile(evenmore, "youtube", getProject());
 
         nestedFeature.setDisplayNameWithPath();

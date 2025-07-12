@@ -62,6 +62,22 @@ public abstract class GherkinOverviewTestBase extends LightJavaCodeInsightFixtur
         return getFixture().configureByFile(filename).getVirtualFile();
     }
 
+    protected VirtualFile copyFileToProject(String filename) {
+        return getFixture().copyFileToProject(filename);
+    }
+
+    protected PsiFile configureEmptyFile(String filename) {
+        return getFixture().configureByText(filename, "");
+    }
+
+    protected PsiFile configureByText(String filename, String text) {
+        return getFixture().configureByText(filename, text);
+    }
+
+    protected PsiFile configureByFile(String filePath) {
+        return getFixture().configureByFile(filePath);
+    }
+
     protected void executeCommandProcessorCommand(Runnable runnable, String name, Object groupId) {
         invokeInWriteActionOnEDTAndWait(() -> CommandProcessor.getInstance().executeCommand(getProject(), runnable, name, groupId));
     }

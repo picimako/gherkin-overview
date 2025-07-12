@@ -18,7 +18,7 @@ final class GherkinUtilTest extends GherkinOverviewTestBase {
 
     @Test
     void collectGherkinTagsFromFile() {
-        PsiFile gherkinFile = getFixture().configureByText("gherkin.feature",
+        PsiFile gherkinFile = configureByText("gherkin.feature",
             """
                 @smoke
                 Feature: A feature
@@ -36,7 +36,7 @@ final class GherkinUtilTest extends GherkinOverviewTestBase {
 
     @Test
     void collectNoGherkinTagsFromFileWithNoTags() {
-        PsiFile gherkinFile = getFixture().configureByText("gherkin.feature", "Feature: A feature");
+        PsiFile gherkinFile = configureByText("gherkin.feature", "Feature: A feature");
 
         List<String> tags = GherkinUtil.collectGherkinTagsFromFile(gherkinFile);
 
@@ -47,28 +47,28 @@ final class GherkinUtilTest extends GherkinOverviewTestBase {
 
     @Test
     void isAGherkinPsiFile() {
-        PsiFile gherkinFile = getFixture().configureByText("gherkin.feature", "");
+        PsiFile gherkinFile = configureEmptyFile("gherkin.feature");
 
         assertThat(GherkinUtil.isGherkinFile(gherkinFile)).isTrue();
     }
 
     @Test
     void isNotAGherkinPsiFile() {
-        PsiFile storyFile = getFixture().configureByText("story.story", "");
+        PsiFile storyFile = configureEmptyFile("story.story");
 
         assertThat(GherkinUtil.isGherkinFile(storyFile)).isFalse();
     }
 
     @Test
     void isAGherkinVirtualFile() {
-        PsiFile gherkinFile = getFixture().configureByText("gherkin.feature", "");
+        PsiFile gherkinFile = configureEmptyFile("gherkin.feature");
 
         assertThat(GherkinUtil.isGherkinFile(gherkinFile.getVirtualFile())).isTrue();
     }
 
     @Test
     void isNotAGherkinVirtualFile() {
-        PsiFile storyFile = getFixture().configureByText("story.story", "");
+        PsiFile storyFile = configureEmptyFile("story.story");
 
         assertThat(GherkinUtil.isGherkinFile(storyFile.getVirtualFile())).isFalse();
     }
