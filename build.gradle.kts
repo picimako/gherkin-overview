@@ -36,6 +36,8 @@ dependencies {
     testImplementation(libs.opentest4j)
     testImplementation("org.assertj:assertj-core:3.27.3")
     testImplementation("org.mockito:mockito-core:5.18.0")
+    testRuntimeOnly(libs.junitJupiterEngine)
+    testImplementation(libs.junitJupiterParams)
 
     intellijPlatform {
         create(providers.gradleProperty("platformType"), providers.gradleProperty("platformVersion"))
@@ -52,7 +54,7 @@ dependencies {
         //Required for 'LightJavaCodeInsightFixtureTestCase5'
         testFramework(TestFrameworkType.Plugin.Java)
         //Required for the 'com.intellij.testFramework.junit5' package
-//        testFramework(TestFrameworkType.JUnit5)
+        testFramework(TestFrameworkType.JUnit5)
     }
 }
 
@@ -113,6 +115,6 @@ tasks {
     }
 
     test {
-        useJUnit()
+        useJUnitPlatform()
     }
 }
