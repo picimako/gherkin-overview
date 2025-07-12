@@ -7,14 +7,14 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.util.List;
 
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
+import com.picimako.gherkin.GherkinOverviewTestBase;
 import com.picimako.gherkin.settings.CategoryAndTags;
 import com.picimako.gherkin.settings.GherkinOverviewProjectState;
 
 /**
  * Unit test for {@link TagCategoryRegistry}.
  */
-public class TagCategoryRegistryTest extends BasePlatformTestCase {
+public class TagCategoryRegistryTest extends GherkinOverviewTestBase {
 
     //TagCategoryRegistry
 

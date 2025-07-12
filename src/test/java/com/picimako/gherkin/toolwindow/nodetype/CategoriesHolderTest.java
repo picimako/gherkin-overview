@@ -9,15 +9,14 @@ import java.util.List;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.testFramework.LightVirtualFile;
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-import org.jetbrains.annotations.NotNull;
-
+import com.picimako.gherkin.GherkinOverviewTestBase;
 import com.picimako.gherkin.toolwindow.TagOccurrencesRegistry;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Unit test for {@link CategoriesHolder}.
  */
-public class CategoriesHolderTest extends BasePlatformTestCase {
+public class CategoriesHolderTest extends GherkinOverviewTestBase {
 
     private DummyCategoriesHolder holder;
 

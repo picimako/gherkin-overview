@@ -17,11 +17,6 @@ public class FeatureFileTest extends MediumBasePlatformTestCase {
 
     private FeatureFile featureFile;
 
-    @Override
-    protected String getTestDataPath() {
-        return "testdata/features";
-    }
-
     //FeatureFile()
 
     public void testCalculatesTagOccurrenceCountsUponInstantiation() {

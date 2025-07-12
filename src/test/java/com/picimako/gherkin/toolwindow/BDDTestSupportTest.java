@@ -6,18 +6,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
+import com.picimako.gherkin.GherkinOverviewTestBase;
 import org.jetbrains.plugins.cucumber.psi.GherkinTag;
 
 /**
  * Unit test for {@link BDDTestSupport}.
  */
-public class BDDTestSupportTest extends BasePlatformTestCase {
-
-    @Override
-    protected String getTestDataPath() {
-        return "testdata/features";
-    }
+public class BDDTestSupportTest extends GherkinOverviewTestBase {
 
     public void testShouldReturnFirstGherkinTagForName() {
         PsiFile psiFile = myFixture.configureByFile("the_gherkin.feature");

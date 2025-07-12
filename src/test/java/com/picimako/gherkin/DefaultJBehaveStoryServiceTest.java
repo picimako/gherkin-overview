@@ -5,13 +5,12 @@ package com.picimako.gherkin;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.psi.PsiElement;
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import com.picimako.gherkin.toolwindow.BDDTestSupport;
 
 /**
  * Unit test for {@link DefaultJBehaveStoryService}.
  */
-public class DefaultJBehaveStoryServiceTest extends BasePlatformTestCase {
+public class DefaultJBehaveStoryServiceTest extends GherkinOverviewTestBase {
 
     private JBehaveStoryService storyService;
 
@@ -19,11 +18,6 @@ public class DefaultJBehaveStoryServiceTest extends BasePlatformTestCase {
     public void setUp() throws Exception {
         super.setUp();
         storyService = new DefaultJBehaveStoryService(getProject());
-    }
-
-    @Override
-    protected String getTestDataPath() {
-        return "testdata/features";
     }
 
     //collectMetasFromFile

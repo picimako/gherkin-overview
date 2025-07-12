@@ -8,15 +8,13 @@ import java.util.ArrayList;
 
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-import org.jetbrains.plugins.cucumber.psi.GherkinTag;
-
 import com.picimako.gherkin.toolwindow.TagNameUtil;
+import org.jetbrains.plugins.cucumber.psi.GherkinTag;
 
 /**
  * Unit test for {@link TagNameUtil}.
  */
-public class TagNameUtilTest extends BasePlatformTestCase {
+public class TagNameUtilTest extends GherkinOverviewTestBase {
     
     private JBehaveStoryService storyService;
     

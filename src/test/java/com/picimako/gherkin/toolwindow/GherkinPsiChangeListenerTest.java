@@ -12,18 +12,13 @@ import com.intellij.openapi.application.WriteAction;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.PsiTreeChangeEventImpl;
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
+import com.picimako.gherkin.GherkinOverviewTestBase;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 
 /**
  * Unit test for {@link GherkinPsiChangeListener}.
  */
-public class GherkinPsiChangeListenerTest extends BasePlatformTestCase {
-
-    @Override
-    protected String getTestDataPath() {
-        return "testdata/features";
-    }
+public class GherkinPsiChangeListenerTest extends GherkinOverviewTestBase {
 
     public void testUpdatesModelForGherkinFile() {
         registerToolWindow(getProject());

@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.intellij.openapi.application.WriteAction;
-
 import com.picimako.gherkin.MediumBasePlatformTestCase;
 import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
 import com.picimako.gherkin.toolwindow.LayoutType;
@@ -23,11 +22,6 @@ public class ModelDataRootTest extends MediumBasePlatformTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         TagOccurrencesRegistry.getInstance(getProject()).init(1);
-    }
-
-    @Override
-    protected String getTestDataPath() {
-        return "testdata/features";
     }
 
     //initData

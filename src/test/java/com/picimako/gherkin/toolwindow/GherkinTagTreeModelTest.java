@@ -23,12 +23,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import org.assertj.core.api.SoftAssertions;
-import org.jetbrains.plugins.cucumber.psi.GherkinElementFactory;
-import org.jetbrains.plugins.cucumber.psi.GherkinFeature;
-import org.jetbrains.plugins.cucumber.psi.GherkinFile;
-import org.jetbrains.plugins.cucumber.psi.GherkinTag;
-
 import com.picimako.gherkin.MediumBasePlatformTestCase;
 import com.picimako.gherkin.settings.CategoryAndTags;
 import com.picimako.gherkin.toolwindow.nodetype.AbstractNodeType;
@@ -36,6 +30,11 @@ import com.picimako.gherkin.toolwindow.nodetype.Category;
 import com.picimako.gherkin.toolwindow.nodetype.ContentRoot;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 import com.picimako.gherkin.toolwindow.nodetype.Tag;
+import org.assertj.core.api.SoftAssertions;
+import org.jetbrains.plugins.cucumber.psi.GherkinElementFactory;
+import org.jetbrains.plugins.cucumber.psi.GherkinFeature;
+import org.jetbrains.plugins.cucumber.psi.GherkinFile;
+import org.jetbrains.plugins.cucumber.psi.GherkinTag;
 
 /**
  * Unit test for {@link GherkinTagTreeModel}.
@@ -51,11 +50,6 @@ public class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
     private List<VirtualFile> theGherkinList;
     private List<VirtualFile> aGherkinList;
     private List<VirtualFile> mixedFiles;
-
-    @Override
-    protected String getTestDataPath() {
-        return "testdata/features";
-    }
 
     @Override
     protected void setUp() throws Exception {

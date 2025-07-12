@@ -6,8 +6,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import com.intellij.util.PlatformIcons;
+import com.picimako.gherkin.GherkinOverviewTestBase;
 import com.picimako.gherkin.toolwindow.nodetype.Category;
 import com.picimako.gherkin.toolwindow.nodetype.ContentRoot;
 import com.picimako.gherkin.toolwindow.nodetype.FeatureFile;
@@ -18,15 +18,10 @@ import icons.CucumberIcons;
 /**
  * Unit test for {@link GherkinTagTree.GherkinTagsNodeRenderer}.
  */
-public class GherkinTagsNodeRendererTest extends BasePlatformTestCase {
+public class GherkinTagsNodeRendererTest extends GherkinOverviewTestBase {
 
     private GherkinTagTree tree;
     private GherkinTagTree.GherkinTagsNodeRenderer renderer;
-
-    @Override
-    protected String getTestDataPath() {
-        return "testdata/features";
-    }
 
     @Override
     protected void setUp() throws Exception {

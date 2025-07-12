@@ -6,20 +6,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-
-import com.picimako.gherkin.toolwindow.StatisticsType;
+import com.picimako.gherkin.GherkinOverviewTestBase;
 import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
+import com.picimako.gherkin.toolwindow.StatisticsType;
 
 /**
  * Unit test for {@link Category}.
  */
-public class CategoryTest extends BasePlatformTestCase {
-
-    @Override
-    protected String getTestDataPath() {
-        return "testdata/features";
-    }
+public class CategoryTest extends GherkinOverviewTestBase {
 
     //get
 

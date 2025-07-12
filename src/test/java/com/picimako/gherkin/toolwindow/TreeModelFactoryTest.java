@@ -4,13 +4,13 @@ package com.picimako.gherkin.toolwindow;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
+import com.picimako.gherkin.GherkinOverviewTestBase;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 
 /**
  * Unit test for {@link TreeModelFactory}.
  */
-public class TreeModelFactoryTest extends BasePlatformTestCase {
+public class TreeModelFactoryTest extends GherkinOverviewTestBase {
 
     public void testCreateModel() {
         GherkinTagsToolWindowSettings.getInstance(getProject()).layout = LayoutType.GROUP_BY_MODULES;

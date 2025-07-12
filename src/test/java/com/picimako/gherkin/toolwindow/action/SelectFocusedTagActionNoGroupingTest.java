@@ -2,27 +2,24 @@
 
 package com.picimako.gherkin.toolwindow.action;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.editor.VisualPosition;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.TestActionEvent;
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
+import com.picimako.gherkin.GherkinOverviewTestBase;
 import com.picimako.gherkin.ToolWindowTestSupport;
-import com.picimako.gherkin.toolwindow.*;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import com.picimako.gherkin.toolwindow.GherkinTagOverviewPanel;
+import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
+import com.picimako.gherkin.toolwindow.LayoutType;
 
 /**
  * Integration test for {@link SelectFocusedTagAction}.
  */
-public class SelectFocusedTagActionNoGroupingTest extends BasePlatformTestCase {
-
-    @Override
-    protected String getTestDataPath() {
-        return "testdata/features";
-    }
+public class SelectFocusedTagActionNoGroupingTest extends GherkinOverviewTestBase {
 
     @Override
     protected LightProjectDescriptor getProjectDescriptor() {

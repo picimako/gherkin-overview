@@ -5,22 +5,22 @@ package com.picimako.gherkin.toolwindow;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
+
 import com.github.kumaraman21.intellijbehave.language.StoryFileType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
+import com.picimako.gherkin.GherkinOverviewTestBase;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.cucumber.psi.GherkinFileType;
 import org.mockito.Mockito;
 
-import java.util.Collections;
-
 /**
  * Unit test for {@link FileAndFolderChangeListener}.
  */
-public class FileAndFolderChangeListenerTest extends BasePlatformTestCase {
+public class FileAndFolderChangeListenerTest extends GherkinOverviewTestBase {
 
     public void testUpdatesGherkinFile() {
         VirtualFile gherkinFile = Mockito.mock();

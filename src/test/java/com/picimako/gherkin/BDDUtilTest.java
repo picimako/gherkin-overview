@@ -4,12 +4,10 @@ package com.picimako.gherkin;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-
 /**
  * Unit test for {@link BDDUtil}.
  */
-public class BDDUtilTest extends BasePlatformTestCase {
+public class BDDUtilTest extends GherkinOverviewTestBase {
 
     //isABDDFile(PsiFile)
 

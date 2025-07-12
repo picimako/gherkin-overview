@@ -6,6 +6,9 @@ import static com.picimako.gherkin.ToolWindowTestSupport.getToolWindowModel;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.picimako.gherkin.MediumBasePlatformTestCase;
 import com.picimako.gherkin.ToolWindowTestSupport;
 import com.picimako.gherkin.toolwindow.GherkinTagOverviewPanel;
@@ -15,20 +18,12 @@ import com.picimako.gherkin.toolwindow.TagCategoryRegistry;
 import com.picimako.gherkin.toolwindow.nodetype.Category;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 
-import java.util.List;
-import java.util.Optional;
-
 /**
  * Unit test for {@link GherkinOverviewProjectConfigurable}.
  */
 public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTestCase {
 
     private GherkinOverviewProjectConfigurable configurable;
-
-    @Override
-    protected String getTestDataPath() {
-        return "testdata/features";
-    }
 
     @Override
     public void setUp() throws Exception {

@@ -4,31 +4,26 @@ package com.picimako.gherkin.toolwindow.action;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import javax.swing.tree.TreePath;
+
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.psi.PsiManager;
 import com.intellij.testFramework.TestActionEvent;
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
+import com.picimako.gherkin.GherkinOverviewTestBase;
 import com.picimako.gherkin.toolwindow.GherkinTagTree;
 import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
 import com.picimako.gherkin.toolwindow.LayoutType;
 import com.picimako.gherkin.toolwindow.ProjectSpecificGherkinTagTreeModel;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 
-import javax.swing.tree.TreePath;
-
 /**
  * Integration test for {@link DeleteAllTagOccurrencesAction}.
  */
-public class DeleteAllTagOccurrencesActionTest extends BasePlatformTestCase {
+public class DeleteAllTagOccurrencesActionTest extends GherkinOverviewTestBase {
 
     private GherkinTagTree tree;
-
-    @Override
-    protected String getTestDataPath() {
-        return "testdata/features";
-    }
 
     @Override
     protected void setUp() throws Exception {

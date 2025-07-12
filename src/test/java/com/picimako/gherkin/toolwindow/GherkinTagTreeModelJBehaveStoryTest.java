@@ -22,14 +22,13 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import org.assertj.core.api.SoftAssertions;
-
 import com.picimako.gherkin.MediumBasePlatformTestCase;
 import com.picimako.gherkin.settings.CategoryAndTags;
 import com.picimako.gherkin.toolwindow.nodetype.Category;
 import com.picimako.gherkin.toolwindow.nodetype.ContentRoot;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 import com.picimako.gherkin.toolwindow.nodetype.Tag;
+import org.assertj.core.api.SoftAssertions;
 
 /**
  * Unit test for {@link GherkinTagTreeModel}.
@@ -41,11 +40,6 @@ public class GherkinTagTreeModelJBehaveStoryTest extends MediumBasePlatformTestC
     private PsiFile psitreeModelStory;
     private GherkinTagTreeModel model;
     private ModelDataRoot root;
-
-    @Override
-    protected String getTestDataPath() {
-        return "testdata/features";
-    }
 
     @Override
     protected void setUp() throws Exception {

@@ -11,7 +11,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
+import com.picimako.gherkin.GherkinOverviewTestBase;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.cucumber.psi.GherkinTag;
@@ -19,12 +19,7 @@ import org.jetbrains.plugins.cucumber.psi.GherkinTag;
 /**
  * Unit test for {@link TagOccurrencesRegistry}.
  */
-public class TagOccurrencesRegistryTest extends BasePlatformTestCase {
-
-    @Override
-    protected String getTestDataPath() {
-        return "testdata/features";
-    }
+public class TagOccurrencesRegistryTest extends GherkinOverviewTestBase {
 
     //calculateOccurrenceCounts
 

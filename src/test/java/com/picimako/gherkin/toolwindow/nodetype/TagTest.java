@@ -5,11 +5,13 @@ package com.picimako.gherkin.toolwindow.nodetype;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
+import java.util.List;
+
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
+import com.picimako.gherkin.GherkinOverviewTestBase;
 import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
 import com.picimako.gherkin.toolwindow.StatisticsType;
 import com.picimako.gherkin.toolwindow.TagOccurrencesRegistry;
@@ -17,12 +19,10 @@ import org.jetbrains.plugins.cucumber.psi.GherkinElementFactory;
 import org.jetbrains.plugins.cucumber.psi.GherkinFeature;
 import org.jetbrains.plugins.cucumber.psi.GherkinFile;
 
-import java.util.List;
-
 /**
  * Unit test for {@link Tag}.
  */
-public class TagTest extends BasePlatformTestCase {
+public class TagTest extends GherkinOverviewTestBase {
 
     private VirtualFile theGherkin;
     private VirtualFile aGherkin;
@@ -33,11 +33,6 @@ public class TagTest extends BasePlatformTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         TagOccurrencesRegistry.getInstance(getProject()).init(1);
-    }
-
-    @Override
-    protected String getTestDataPath() {
-        return "testdata/features";
     }
 
     //hasFeatureFile

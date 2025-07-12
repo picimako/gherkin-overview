@@ -7,16 +7,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 
 import com.intellij.psi.PsiFile;
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 
 /**
  * Unit test for {@link GherkinUtil}.
  */
-public class GherkinUtilTest extends BasePlatformTestCase {
-    @Override
-    protected String getTestDataPath() {
-        return "testdata/features";
-    }
+public class GherkinUtilTest extends GherkinOverviewTestBase {
 
     //collectGherkinTagsFromFile
 
