@@ -48,7 +48,7 @@ public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTe
     //createComponent
 
     public void testCreateComponent() {
-        var component = configurable.getComponent();
+        var component = getComponent();
         assertThat(component.isUseProjectLevelMappings()).isFalse();
 
         assertThat(component.getApplicationLevelMappings())
@@ -67,19 +67,19 @@ public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTe
     }
 
     public void testModifiedWhenUsingProjectLevelMappingsIsEnabled() {
-        configurable.getComponent().setUseProjectLevelMappings(true);
+        getComponent().setUseProjectLevelMappings(true);
 
         assertThat(configurable.isModified()).isTrue();
     }
 
     public void testModifiedWhenUsingApplicationLevelMappings() {
-        configurable.getComponent().setApplicationLevelMappings(List.of(new CategoryAndTags("Breakpoint", "small,medium")));
+        getComponent().setApplicationLevelMappings(List.of(new CategoryAndTags("Breakpoint", "small,medium")));
 
         assertThat(configurable.isModified()).isTrue();
     }
 
     public void testModifiedWhenUsingProjectLevelMappings() {
-        configurable.getComponent().setProjectLevelMappings(List.of(new CategoryAndTags("Breakpoint", "small,medium")));
+        getComponent().setProjectLevelMappings(List.of(new CategoryAndTags("Breakpoint", "small,medium")));
         assertThat(configurable.isModified()).isTrue();
     }
 
@@ -88,8 +88,8 @@ public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTe
     public void testAppliesSettingsWithoutProjectLevelMappings() {
         CategoryAndTags breakpoint = new CategoryAndTags("Breakpoint", "small,medium");
         CategoryAndTags media = new CategoryAndTags("Media", "image");
-        configurable.getComponent().setApplicationLevelMappings(List.of(breakpoint));
-        configurable.getComponent().setProjectLevelMappings(List.of(media));
+        getComponent().setApplicationLevelMappings(List.of(breakpoint));
+        getComponent().setProjectLevelMappings(List.of(media));
 
         configurable.apply();
 
@@ -110,9 +110,9 @@ public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTe
         ToolWindowTestSupport.registerToolWindow(new GherkinTagOverviewPanel(getProject()), getProject());
         CategoryAndTags breakpoint = new CategoryAndTags("Breakpoint", "small,medium");
         CategoryAndTags media = new CategoryAndTags("Media", "image");
-        configurable.getComponent().setApplicationLevelMappings(List.of(breakpoint));
-        configurable.getComponent().setProjectLevelMappings(List.of(media));
-        configurable.getComponent().setUseProjectLevelMappings(true);
+        getComponent().setApplicationLevelMappings(List.of(breakpoint));
+        getComponent().setProjectLevelMappings(List.of(media));
+        getComponent().setUseProjectLevelMappings(true);
 
         configurable.apply();
 
@@ -133,7 +133,7 @@ public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTe
         myFixture.configureByFile("the_gherkin.feature");
         ToolWindowTestSupport.registerToolWindow(new GherkinTagOverviewPanel(getProject()), getProject());
         GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = StatisticsType.SIMPLIFIED;
-        configurable.getComponent().setApplicationLevelMappings(List.of(new CategoryAndTags("Web Browser", "chrome,edge")));
+        getComponent().setApplicationLevelMappings(List.of(new CategoryAndTags("Web Browser", "chrome,edge")));
 
         validateCategories(getToolWindowModel(getProject()), "Browser", "Web Browser");
 
@@ -146,8 +146,8 @@ public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTe
         myFixture.configureByFile("the_gherkin.feature");
         ToolWindowTestSupport.registerToolWindow(new GherkinTagOverviewPanel(getProject()), getProject());
         GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = StatisticsType.SIMPLIFIED;
-        configurable.getComponent().setUseProjectLevelMappings(true);
-        configurable.getComponent().setProjectLevelMappings(List.of(new CategoryAndTags("Web Browser", "chrome,edge")));
+        getComponent().setUseProjectLevelMappings(true);
+        getComponent().setProjectLevelMappings(List.of(new CategoryAndTags("Web Browser", "chrome,edge")));
 
         validateCategories(getToolWindowModel(getProject()), "Browser", "Web Browser");
 
@@ -171,10 +171,10 @@ public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTe
     //reset
 
     public void testResetsSettings() {
-        configurable.getComponent().setUseProjectLevelMappings(true);
+        getComponent().setUseProjectLevelMappings(true);
         CategoryAndTags breakpoint = new CategoryAndTags("Breakpoint", "small,medium");
-        configurable.getComponent().setApplicationLevelMappings(List.of(breakpoint));
-        configurable.getComponent().setProjectLevelMappings(List.of(breakpoint));
+        getComponent().setApplicationLevelMappings(List.of(breakpoint));
+        getComponent().setProjectLevelMappings(List.of(breakpoint));
 
         configurable.reset();
 
@@ -192,5 +192,9 @@ public class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTe
         assertThat(nonEmptyCategory).isPresent();
         assertThat(nonEmptyCategory.get().getTags()).hasSize(2);
         assertThat(model.findCategory(emptyCategoryName)).isEmpty();
+    }
+
+    private GherkinOverviewComponent getComponent() {
+        return configurable.getComponent();
     }
 }
