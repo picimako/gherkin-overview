@@ -85,7 +85,7 @@ final class GherkinPsiChangeListenerTest extends GherkinOverviewTestBase {
     void updatesModelForDeletedFile() {
         registerToolWindow(getProject());
         PsiFile gherkinFile = configureByFile("the_gherkin.feature");
-        PsiFile childFile = configureByFile("a_gherkin.feature");
+        PsiFile childFile = configureByFile("A_gherkin.feature");
         GherkinTagTree tree = mock(GherkinTagTree.class);
         GherkinTagTreeModel model = mock(ContentRootBasedGherkinTagTreeModel.class);
         ModelDataRoot modelRoot = mock(ModelDataRoot.class);
