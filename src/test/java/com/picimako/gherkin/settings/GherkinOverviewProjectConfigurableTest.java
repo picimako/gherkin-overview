@@ -185,7 +185,7 @@ final class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTes
         getComponent().setApplicationLevelMappings(List.of(breakpoint));
         getComponent().setProjectLevelMappings(List.of(breakpoint));
 
-        configurable.reset();
+        invokeAndWait(configurable::reset);
 
         assertSoftly(s -> {
             s.assertThat(getComponent().isUseProjectLevelMappings()).isFalse();
