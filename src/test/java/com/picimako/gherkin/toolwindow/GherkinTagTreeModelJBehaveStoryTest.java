@@ -4,37 +4,33 @@ package com.picimako.gherkin.toolwindow;
 
 import static com.picimako.gherkin.toolwindow.BDDTestSupport.getFirstMetaKeyForName;
 import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.google.common.collect.ImmutableMap;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.picimako.gherkin.MediumBasePlatformTestCase;
 import com.picimako.gherkin.settings.CategoryAndTags;
-import com.picimako.gherkin.toolwindow.nodetype.Category;
-import com.picimako.gherkin.toolwindow.nodetype.ContentRoot;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 import com.picimako.gherkin.toolwindow.nodetype.Tag;
+import lombok.Getter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
  * Unit test for {@link GherkinTagTreeModel}.
  */
-final class GherkinTagTreeModelJBehaveStoryTest extends MediumBasePlatformTestCase {
+final class GherkinTagTreeModelJBehaveStoryTest extends GherkinTagTreeModelTestBase {
     private VirtualFile treeModelStory;
     private VirtualFile treeModel2Story;
     private PsiFile psitreeModelStory;
     private GherkinTagTreeModel model;
+    @Getter
     private ModelDataRoot root;
 
     @BeforeEach
@@ -63,7 +59,7 @@ final class GherkinTagTreeModelJBehaveStoryTest extends MediumBasePlatformTestCa
             "Browser", List.of("edge", "ff", "chrome"),
             "Analytics and SEO", List.of("sitemap"));
 
-        validateCategoryToMetaMappings(expectedCategoryTagMappings, root);
+        validateCategoryToTagOrMetaMappings(expectedCategoryTagMappings, root);
     }
 
     @Test
@@ -86,7 +82,7 @@ final class GherkinTagTreeModelJBehaveStoryTest extends MediumBasePlatformTestCa
             .put("youtube", List.of(treeModelStory))
             .build();
 
-        validateTagToGherkinFileMappings(expectedMetaStoryFileMappings, root);
+        validateTagToFileMappings(expectedMetaStoryFileMappings, root);
     }
 
     //updateTreeForFile
@@ -120,8 +116,8 @@ final class GherkinTagTreeModelJBehaveStoryTest extends MediumBasePlatformTestCa
             .build();
 
         validateCategories(List.of("Other", "Test Suite", "Device", "Excluded", "Browser"));
-        validateCategoryToMetaMappings(expectedCategoryTagMappingsAfter, root);
-        validateTagToGherkinFileMappings(expectedTagGherkinFileMappingsAfter, root);
+        validateCategoryToTagOrMetaMappings(expectedCategoryTagMappingsAfter, root);
+        validateTagToFileMappings(expectedTagGherkinFileMappingsAfter, root);
     }
 
     @Test
@@ -171,8 +167,8 @@ final class GherkinTagTreeModelJBehaveStoryTest extends MediumBasePlatformTestCa
             .build();
 
         validateCategories(List.of("Other", "Test Suite", "Device", "Excluded", "Browser", "Analytics and SEO", "Jira"));
-        validateCategoryToMetaMappings(expectedCategoryMetaMappings, root);
-        validateTagToGherkinFileMappings(expectedMetaStoryFileMappings, root);
+        validateCategoryToTagOrMetaMappings(expectedCategoryMetaMappings, root);
+        validateTagToFileMappings(expectedMetaStoryFileMappings, root);
         assertThat(root.getModules().getFirst().getOther().get("desktop")).isEmpty();
     }
 
@@ -208,8 +204,8 @@ final class GherkinTagTreeModelJBehaveStoryTest extends MediumBasePlatformTestCa
             .build();
 
         validateCategories(List.of("Other", "Test Suite", "Device", "Excluded", "Browser", "Work in Progress", "Jira"));
-        validateCategoryToMetaMappings(expectedCategoryMetaMappings, root);
-        validateTagToGherkinFileMappings(expectedMetaStoryFileMappings, root);
+        validateCategoryToTagOrMetaMappings(expectedCategoryMetaMappings, root);
+        validateTagToFileMappings(expectedMetaStoryFileMappings, root);
         assertThat(root.getModules().getFirst().getOther().get("sitemap")).isEmpty();
         assertThat(root.getModules().getFirst().findCategory("Work in Progress").get().get("WIP")).isNotEmpty();
     }
@@ -250,7 +246,7 @@ final class GherkinTagTreeModelJBehaveStoryTest extends MediumBasePlatformTestCa
         model.updateModelForFile(psitreeModelStory);
 
         assertThat(root.getModules().getFirst().findCategory("Jira")).isEmpty();
-        Optional<Category> trello = root.getModules().getFirst().findCategory("Trello");
+        var trello = root.getModules().getFirst().findCategory("Trello");
         assertSoftly(s -> {
             s.assertThat(trello).isNotNull();
             s.assertThat(trello.get().get("TRELLO-9999")).isNotEmpty();
@@ -276,32 +272,5 @@ final class GherkinTagTreeModelJBehaveStoryTest extends MediumBasePlatformTestCa
             s.assertThat(samename.getFeatureFiles().getFirst().getDisplayName()).isEqualTo("story_with_same_name.story [nested]");
             s.assertThat(samename.getFeatureFiles().get(1).getDisplayName()).isEqualTo("story_with_same_name.story [nested/evenmore/evenmoremore]");
         });
-    }
-
-    private void validateCategories(List<String> categories) {
-        assertThat(root.getModules())
-            .flatMap(ContentRoot::getCategories)
-            .extracting(Category::getDisplayName)
-            .containsExactlyInAnyOrderElementsOf(categories);
-    }
-
-    private void validateCategoryToMetaMappings(Map<String, List<String>> expectedCategoryMetaMappings, ModelDataRoot root) {
-        assertSoftly(s ->
-            expectedCategoryMetaMappings.forEach((category, tags) ->
-                s.assertThat(root.getModules().getFirst().findCategory(category).get().getTags())
-                    .extracting(Tag::getDisplayName)
-                    .containsExactlyInAnyOrderElementsOf(tags)));
-    }
-
-    private void validateTagToGherkinFileMappings(Map<String, List<VirtualFile>> expectedTagStoryFileMappings, ModelDataRoot root) {
-        Map<String, Tag> tags = root.getContentRoots().getFirst().getCategories().stream()
-            .flatMap(category -> category.getTags().stream())
-            .collect(toMap(Tag::getDisplayName, Function.identity()));
-        assertSoftly(s ->
-            expectedTagStoryFileMappings.forEach((tag, gherkinFiles) -> {
-                assertThat(tags).containsKey(tag);
-                s.assertThat(tags.keySet()).contains(tag);
-                s.assertThat(tags.get(tag).getGherkinFiles()).containsExactlyInAnyOrderElementsOf(gherkinFiles);
-            }));
     }
 }

@@ -2,9 +2,9 @@
 
 package com.picimako.gherkin.toolwindow;
 
+import static com.intellij.openapi.application.ReadAction.compute;
 import static com.picimako.gherkin.toolwindow.BDDTestSupport.getFirstGherkinTagForName;
 import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
@@ -12,21 +12,16 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.picimako.gherkin.MediumBasePlatformTestCase;
 import com.picimako.gherkin.settings.CategoryAndTags;
 import com.picimako.gherkin.toolwindow.nodetype.AbstractNodeType;
-import com.picimako.gherkin.toolwindow.nodetype.Category;
 import com.picimako.gherkin.toolwindow.nodetype.ContentRoot;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 import com.picimako.gherkin.toolwindow.nodetype.Tag;
+import lombok.Getter;
 import org.jetbrains.plugins.cucumber.psi.GherkinElementFactory;
 import org.jetbrains.plugins.cucumber.psi.GherkinFeature;
 import org.jetbrains.plugins.cucumber.psi.GherkinFile;
@@ -37,11 +32,12 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit test for {@link GherkinTagTreeModel}.
  */
-final class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
+final class GherkinTagTreeModelTest extends GherkinTagTreeModelTestBase {
     private VirtualFile theGherkin;
     private VirtualFile aGherkin;
     private PsiFile psiTheGherkin;
     private GherkinTagTreeModel model;
+    @Getter
     private ModelDataRoot root;
 
     private List<VirtualFile> theGherkinList;
@@ -86,7 +82,7 @@ final class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
             "Browser", List.of("edge", "ff", "chrome"),
             "Analytics and SEO", List.of("sitemap"));
 
-        validateCategoryToTagMappings(expectedCategoryTagMappings, root);
+        validateCategoryToTagOrMetaMappings(expectedCategoryTagMappings, root);
     }
 
     @Test
@@ -96,7 +92,7 @@ final class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
             List.of("disabled", "ff", "mobile", "smoke"),
             List.of("chrome", "e2e", "edge", "image"));
 
-        validateTagToGherkinFileMappings(expectedTagGherkinFileMappings, root);
+        validateTagToFileMappings(expectedTagGherkinFileMappings, root);
     }
 
     //updateTreeForFile
@@ -122,8 +118,8 @@ final class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
             List.of("chrome", "disabled", "e2e", "edge", "ff", "image", "mobile", "smoke"), List.of());
 
         validateCategories(List.of("Other", "Test Suite", "Device", "Excluded", "Browser"));
-        validateCategoryToTagMappings(expectedCategoryTagMappingsAfter, root);
-        validateTagToGherkinFileMappings(expectedTagGherkinFileMappingsAfter, root);
+        validateCategoryToTagOrMetaMappings(expectedCategoryTagMappingsAfter, root);
+        validateTagToFileMappings(expectedTagGherkinFileMappingsAfter, root);
     }
 
     @Test
@@ -144,7 +140,7 @@ final class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
     @Test
     void updateTreeModelWhenGherkinTagIsDeleted() {
         GherkinTag tag = getFirstGherkinTagForName(psiTheGherkin, "@desktop");
-        executeCommandProcessorCommand(() -> tag.delete(), "Delete", "group.id");
+        executeCommandProcessorCommand(tag::delete, "Delete", "group.id");
         model.updateModelForFile(psiTheGherkin);
 
         final var expectedCategoryTagMappings = Map.of(
@@ -161,15 +157,15 @@ final class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
             List.of("chrome", "e2e", "edge", "image"));
 
         validateCategories(List.of("Other", "Test Suite", "Device", "Excluded", "Browser", "Analytics and SEO", "Jira"));
-        validateCategoryToTagMappings(expectedCategoryTagMappings, root);
-        validateTagToGherkinFileMappings(expectedTagGherkinFileMappings, root);
+        validateCategoryToTagOrMetaMappings(expectedCategoryTagMappings, root);
+        validateTagToFileMappings(expectedTagGherkinFileMappings, root);
         assertThat(root.getModules().getFirst().getOther().get("desktop")).isEmpty();
     }
 
     @Test
     void updateTreeModelWhenGherkinTagIsReplaced() {
         GherkinTag tag = getFirstGherkinTagForName(psiTheGherkin, "@sitemap");
-        PsiElement[] topLevelElements = ReadAction.compute(() -> GherkinElementFactory.getTopLevelElements(getProject(), "@WIP\nFeature: Wip feature\n"));
+        var topLevelElements = compute(() -> GherkinElementFactory.getTopLevelElements(getProject(), "@WIP\nFeature: Wip feature\n"));
         executeCommandProcessorCommand(() -> tag.replace(topLevelElements[0]), "Replace", "group.id");
         model.updateModelForFile(psiTheGherkin);
 
@@ -187,8 +183,8 @@ final class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
             List.of("chrome", "e2e", "edge", "image"));
 
         validateCategories(List.of("Other", "Test Suite", "Device", "Excluded", "Browser", "Work in Progress", "Jira"));
-        validateCategoryToTagMappings(expectedCategoryTagMappings, root);
-        validateTagToGherkinFileMappings(expectedTagGherkinFileMappings, root);
+        validateCategoryToTagOrMetaMappings(expectedCategoryTagMappings, root);
+        validateTagToFileMappings(expectedTagGherkinFileMappings, root);
         assertThat(root.getModules().getFirst().getOther().get("sitemap")).isEmpty();
         assertThat(root.getModules().getFirst().findCategory("Work in Progress").get().get("WIP")).isNotEmpty();
     }
@@ -205,7 +201,7 @@ final class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
 
         assertThat(countGetter.get()).isEqualTo(2);
 
-        executeCommandProcessorCommand(() -> tag.delete(), "Delete", "group.id");
+        executeCommandProcessorCommand(tag::delete, "Delete", "group.id");
         model.updateModelForFile(psiTheGherkin);
 
         assertThat(countGetter.get()).isOne();
@@ -221,15 +217,15 @@ final class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
     @Test
     void removeNodesForTagsMappedToMultipleDifferentCategories() {
         GherkinTag tag = getFirstGherkinTagForName(psiTheGherkin, "@JIRA-1234");
-        var registry = TagCategoryRegistry.getInstance(getProject());
-        registry.putMappingsFrom(singletonList(new CategoryAndTags("Trello", "#^[A-Z]+-[0-9]+$")));
+        TagCategoryRegistry.getInstance(getProject())
+            .putMappingsFrom(singletonList(new CategoryAndTags("Trello", "#^[A-Z]+-[0-9]+$")));
 
-        PsiElement[] topLevelElements = ReadAction.compute(() -> GherkinElementFactory.getTopLevelElements(getProject(), "@TRELLO-9999\nFeature: Wip feature\n"));
+        var topLevelElements = compute(() -> GherkinElementFactory.getTopLevelElements(getProject(), "@TRELLO-9999\nFeature: Wip feature\n"));
         executeCommandProcessorCommand(() -> tag.replace(topLevelElements[0]), "Replace", "group.id");
         model.updateModelForFile(psiTheGherkin);
 
         assertThat(root.getModules().getFirst().findCategory("Jira")).isEmpty();
-        Optional<Category> trello = root.getModules().getFirst().findCategory("Trello");
+        var trello = root.getModules().getFirst().findCategory("Trello");
         assertSoftly(s -> {
             s.assertThat(trello).isNotNull();
             s.assertThat(trello.get().get("TRELLO-9999")).isNotNull();
@@ -246,10 +242,11 @@ final class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
         model.buildModel();
         Tag samename = ((ModelDataRoot) model.getRoot()).getModules().getFirst().findTag("samename").get();
 
-        assertThat(samename.getFeatureFiles()).extracting(AbstractNodeType::getDisplayName)
+        assertThat(samename.getFeatureFiles())
+            .extracting(AbstractNodeType::getDisplayName)
             .containsExactlyInAnyOrder("gherkin_with_same_name.feature [Almost same name]", "gherkin_with_same_name.feature [Same name]");
 
-        GherkinFeature feature = ReadAction.compute(() -> GherkinElementFactory.createFeatureFromText(getProject(), "Feature: Same name"));
+        GherkinFeature feature = compute(() -> GherkinElementFactory.createFeatureFromText(getProject(), "Feature: Same name"));
         executeCommandProcessorCommand(() -> ((GherkinFile) evenmoremore).getFeatures()[0].replace(feature), "Replace", "group.id");
 
         model.updateModelForFile(evenmoremore);
@@ -267,32 +264,5 @@ final class GherkinTagTreeModelTest extends MediumBasePlatformTestCase {
         aGherkinCategories.forEach(s -> expectedTagGherkinFileMappings.put(s, aGherkinList));
         mixedCategories.forEach(s -> expectedTagGherkinFileMappings.put(s, mixedFiles));
         return expectedTagGherkinFileMappings;
-    }
-
-    private void validateCategories(List<String> categories) {
-        assertThat(root.getModules())
-            .flatMap(ContentRoot::getCategories)
-            .extracting(Category::getDisplayName)
-            .containsExactlyInAnyOrderElementsOf(categories);
-    }
-
-    private void validateCategoryToTagMappings(Map<String, List<String>> expectedCategoryTagMappings, ModelDataRoot root) {
-        assertSoftly(s ->
-            expectedCategoryTagMappings.forEach((category, tags) ->
-                s.assertThat(root.getModules().getFirst().findCategory(category).get().getTags())
-                    .extracting(Tag::getDisplayName)
-                    .containsExactlyInAnyOrderElementsOf(tags)));
-    }
-
-    private void validateTagToGherkinFileMappings(Map<String, List<VirtualFile>> expectedTagGherkinFileMappings, ModelDataRoot root) {
-        Map<String, Tag> tags = root.getContentRoots().getFirst().getCategories().stream()
-            .flatMap(category -> category.getTags().stream())
-            .collect(toMap(Tag::getDisplayName, Function.identity()));
-        assertSoftly(s ->
-            expectedTagGherkinFileMappings.forEach((tag, gherkinFiles) -> {
-                assertThat(tags).containsKey(tag);
-                s.assertThat(tags.keySet()).contains(tag);
-                s.assertThat(tags.get(tag).getGherkinFiles()).containsExactlyInAnyOrderElementsOf(gherkinFiles);
-            }));
     }
 }
