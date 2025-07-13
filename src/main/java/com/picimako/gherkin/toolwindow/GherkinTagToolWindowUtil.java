@@ -1,4 +1,4 @@
-//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow;
 
@@ -19,7 +19,7 @@ public final class GherkinTagToolWindowUtil {
 
     /**
      * Returns the Gherkin tag tool window for the current project,
-     * or throws an exception if the tool window is not registered.
+     * or returns null, and logs an error if the tool window is not registered.
      *
      * @param project the current project
      * @return the tool window
@@ -28,7 +28,7 @@ public final class GherkinTagToolWindowUtil {
     public static ToolWindow getGherkinTagsToolWindow(@NotNull Project project) {
         ToolWindow gherkinTagsToolWindow = ToolWindowManager.getInstance(project).getToolWindow(TOOL_WINDOW_ID);
         if (gherkinTagsToolWindow == null) {
-            LOG.error("There is no tool window registered with the id: [" + TOOL_WINDOW_ID + "]");
+            LOG.warn("There is no tool window registered with the id: [" + TOOL_WINDOW_ID + "]");
             return null;
         }
         return gherkinTagsToolWindow;

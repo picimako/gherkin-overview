@@ -1,4 +1,4 @@
-//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow.nodetype;
 
@@ -159,6 +159,7 @@ public final class ModelDataRoot extends AbstractNodeType implements CategoriesH
             .findFirst();
     }
 
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private ContentRoot getContentRoot(Optional<ContentRoot> root, String moduleName) {
         return root.orElseGet(() -> {
             ContentRoot contentRoot = new ContentRoot(

@@ -1,4 +1,4 @@
-//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow.nodetype;
 
@@ -34,17 +34,11 @@ public abstract class AbstractNodeType implements NodeType {
      * @param detailed   the toString supplier for the Detailed statistics
      */
     public String getToString(Supplier<String> simplified, Supplier<String> detailed) {
-        String toString = displayName;
-        switch (GherkinTagsToolWindowSettings.getInstance(project).statisticsType) {
-            case SIMPLIFIED:
-                toString = simplified.get();
-                break;
-            case DETAILED:
-                toString = detailed.get();
-                break;
-            default:
-        }
-        return toString;
+        return switch (GherkinTagsToolWindowSettings.getInstance(project).statisticsType) {
+            case SIMPLIFIED -> simplified.get();
+            case DETAILED -> detailed.get();
+            default -> displayName;
+        };
     }
 
     /**

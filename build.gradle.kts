@@ -1,6 +1,5 @@
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
-import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 
 plugins {
@@ -22,6 +21,7 @@ kotlin {
 // Configure project's dependencies
 repositories {
     mavenCentral()
+
     // IntelliJ Platform Gradle Plugin Repositories Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-repositories-extension.html
     intellijPlatform {
         defaultRepositories()
@@ -33,8 +33,11 @@ dependencies {
     //Testing
 
     testImplementation(libs.junit)
+    testImplementation(libs.opentest4j)
     testImplementation("org.assertj:assertj-core:3.27.3")
-    testImplementation("org.mockito:mockito-core:5.15.2")
+    testImplementation("org.mockito:mockito-core:5.18.0")
+    testRuntimeOnly(libs.junitJupiterEngine)
+    testImplementation(libs.junitJupiterParams)
 
     intellijPlatform {
         create(providers.gradleProperty("platformType"), providers.gradleProperty("platformVersion"))
@@ -45,20 +48,20 @@ dependencies {
         // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file for plugin from JetBrains Marketplace.
         plugins(providers.gradleProperty("platformPlugins").map { it.split(',') })
 
-        instrumentationTools()
         pluginVerifier()
         zipSigner()
         testFramework(TestFrameworkType.Platform)
         //Required for 'LightJavaCodeInsightFixtureTestCase5'
         testFramework(TestFrameworkType.Plugin.Java)
         //Required for the 'com.intellij.testFramework.junit5' package
-//        testFramework(TestFrameworkType.JUnit5)
+        testFramework(TestFrameworkType.JUnit5)
     }
 }
 
 // Configure IntelliJ Platform Gradle Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html
 intellijPlatform {
     pluginConfiguration {
+        name = providers.gradleProperty("pluginName")
         version = providers.gradleProperty("pluginVersion")
 
         // Extract the <!-- Plugin description --> section from README.md and provide for the plugin's manifest
@@ -89,26 +92,13 @@ intellijPlatform {
 
         ideaVersion {
             sinceBuild = providers.gradleProperty("pluginSinceBuild")
-            untilBuild = providers.gradleProperty("pluginUntilBuild")
+//            untilBuild = providers.gradleProperty("pluginUntilBuild")
         }
     }
 
     pluginVerification {
         ides {
             recommended()
-        }
-    }
-}
-
-intellijPlatformTesting {
-    val runTestsInIJCommunity by intellijPlatformTesting.testIde.registering {
-        type = IntelliJPlatformType.IntellijIdeaCommunity
-        version = "2024.3"
-        task {
-            useJUnit {
-                isScanForTestClasses = false
-                include("**/*Test.class")
-            }
         }
     }
 }
@@ -122,5 +112,9 @@ changelog {
 tasks {
     wrapper {
         gradleVersion = providers.gradleProperty("gradleVersion").get()
+    }
+
+    test {
+        useJUnitPlatform()
     }
 }

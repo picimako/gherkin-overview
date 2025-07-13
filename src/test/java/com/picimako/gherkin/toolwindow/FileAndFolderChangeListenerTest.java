@@ -1,69 +1,74 @@
-//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow;
 
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 import com.github.kumaraman21.intellijbehave.language.StoryFileType;
+import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
+import com.picimako.gherkin.GherkinOverviewTestBase;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.cucumber.psi.GherkinFileType;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
-import java.util.Collections;
 
 /**
  * Unit test for {@link FileAndFolderChangeListener}.
  */
-public class FileAndFolderChangeListenerTest extends BasePlatformTestCase {
+final class FileAndFolderChangeListenerTest extends GherkinOverviewTestBase {
 
-    public void testUpdatesGherkinFile() {
+    @Test
+    void updatesGherkinFile() {
         VirtualFile gherkinFile = Mockito.mock();
         when(gherkinFile.getFileType()).thenReturn(GherkinFileType.INSTANCE);
 
-        boolean[] isCalled = new boolean[]{false};
-        var listener = new FileAndFolderChangeListener(() -> isCalled[0] = true, getProject());
-        listener.after(Collections.singletonList(new VFileMoveEvent(gherkinFile)));
+        var isCalled = new Ref<>(false);
+        var listener = new FileAndFolderChangeListener(() -> isCalled.set(true), getProject());
+        listener.after(singletonList(new VFileMoveEvent(gherkinFile)));
 
-        assertThat(isCalled[0]).isTrue();
+        assertThat(isCalled.get()).isTrue();
     }
 
-    public void testUpdatesStoryFile() {
+    @Test
+    void updatesStoryFile() {
         VirtualFile storyFile = Mockito.mock();
         when(storyFile.getFileType()).thenReturn(StoryFileType.STORY_FILE_TYPE);
 
-        boolean[] isCalled = new boolean[]{false};
-        var listener = new FileAndFolderChangeListener(() -> isCalled[0] = true, getProject());
-        listener.after(Collections.singletonList(new VFileMoveEvent(storyFile)));
+        var isCalled = new Ref<>(false);
+        var listener = new FileAndFolderChangeListener(() -> isCalled.set(true), getProject());
+        listener.after(singletonList(new VFileMoveEvent(storyFile)));
 
-        assertThat(isCalled[0]).isTrue();
+        assertThat(isCalled.get()).isTrue();
     }
 
-    public void testDoesntUpdateGherkinFileForDeleteEvent() {
+    @Test
+    void doesntUpdateGherkinFileForDeleteEvent() {
         VirtualFile gherkinFile = Mockito.mock();
         when(gherkinFile.getFileType()).thenReturn(GherkinFileType.INSTANCE);
 
-        boolean[] isCalled = new boolean[]{false};
-        var listener = new FileAndFolderChangeListener(() -> isCalled[0] = true, getProject());
-        listener.after(Collections.singletonList(new VFileDeleteEvent(gherkinFile)));
+        var isCalled = new Ref<>(false);
+        var listener = new FileAndFolderChangeListener(() -> isCalled.set(true), getProject());
+        listener.after(singletonList(new VFileDeleteEvent(gherkinFile)));
 
-        assertThat(isCalled[0]).isFalse();
+        assertThat(isCalled.get()).isFalse();
     }
 
-    public void testDoesntUpdateGherkinFileForContentChangeEvent() {
+    @Test
+    void doesntUpdateGherkinFileForContentChangeEvent() {
         VirtualFile gherkinFile = Mockito.mock();
         when(gherkinFile.getFileType()).thenReturn(GherkinFileType.INSTANCE);
 
-        boolean[] isCalled = new boolean[]{false};
-        var listener = new FileAndFolderChangeListener(() -> isCalled[0] = true, getProject());
-        listener.after(Collections.singletonList(new VFileContentChangeEvent(gherkinFile)));
+        var isCalled = new Ref<>(false);
+        var listener = new FileAndFolderChangeListener(() -> isCalled.set(true), getProject());
+        listener.after(singletonList(new VFileContentChangeEvent(gherkinFile)));
 
-        assertThat(isCalled[0]).isFalse();
+        assertThat(isCalled.get()).isFalse();
     }
 
     //Dummy events
@@ -91,7 +96,6 @@ public class FileAndFolderChangeListenerTest extends BasePlatformTestCase {
      * marked as internal.
      */
     private static abstract class DummyVFileEvent extends VFileEvent {
-
         private final VirtualFile file;
 
         public DummyVFileEvent(@NotNull VirtualFile file) {

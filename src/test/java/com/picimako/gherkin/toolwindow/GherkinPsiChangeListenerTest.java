@@ -1,4 +1,4 @@
-//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow;
 
@@ -8,26 +8,22 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.intellij.openapi.application.WriteAction;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.PsiTreeChangeEventImpl;
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
+import com.picimako.gherkin.GherkinOverviewTestBase;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit test for {@link GherkinPsiChangeListener}.
  */
-public class GherkinPsiChangeListenerTest extends BasePlatformTestCase {
+final class GherkinPsiChangeListenerTest extends GherkinOverviewTestBase {
 
-    @Override
-    protected String getTestDataPath() {
-        return "testdata/features";
-    }
-
-    public void testUpdatesModelForGherkinFile() {
+    @Test
+    void updatesModelForGherkinFile() {
         registerToolWindow(getProject());
-        PsiFile gherkinFile = myFixture.configureByFile("the_gherkin.feature");
+        PsiFile gherkinFile = configureByFile("the_gherkin.feature");
         GherkinTagTree tree = mock();
         GherkinTagTreeModel model = mock();
         ModelDataRoot modelRoot = mock();
@@ -41,9 +37,10 @@ public class GherkinPsiChangeListenerTest extends BasePlatformTestCase {
         verify(tree).updateUI();
     }
 
-    public void testUpdatesModelForStoryFile() {
+    @Test
+    void updatesModelForStoryFile() {
         registerToolWindow(getProject());
-        PsiFile storyFile = myFixture.configureByText("story.story", "");
+        PsiFile storyFile = configureEmptyFile("story.story");
         GherkinTagTree tree = mock(GherkinTagTree.class);
         GherkinTagTreeModel model = mock(ContentRootBasedGherkinTagTreeModel.class);
         ModelDataRoot modelRoot = mock(ModelDataRoot.class);
@@ -57,7 +54,8 @@ public class GherkinPsiChangeListenerTest extends BasePlatformTestCase {
         verify(tree).updateUI();
     }
 
-    public void testDoesntUpdateModelForNoFile() {
+    @Test
+    void doesntUpdateModelForNoFile() {
         GherkinTagTree tree = mock(GherkinTagTree.class);
 
         firePsiEvent(null, tree);
@@ -65,8 +63,9 @@ public class GherkinPsiChangeListenerTest extends BasePlatformTestCase {
         verify(tree, never()).getModel();
     }
 
-    public void testDoesntUpdateModelForNonBDDFile() {
-        PsiFile jsFile = myFixture.configureByFile("some_js_file.js");
+    @Test
+    void doesntUpdateModelForNonBddFile() {
+        PsiFile jsFile = configureByFile("some_js_file.js");
         GherkinTagTree tree = mock(GherkinTagTree.class);
 
         firePsiEvent(jsFile, tree);
@@ -74,24 +73,26 @@ public class GherkinPsiChangeListenerTest extends BasePlatformTestCase {
         verify(tree, never()).getModel();
     }
 
-    public void testDoesntUpdateModelWhenGherkinTagsToolWindowIsNotRegistered() {
-        myFixture.configureByFile("the_gherkin.feature");
+    @Test
+    void doesntUpdateModelWhenGherkinTagsToolWindowIsNotRegistered() {
+        configureByFile("the_gherkin.feature");
         GherkinTagTree tree = mock(GherkinTagTree.class);
 
         verify(tree, never()).getModel();
     }
 
-    public void testUpdatesModelForDeletedFile() {
+    @Test
+    void updatesModelForDeletedFile() {
         registerToolWindow(getProject());
-        PsiFile gherkinFile = myFixture.configureByFile("the_gherkin.feature");
-        PsiFile childFile = myFixture.configureByFile("a_gherkin.feature");
+        PsiFile gherkinFile = configureByFile("the_gherkin.feature");
+        PsiFile childFile = configureByFile("A_gherkin.feature");
         GherkinTagTree tree = mock(GherkinTagTree.class);
         GherkinTagTreeModel model = mock(ContentRootBasedGherkinTagTreeModel.class);
         ModelDataRoot modelRoot = mock(ModelDataRoot.class);
         when(tree.getModel()).thenReturn(model);
         when(model.getRoot()).thenReturn(modelRoot);
 
-        WriteAction.run(gherkinFile::delete);
+        invokeInWriteActionOnEDTAndWait(gherkinFile::delete);
 
         var listener = new GherkinPsiChangeListener(tree, getProject());
         var event = new PsiTreeChangeEventImpl(PsiManager.getInstance(getProject()));

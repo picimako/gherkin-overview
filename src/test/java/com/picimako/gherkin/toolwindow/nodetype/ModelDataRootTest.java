@@ -1,11 +1,9 @@
-//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow.nodetype;
 
-import static com.picimako.gherkin.SoftAsserts.assertSoftly;
 import static org.assertj.core.api.Assertions.assertThat;
-
-import com.intellij.openapi.application.WriteAction;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.picimako.gherkin.MediumBasePlatformTestCase;
 import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
@@ -13,26 +11,23 @@ import com.picimako.gherkin.toolwindow.LayoutType;
 import com.picimako.gherkin.toolwindow.ProjectBDDTypeService;
 import com.picimako.gherkin.toolwindow.StatisticsType;
 import com.picimako.gherkin.toolwindow.TagOccurrencesRegistry;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit test for {@link ModelDataRoot}.
  */
-public class ModelDataRootTest extends MediumBasePlatformTestCase {
+final class ModelDataRootTest extends MediumBasePlatformTestCase {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @BeforeEach
+    void setUp() {
         TagOccurrencesRegistry.getInstance(getProject()).init(1);
-    }
-
-    @Override
-    protected String getTestDataPath() {
-        return "testdata/features";
     }
 
     //initData
 
-    public void testInitsProjectDataIfNotYetInitialized() {
+    @Test
+    void initsProjectDataIfNotYetInitialized() {
         configureToolWindowLayout(LayoutType.GROUP_BY_MODULES);
         var modelDataRoot = new ModelDataRoot(getProject());
 
@@ -49,7 +44,8 @@ public class ModelDataRootTest extends MediumBasePlatformTestCase {
         assertThat(modelDataRoot.isInitializedAsProjectData()).isTrue();
     }
 
-    public void testDoesntInitProjectDataIfInitialized() {
+    @Test
+    void doesntInitProjectDataIfInitialized() {
         configureToolWindowLayout(LayoutType.NO_GROUPING);
         var modelDataRoot = new ModelDataRoot(getProject());
 
@@ -62,7 +58,8 @@ public class ModelDataRootTest extends MediumBasePlatformTestCase {
         assertThat(modelDataRoot.getCategories()).hasSize(2);
     }
 
-    public void testInitsContentRootDataIfNotYetInitialized() {
+    @Test
+    void initsContentRootDataIfNotYetInitialized() {
         configureToolWindowLayout(LayoutType.NO_GROUPING);
         var modelDataRoot = new ModelDataRoot(getProject());
 
@@ -80,7 +77,8 @@ public class ModelDataRootTest extends MediumBasePlatformTestCase {
         assertThat(modelDataRoot.isInitializedAsContentRootData()).isTrue();
     }
 
-    public void testDoesntInitContentRootDataIfInitialized() {
+    @Test
+    void doesntInitContentRootDataIfInitialized() {
         configureToolWindowLayout(LayoutType.GROUP_BY_MODULES);
         var modelDataRoot = new ModelDataRoot(getProject());
 
@@ -95,7 +93,8 @@ public class ModelDataRootTest extends MediumBasePlatformTestCase {
 
     //updateDisplayName
 
-    public void testUpdatesDisplayNameForTagsOnly() {
+    @Test
+    void updatesDisplayNameForTagsOnly() {
         configureToolWindowLayout(LayoutType.GROUP_BY_MODULES);
         var modelDataRoot = new ModelDataRoot(getProject());
 
@@ -105,7 +104,8 @@ public class ModelDataRootTest extends MediumBasePlatformTestCase {
         assertThat(modelDataRoot.displayName).isEqualTo("Gherkin Tags");
     }
 
-    public void testUpdatesDisplayNameForMetasOnly() {
+    @Test
+    void updatesDisplayNameForMetasOnly() {
         configureToolWindowLayout(LayoutType.GROUP_BY_MODULES);
         var modelDataRoot = new ModelDataRoot(getProject());
 
@@ -115,7 +115,8 @@ public class ModelDataRootTest extends MediumBasePlatformTestCase {
         assertThat(modelDataRoot.displayName).isEqualTo("Story Metas");
     }
 
-    public void testUpdatesDisplayNameForTagsAndMetas() {
+    @Test
+    void updatesDisplayNameForTagsAndMetas() {
         configureToolWindowLayout(LayoutType.GROUP_BY_MODULES);
         var modelDataRoot = new ModelDataRoot(getProject());
 
@@ -127,7 +128,8 @@ public class ModelDataRootTest extends MediumBasePlatformTestCase {
 
     //getContentRootsByLayout
 
-    public void testReturnsModules() {
+    @Test
+    void returnsModules() {
         configureToolWindowLayout(LayoutType.GROUP_BY_MODULES);
         var module1 = ContentRoot.createModule("module1", getProject());
         var module2 = ContentRoot.createModule("module2", getProject());
@@ -140,7 +142,8 @@ public class ModelDataRootTest extends MediumBasePlatformTestCase {
         assertThat(modelDataRoot.getContentRootsByLayout()).containsExactly(module1, module2);
     }
 
-    public void testReturnsContentRoots() {
+    @Test
+    void returnsContentRoots() {
         configureToolWindowLayout(LayoutType.GROUP_BY_MODULES);
         var root1 = new ContentRoot("root1", ContentRoot.Type.CONTENT_ROOT, getProject());
         var root2 = new ContentRoot("root2", ContentRoot.Type.CONTENT_ROOT, getProject());
@@ -166,18 +169,20 @@ public class ModelDataRootTest extends MediumBasePlatformTestCase {
         //TODO: How to and where to add file to not be in a project?
     }
 
-    public void testCreatesAndGetsModuleForName() {
+    @Test
+    void createsAndGetsModuleForName() {
         configureToolWindowLayout(LayoutType.GROUP_BY_MODULES);
-        var psiFile = myFixture.configureByFile("the_gherkin.feature");
+        var psiFile = configureByFile("the_gherkin.feature");
 
         var root = new ModelDataRoot(getProject()).findContentRootOrRootless(psiFile);
 
         assertThat(root.displayName).isEqualTo("light_idea_test_case");
     }
 
-    public void testGetsAlreadyCreatedModuleForName() {
+    @Test
+    void getsAlreadyCreatedModuleForName() {
         configureToolWindowLayout(LayoutType.GROUP_BY_MODULES);
-        var psiFile = myFixture.configureByFile("the_gherkin.feature");
+        var psiFile = configureByFile("the_gherkin.feature");
 
         var modelDataRoot = new ModelDataRoot(getProject())
             .add(ContentRoot.createModule("light_idea_test_case", getProject()));
@@ -187,16 +192,17 @@ public class ModelDataRootTest extends MediumBasePlatformTestCase {
         assertThat(root.displayName).isEqualTo("light_idea_test_case");
     }
 
-    public void testGetsLinkedModuleForDeletedVirtualFile() {
+    @Test
+    void getsLinkedModuleForDeletedVirtualFile() {
         configureToolWindowLayout(LayoutType.GROUP_BY_MODULES);
-        var psiFile = myFixture.configureByFile("the_gherkin.feature");
+        var psiFile = configureByFile("the_gherkin.feature");
 
         var modelDataRoot = new ModelDataRoot(getProject())
             .add(ContentRoot.createModule("light_idea_test_case", getProject())
                 .addCategory(new Category("category", getProject())
                     .add(new Tag("tag", psiFile.getVirtualFile(), getProject()))));
 
-        WriteAction.run(psiFile::delete);
+        invokeInWriteActionOnEDTAndWait(psiFile::delete);
 
         var root = modelDataRoot.findContentRootOrRootless(psiFile);
 
@@ -205,7 +211,8 @@ public class ModelDataRootTest extends MediumBasePlatformTestCase {
 
     //getContentRoot
 
-    public void testGetsModuleForName() {
+    @Test
+    void getsModuleForName() {
         configureToolWindowLayout(LayoutType.GROUP_BY_MODULES);
 
         var root = ContentRoot.createModule("light_idea_test_case", getProject());
@@ -214,7 +221,8 @@ public class ModelDataRootTest extends MediumBasePlatformTestCase {
         assertThat(modelDataRoot.getContentRoot("light_idea_test_case")).hasValue(root);
     }
 
-    public void testDoesntGetModuleForNonExistentName() {
+    @Test
+    void doesntGetModuleForNonExistentName() {
         configureToolWindowLayout(LayoutType.GROUP_BY_MODULES);
 
         var modelDataRoot = new ModelDataRoot(getProject())
@@ -225,7 +233,8 @@ public class ModelDataRootTest extends MediumBasePlatformTestCase {
 
     //getOther
 
-    public void testGetsOtherCategory() {
+    @Test
+    void getsOtherCategory() {
         assertThat(new ModelDataRoot(getProject()).getOther())
             .isNotNull()
             .extracting(AbstractNodeType::getDisplayName).isEqualTo("Other");
@@ -233,9 +242,10 @@ public class ModelDataRootTest extends MediumBasePlatformTestCase {
 
     //sort
 
-    public void testSortBasedOnProjectData() {
-        var theGherkinFile = myFixture.configureByFile("the_gherkin.feature").getVirtualFile();
-        var aGherkinFile = myFixture.configureByFile("A_gherkin.feature").getVirtualFile();
+    @Test
+    void sortBasedOnProjectData() {
+        var theGherkinFile = configureVirtualFile("the_gherkin.feature");
+        var aGherkinFile = configureVirtualFile("A_gherkin.feature");
 
         Tag smoke = new Tag("smoke", theGherkinFile, getProject()).add(aGherkinFile);
         Tag e2e = new Tag("E2E", theGherkinFile, getProject());
@@ -252,18 +262,19 @@ public class ModelDataRootTest extends MediumBasePlatformTestCase {
         modelDataRoot.sort();
 
         var categories = modelDataRoot.getCategories();
-        assertSoftly(
-            softly -> softly.assertThat(categories).containsExactly(component, modelDataRoot.getOther(), testSuite),
-            softly -> softly.assertThat(categories.get(2).getTags()).containsExactly(e2e, smoke),
-            softly -> softly.assertThat(categories.get(2).getTags().get(1).getGherkinFiles()).containsExactly(aGherkinFile, theGherkinFile)
-        );
+        assertSoftly(s -> {
+            s.assertThat(categories).containsExactly(component, modelDataRoot.getOther(), testSuite);
+            s.assertThat(categories.get(2).getTags()).containsExactly(e2e, smoke);
+            s.assertThat(categories.get(2).getTags().get(1).getGherkinFiles()).containsExactly(aGherkinFile, theGherkinFile);
+        });
     }
 
-    public void testSortBaseOnContentRootData() {
+    @Test
+    void sortBaseOnContentRootData() {
         configureToolWindowLayout(LayoutType.GROUP_BY_MODULES);
 
-        var theGherkin = myFixture.configureByFile("the_gherkin.feature").getVirtualFile();
-        var aGherkin = myFixture.configureByFile("A_gherkin.feature").getVirtualFile();
+        var theGherkin = configureVirtualFile("the_gherkin.feature");
+        var aGherkin = configureVirtualFile("A_gherkin.feature");
 
         Tag smoke = new Tag("smoke", theGherkin, getProject()).add(aGherkin);
         Tag e2e = new Tag("E2E", theGherkin, getProject());
@@ -284,20 +295,21 @@ public class ModelDataRootTest extends MediumBasePlatformTestCase {
         modelDataRoot.add(projectModule).add(projectModule2);
         modelDataRoot.sort();
 
-        assertSoftly(
-            softly -> softly.assertThat(modelDataRoot.getModules()).containsExactly(projectModule, projectModule2),
-            softly -> softly.assertThat(projectModule.getCategories()).containsExactly(component, projectModule.getOther(), testSuite),
-            softly -> softly.assertThat(modelDataRoot.getContentRoot("features").get().getCategories().get(2).getTags()).containsExactly(e2e, smoke),
-            softly -> softly.assertThat(modelDataRoot.getContentRoot("features").get().getCategories().get(2).getTags().get(1).getGherkinFiles()).containsExactly(aGherkin, theGherkin)
-        );
+        assertSoftly(s -> {
+            s.assertThat(modelDataRoot.getModules()).containsExactly(projectModule, projectModule2);
+            s.assertThat(projectModule.getCategories()).containsExactly(component, projectModule.getOther(), testSuite);
+            s.assertThat(modelDataRoot.getContentRoot("features").get().getCategories().get(2).getTags()).containsExactly(e2e, smoke);
+            s.assertThat(modelDataRoot.getContentRoot("features").get().getCategories().get(2).getTags().get(1).getGherkinFiles()).containsExactly(aGherkin, theGherkin);
+        });
     }
 
     //toString
 
-    public void testReturnsToStringForProjectData() {
+    @Test
+    void returnsToStringForProjectData() {
         GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = StatisticsType.SIMPLIFIED;
-        var theGherkin = myFixture.configureByFile("the_gherkin.feature").getVirtualFile();
-        var aGherkin = myFixture.configureByFile("A_gherkin.feature").getVirtualFile();
+        var theGherkin = configureVirtualFile("the_gherkin.feature");
+        var aGherkin = configureVirtualFile("A_gherkin.feature");
 
         var modelDataRoot = new ModelDataRoot(getProject())
             .addCategory(new Category("Test Suite", getProject())
@@ -311,21 +323,24 @@ public class ModelDataRootTest extends MediumBasePlatformTestCase {
         assertThat(modelDataRoot).hasToString("Gherkin Tags - 4 tags, 2 .feature files");
     }
 
-    public void testReturnToStringWithSimplifiedStatistics() {
+    @Test
+    void returnToStringWithSimplifiedStatistics() {
         configureToolWindowSettings(LayoutType.GROUP_BY_MODULES, StatisticsType.SIMPLIFIED);
 
         assertThat(setupModelData()).hasToString("Gherkin Tags - 4 tags, 2 .feature files");
     }
 
-    public void testReturnToStringWithDetailedStatistics() {
+    @Test
+    void returnToStringWithDetailedStatistics() {
         configureToolWindowSettings(LayoutType.GROUP_BY_MODULES, StatisticsType.DETAILED);
 
         assertThat(setupModelData()).hasToString("Gherkin Tags - 4 distinct tags in 2 .feature files");
     }
 
-    public void testReturnDetailedToStringWithStoryOnlyProject() {
+    @Test
+    void returnDetailedToStringWithStoryOnlyProject() {
         configureToolWindowSettings(LayoutType.GROUP_BY_MODULES, StatisticsType.DETAILED);
-        var anotherStory = myFixture.configureByFile("Another story.story").getVirtualFile();
+        var anotherStory = configureVirtualFile("Another story.story");
 
         var modelDataRoot = new ModelDataRoot(getProject())
             .add(ContentRoot.createModule("features", getProject())
@@ -340,9 +355,10 @@ public class ModelDataRootTest extends MediumBasePlatformTestCase {
         assertThat(modelDataRoot).hasToString("Story Metas - 1 distinct meta in 1 .story file");
     }
 
-    public void testReturnDetailedToStringWithProjectContainingBothGherkinAndStoryFiles() {
+    @Test
+    void returnDetailedToStringWithProjectContainingBothGherkinAndStoryFiles() {
         configureToolWindowSettings(LayoutType.GROUP_BY_MODULES, StatisticsType.DETAILED);
-        var anotherStory = myFixture.configureByFile("Another story.story").getVirtualFile();
+        var anotherStory = configureVirtualFile("Another story.story");
 
         var modelDataRoot = setupModelData();
         modelDataRoot.getModules().getFirst().findCategory("Component").get().addTagOrFileToTag("vimeo", anotherStory);
@@ -353,15 +369,17 @@ public class ModelDataRootTest extends MediumBasePlatformTestCase {
         assertThat(modelDataRoot).hasToString("Tags and Metas - 4 distinct items in 3 .feature/.story files");
     }
 
-    public void testReturnToStringWithoutStatistics() {
+    @Test
+    void returnToStringWithoutStatistics() {
         configureToolWindowSettings(LayoutType.GROUP_BY_MODULES, StatisticsType.DISABLED);
 
         assertThat(setupModelData()).hasToString("Gherkin Tags");
     }
 
-    public void testReturnSimplifiedToStringWithStoryOnlyProject() {
+    @Test
+    void returnSimplifiedToStringWithStoryOnlyProject() {
         configureToolWindowSettings(LayoutType.GROUP_BY_MODULES, StatisticsType.SIMPLIFIED);
-        var anotherStory = myFixture.configureByFile("Another story.story").getVirtualFile();
+        var anotherStory = configureVirtualFile("Another story.story");
 
         var modelDataRoot = new ModelDataRoot(getProject())
             .add(ContentRoot.createModule("features", getProject())
@@ -374,9 +392,10 @@ public class ModelDataRootTest extends MediumBasePlatformTestCase {
         assertThat(modelDataRoot).hasToString("Story Metas - 1 meta, 1 .story file");
     }
 
-    public void testReturnSimplifiedToStringWithProjectContainingBothGherkinAndStoryFiles() {
+    @Test
+    void returnSimplifiedToStringWithProjectContainingBothGherkinAndStoryFiles() {
         configureToolWindowSettings(LayoutType.GROUP_BY_MODULES, StatisticsType.SIMPLIFIED);
-        var anotherStory = myFixture.configureByFile("Another story.story").getVirtualFile();
+        var anotherStory = configureVirtualFile("Another story.story");
 
         var modelDataRoot = setupModelData();
         modelDataRoot.getModules().getFirst().findCategory("Component").get().addTagOrFileToTag("vimeo", anotherStory);
@@ -388,8 +407,8 @@ public class ModelDataRootTest extends MediumBasePlatformTestCase {
     }
 
     private ModelDataRoot setupModelData() {
-        var theGherkin = myFixture.configureByFile("the_gherkin.feature").getVirtualFile();
-        var aGherkin = myFixture.configureByFile("A_gherkin.feature").getVirtualFile();
+        var theGherkin = configureVirtualFile("the_gherkin.feature");
+        var aGherkin = configureVirtualFile("A_gherkin.feature");
 
         return new ModelDataRoot(getProject())
             .add(ContentRoot.createModule("features", getProject())

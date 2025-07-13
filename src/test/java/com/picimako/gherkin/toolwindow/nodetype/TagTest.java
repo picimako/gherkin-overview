@@ -1,55 +1,55 @@
-//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow.nodetype;
 
-import static com.picimako.gherkin.SoftAsserts.assertSoftly;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.junit.jupiter.params.provider.Arguments.argumentSet;
 
 import java.util.List;
+import java.util.stream.Stream;
 
-import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.command.CommandProcessor;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-import org.jetbrains.plugins.cucumber.psi.GherkinElementFactory;
-import org.jetbrains.plugins.cucumber.psi.GherkinFeature;
-import org.jetbrains.plugins.cucumber.psi.GherkinFile;
-
+import com.picimako.gherkin.GherkinOverviewTestBase;
 import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
 import com.picimako.gherkin.toolwindow.StatisticsType;
 import com.picimako.gherkin.toolwindow.TagOccurrencesRegistry;
+import org.jetbrains.plugins.cucumber.psi.GherkinElementFactory;
+import org.jetbrains.plugins.cucumber.psi.GherkinFeature;
+import org.jetbrains.plugins.cucumber.psi.GherkinFile;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * Unit test for {@link Tag}.
  */
-public class TagTest extends BasePlatformTestCase {
-
+final class TagTest extends GherkinOverviewTestBase {
     private VirtualFile theGherkin;
     private VirtualFile aGherkin;
     private VirtualFile forStatistics;
     private Tag tag;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @BeforeEach
+    void setUp() {
         TagOccurrencesRegistry.getInstance(getProject()).init(1);
-    }
-
-    @Override
-    protected String getTestDataPath() {
-        return "testdata/features";
     }
 
     //hasFeatureFile
 
-    public void testHasFeatureFile() {
+    @Test
+    void hasFeatureFile() {
         setupTestObjects();
 
         assertThat(tag.hasFeatureFile()).isTrue();
     }
 
-    public void testDoesntHaveFeatureFile() {
+    @Test
+    void doesntHaveFeatureFile() {
         setupTestObjects();
         tag.remove(theGherkin);
         tag.remove(aGherkin);
@@ -60,13 +60,15 @@ public class TagTest extends BasePlatformTestCase {
 
     //contains
 
-    public void testContainsVirtualFile() {
+    @Test
+    void containsVirtualFile() {
         setupTestObjects();
 
         assertThat(tag.contains(theGherkin)).isTrue();
     }
 
-    public void testDoesntContainVirtualFile() {
+    @Test
+    void doesntContainVirtualFile() {
         setupTestObjects();
         tag.remove(theGherkin);
 
@@ -75,13 +77,15 @@ public class TagTest extends BasePlatformTestCase {
 
     //add
 
-    public void testShouldAddGherkinFile() {
+    @Test
+    void shouldAddGherkinFile() {
         setupTestObjects();
 
         assertThat(tag.getGherkinFiles()).containsExactly(forStatistics, theGherkin, aGherkin);
     }
 
-    public void testShouldNotAddGherkinFile() {
+    @Test
+    void shouldNotAddGherkinFile() {
         setupTestObjects();
         Tag tag = new Tag("smoke", theGherkin, getProject());
         tag.add(theGherkin);
@@ -89,10 +93,11 @@ public class TagTest extends BasePlatformTestCase {
         assertThat(tag.getGherkinFiles()).containsOnly(theGherkin);
     }
 
-    public void testAddsFeatureFileWithRelativePathInNameAndUpdatesPreviouslyAddedFeatureFileNames() {
-        VirtualFile nested = myFixture.copyFileToProject("nested/gherkin_with_same_name.feature");
-        VirtualFile evenMore = myFixture.copyFileToProject("nested/evenmore/gherkin_with_same_name.feature");
-        VirtualFile evenMoreMore = myFixture.copyFileToProject("nested/evenmore/evenmoremore/gherkin_with_same_name.feature");
+    @Test
+    void addsFeatureFileWithRelativePathInNameAndUpdatesPreviouslyAddedFeatureFileNames() {
+        VirtualFile nested = copyFileToProject("nested/gherkin_with_same_name.feature");
+        VirtualFile evenMore = copyFileToProject("nested/evenmore/gherkin_with_same_name.feature");
+        VirtualFile evenMoreMore = copyFileToProject("nested/evenmore/evenmoremore/gherkin_with_same_name.feature");
 
         Tag tag = new Tag("smoke", nested, getProject());
 
@@ -101,90 +106,94 @@ public class TagTest extends BasePlatformTestCase {
 
         tag.add(evenMore);
 
-        assertSoftly(
-            softly -> softly.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested]"),
-            softly -> softly.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested/evenmore]")
-        );
+        assertSoftly(s -> {
+            s.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested]");
+            s.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested/evenmore]");
+        });
 
         tag.add(evenMoreMore);
 
-        assertSoftly(
-            softly -> softly.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested]"),
-            softly -> softly.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested/evenmore]"),
-            softly -> softly.assertThat(featureFiles.get(2).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested/evenmore/evenmoremore]")
-        );
+        assertSoftly(s -> {
+            s.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested]");
+            s.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested/evenmore]");
+            s.assertThat(featureFiles.get(2).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested/evenmore/evenmoremore]");
+        });
     }
 
     //updateDisplayNames
 
-    public void testUpdatesDisplayNameWithPathForMoreThanTwoFeatureFilesInATagWithTheSameName() {
-        PsiFile nested = myFixture.configureByFile("nested/gherkin_with_same_name.feature");
-        PsiFile evenmoremore = myFixture.configureByFile("nested/evenmore/evenmoremore/gherkin_with_same_name.feature");
+    @Test
+    void updatesDisplayNameWithPathForMoreThanTwoFeatureFilesInATagWithTheSameName() {
+        PsiFile nested = configureByFile("nested/gherkin_with_same_name.feature");
+        PsiFile evenmoremore = configureByFile("nested/evenmore/evenmoremore/gherkin_with_same_name.feature");
 
         Tag tag = new Tag("smoke", nested.getVirtualFile(), getProject()).add(evenmoremore.getVirtualFile());
 
         List<FeatureFile> featureFiles = tag.getFeatureFiles();
-        assertSoftly(
-            softly -> softly.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Same name]"),
-            softly -> softly.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Almost same name]")
-        );
+        assertSoftly(s -> {
+            s.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Same name]");
+            s.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Almost same name]");
+        });
 
-        GherkinFeature feature = GherkinElementFactory.createFeatureFromText(getProject(), "Feature: Same name");
-        WriteAction.run(() -> CommandProcessor.getInstance().executeCommand(getProject(), () -> ((GherkinFile) evenmoremore).getFeatures()[0].replace(feature), "Replace", "group.id"));
+        GherkinFeature feature = ReadAction.compute(() -> GherkinElementFactory.createFeatureFromText(getProject(), "Feature: Same name"));
+        executeCommandProcessorCommand(() -> ((GherkinFile) evenmoremore).getFeatures()[0].replace(feature), "Replace", "group.id");
 
         tag.updateDisplayNames(evenmoremore.getVirtualFile());
 
-        assertSoftly(
-            softly -> softly.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested]"),
-            softly -> softly.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested/evenmore/evenmoremore]")
-        );
+        assertSoftly(s -> {
+            s.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested]");
+            s.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested/evenmore/evenmoremore]");
+        });
     }
 
-    public void testUpdatesDisplayNameWithPathForMoreThanTwoStoryFilesInATagWithTheSameName() {
-        PsiFile nested = myFixture.configureByFile("nested/story_with_same_name.story");
+    @Test
+    void updatesDisplayNameWithPathForMoreThanTwoStoryFilesInATagWithTheSameName() {
+        PsiFile nested = configureByFile("nested/story_with_same_name.story");
 
         Tag tag = new Tag("smoke", nested.getVirtualFile(), getProject());
 
         List<FeatureFile> featureFiles = tag.getFeatureFiles();
         assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("story_with_same_name.story");
 
-        PsiFile evenmoremore = myFixture.configureByFile("nested/evenmore/evenmoremore/story_with_same_name.story");
+        PsiFile evenmoremore = configureByFile("nested/evenmore/evenmoremore/story_with_same_name.story");
         tag.add(evenmoremore.getVirtualFile());
 
         tag.updateDisplayNames(evenmoremore.getVirtualFile());
 
-        assertSoftly(
-            softly -> softly.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("story_with_same_name.story [nested]"),
-            softly -> softly.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("story_with_same_name.story [nested/evenmore/evenmoremore]")
-        );
+        assertSoftly(s -> {
+            s.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("story_with_same_name.story [nested]");
+            s.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("story_with_same_name.story [nested/evenmore/evenmoremore]");
+        });
     }
 
-    public void testUpdatesDisplayNameWithFeatureNameForMoreThanTwoFeatureFilesInATagWithTheSameName() {
-        PsiFile nested = myFixture.configureByFile("nested/gherkin_with_same_name.feature");
-        PsiFile evenmore = myFixture.configureByFile("nested/evenmore/gherkin_with_same_name.feature");
+    @Test
+    void updatesDisplayNameWithFeatureNameForMoreThanTwoFeatureFilesInATagWithTheSameName() {
+        PsiFile nested = configureByFile("nested/gherkin_with_same_name.feature");
+        PsiFile evenmore = configureByFile("nested/evenmore/gherkin_with_same_name.feature");
 
         Tag tag = new Tag("smoke", nested.getVirtualFile(), getProject()).add(evenmore.getVirtualFile());
 
         List<FeatureFile> featureFiles = tag.getFeatureFiles();
-        assertSoftly(
-            softly -> softly.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested]"),
-            softly -> softly.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested/evenmore]")
-        );
+        assertSoftly(s -> {
+            s.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested]");
+            s.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested/evenmore]");
+        });
 
-        GherkinFeature feature = GherkinElementFactory.createFeatureFromText(getProject(), "Feature: Not same name");
-        WriteAction.run(() -> CommandProcessor.getInstance().executeCommand(getProject(), () -> ((GherkinFile) nested).getFeatures()[0].replace(feature), "Replace", "group.id"));
+        GherkinFeature feature = ReadAction.compute(() -> GherkinElementFactory.createFeatureFromText(getProject(), "Feature: Not same name"));
+        executeCommandProcessorCommand(() -> ((GherkinFile) nested).getFeatures()[0].replace(feature), "Replace", "group.id");
 
         tag.updateDisplayNames(nested.getVirtualFile());
 
-        assertSoftly(
-            softly -> softly.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Not same name]"),
-            softly -> softly.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Same name]")
-        );
+        assertSoftly(s -> {
+            s.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Not same name]");
+            s.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Same name]");
+        });
     }
 
     //remove
 
-    public void testShouldRemoveGherkinFile() {
+    @Test
+    void shouldRemoveGherkinFile() {
         setupTestObjects();
 
         tag.remove(theGherkin);
@@ -192,9 +201,10 @@ public class TagTest extends BasePlatformTestCase {
         assertThat(tag.getFeatureFiles()).extracting(FeatureFile::getFile).containsExactly(forStatistics, aGherkin);
     }
 
-    public void testUponRemovalWithOneRemainingFileRestoresDisplayNameToFileName() {
-        VirtualFile nested = myFixture.copyFileToProject("nested/gherkin_with_same_name.feature");
-        VirtualFile evenMore = myFixture.copyFileToProject("nested/evenmore/gherkin_with_same_name.feature");
+    @Test
+    void uponRemovalWithOneRemainingFileRestoresDisplayNameToFileName() {
+        VirtualFile nested = copyFileToProject("nested/gherkin_with_same_name.feature");
+        VirtualFile evenMore = copyFileToProject("nested/evenmore/gherkin_with_same_name.feature");
 
         Tag tag = new Tag("smoke", nested, getProject()).add(evenMore);
 
@@ -205,47 +215,50 @@ public class TagTest extends BasePlatformTestCase {
         assertThat(tag.getFeatureFiles().getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature");
     }
 
-    public void testUponRemovalWithOneFileRemainingWithTheSameNameRestoresDisplayNameToFileName() {
-        VirtualFile aGherkin = myFixture.copyFileToProject("A_gherkin.feature");
-        VirtualFile nested = myFixture.copyFileToProject("nested/gherkin_with_same_name.feature");
-        VirtualFile evenmoremore = myFixture.copyFileToProject("nested/evenmore/evenmoremore/gherkin_with_same_name.feature");
+    @Test
+    void uponRemovalWithOneFileRemainingWithTheSameNameRestoresDisplayNameToFileName() {
+        VirtualFile aGherkin = copyFileToProject("A_gherkin.feature");
+        VirtualFile nested = copyFileToProject("nested/gherkin_with_same_name.feature");
+        VirtualFile evenmoremore = copyFileToProject("nested/evenmore/evenmoremore/gherkin_with_same_name.feature");
 
         Tag tag = new Tag("smoke", nested, getProject()).add(aGherkin).add(evenmoremore);
 
-        assertSoftly(
-            softly -> softly.assertThat(tag.getFeatureFiles().getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Same name]"),
-            softly -> softly.assertThat(tag.getFeatureFiles().get(2).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Almost same name]")
-        );
+        assertSoftly(s -> {
+            s.assertThat(tag.getFeatureFiles().getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Same name]");
+            s.assertThat(tag.getFeatureFiles().get(2).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Almost same name]");
+        });
 
         tag.remove(nested);
 
         assertThat(tag.getFeatureFiles().get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature");
     }
 
-    public void testUponRemovalWithMultipleFilesRemainingWithTheSameNameUpdatesDisplayName() {
-        VirtualFile nested = myFixture.copyFileToProject("nested/gherkin_with_same_name.feature");
-        VirtualFile evenMore = myFixture.copyFileToProject("nested/evenmore/gherkin_with_same_name.feature");
-        VirtualFile evenmoremore = myFixture.copyFileToProject("nested/evenmore/evenmoremore/gherkin_with_same_name.feature");
+    @Test
+    void uponRemovalWithMultipleFilesRemainingWithTheSameNameUpdatesDisplayName() {
+        VirtualFile nested = copyFileToProject("nested/gherkin_with_same_name.feature");
+        VirtualFile evenMore = copyFileToProject("nested/evenmore/gherkin_with_same_name.feature");
+        VirtualFile evenmoremore = copyFileToProject("nested/evenmore/evenmoremore/gherkin_with_same_name.feature");
 
         Tag tag = new Tag("smoke", nested, getProject()).add(evenMore).add(evenmoremore);
 
         List<FeatureFile> featureFiles = tag.getFeatureFiles();
-        assertSoftly(
-            softly -> softly.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested]"),
-            softly -> softly.assertThat(featureFiles.get(2).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested/evenmore/evenmoremore]")
-        );
+        assertSoftly(s -> {
+            s.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested]");
+            s.assertThat(featureFiles.get(2).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested/evenmore/evenmoremore]");
+        });
 
         tag.remove(nested);
 
-        assertSoftly(
-            softly -> softly.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Same name]"),
-            softly -> softly.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Almost same name]")
-        );
+        assertSoftly(s -> {
+            s.assertThat(featureFiles.getFirst().getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Same name]");
+            s.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Almost same name]");
+        });
     }
 
     //sort
 
-    public void testShouldSortGherkinFiles() {
+    @Test
+    void shouldSortGherkinFiles() {
         setupTestObjects();
 
         tag.sort();
@@ -255,31 +268,27 @@ public class TagTest extends BasePlatformTestCase {
 
     //toString
 
-    public void testShouldShowSimplifiedStatistics() {
-        GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = StatisticsType.SIMPLIFIED;
+    @ParameterizedTest
+    @MethodSource("toStrings")
+    void testToString(StatisticsType statisticsType, String toString) {
+        GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = statisticsType;
         setupTestObjects();
 
-        assertThat(tag).hasToString("youtube (5)");
+        assertThat(tag).hasToString(toString);
     }
 
-    public void testShouldShowDetailedStatistics() {
-        GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = StatisticsType.DETAILED;
-        setupTestObjects();
-
-        assertThat(tag).hasToString("youtube - 5 in 3 files");
-    }
-
-    public void testShouldNotShowStatistics() {
-        GherkinTagsToolWindowSettings.getInstance(getProject()).statisticsType = StatisticsType.DISABLED;
-        setupTestObjects();
-
-        assertThat(tag).hasToString("youtube");
+    private static Stream<Arguments> toStrings() {
+        return Stream.of(
+            argumentSet("returns disabled toString()", StatisticsType.DISABLED, "youtube"),
+            argumentSet("builds simplified toString()", StatisticsType.SIMPLIFIED, "youtube (5)"),
+            argumentSet("builds detailed toString()", StatisticsType.DETAILED, "youtube - 5 in 3 files")
+        );
     }
 
     private void setupTestObjects() {
-        theGherkin = myFixture.configureByFile("the_gherkin.feature").getVirtualFile();
-        aGherkin = myFixture.configureByFile("A_gherkin.feature").getVirtualFile();
-        forStatistics = myFixture.configureByFile("for_statistics.feature").getVirtualFile();
+        theGherkin = configureVirtualFile("the_gherkin.feature");
+        aGherkin = configureVirtualFile("A_gherkin.feature");
+        forStatistics = configureVirtualFile("for_statistics.feature");
         tag = new Tag("youtube", forStatistics, getProject());
         tag.add(theGherkin).add(aGherkin);
     }

@@ -1,4 +1,4 @@
-//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow.nodetype;
 
@@ -9,71 +9,78 @@ import java.util.List;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.testFramework.LightVirtualFile;
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-import org.jetbrains.annotations.NotNull;
-
+import com.picimako.gherkin.GherkinOverviewTestBase;
 import com.picimako.gherkin.toolwindow.TagOccurrencesRegistry;
+import lombok.Getter;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit test for {@link CategoriesHolder}.
  */
-public class CategoriesHolderTest extends BasePlatformTestCase {
+final class CategoriesHolderTest extends GherkinOverviewTestBase {
 
     private DummyCategoriesHolder holder;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @BeforeEach
+    void setUp() {
         holder = new DummyCategoriesHolder(getProject());
     }
 
     //findCategory
 
-    public void testFindCategory() {
+    @Test
+    void findCategory() {
         assertThat(holder.findCategory("Browser")).hasValue(holder.categories.get(2));
     }
 
-    public void testNotFindCategory() {
+    @Test
+    void notFindCategory() {
         assertThat(holder.findCategory("Media")).isEmpty();
     }
 
     //findCategoryOrOther
 
-    public void testFindCategoryWithoutFallback() {
+    @Test
+    void findCategoryWithoutFallback() {
         assertThat(holder.findCategoryOrOther("Browser")).isEqualTo(holder.categories.get(2));
     }
 
-    public void testFindOtherAsFallback() {
+    @Test
+    void findOtherAsFallback() {
         assertThat(holder.findCategoryOrOther("Media")).isEqualTo(holder.other);
     }
 
     //addCategory
 
-    public void testAddCategory() {
-        DummyCategoriesHolder holder = new DummyCategoriesHolder(getProject());
-        Category category = new Category("Addition", getProject());
+    @Test
+    void addCategory() {
+        var categoriesHolder = new DummyCategoriesHolder(getProject());
+        var category = new Category("Addition", getProject());
 
-        holder.addCategory(category);
+        categoriesHolder.addCategory(category);
 
-        assertThat(holder.getCategories().get(3)).isEqualTo(category);
+        assertThat(categoriesHolder.getCategories().get(3)).isEqualTo(category);
     }
 
     //findTag
 
-    public void testFindTag() {
-        DummyCategoriesHolder holder = new DummyCategoriesHolder(getProject());
+    @Test
+    void findTag() {
+        var categoriesHolder = new DummyCategoriesHolder(getProject());
 
-        assertThat(holder.findTag("tag2")).hasValue(holder.categories.get(2).getTags().getFirst());
+        assertThat(categoriesHolder.findTag("tag2")).hasValue(categoriesHolder.categories.get(2).getTags().getFirst());
     }
 
-    public void testNotFindTag() {
-        DummyCategoriesHolder holder = new DummyCategoriesHolder(getProject());
+    @Test
+    void notFindTag() {
+        var categoriesHolder = new DummyCategoriesHolder(getProject());
 
-        assertThat(holder.findTag("nonexistent")).isEmpty();
+        assertThat(categoriesHolder.findTag("nonexistent")).isEmpty();
     }
 
+    @Getter
     private static final class DummyCategoriesHolder implements CategoriesHolder {
-
         final Category other;
         final List<Category> categories = new ArrayList<>();
 
@@ -85,16 +92,6 @@ public class CategoriesHolderTest extends BasePlatformTestCase {
                 .add(new Tag("tag", new LightVirtualFile(), project)));
             categories.add(new Category("Browser", project)
                 .add(new Tag("tag2", new LightVirtualFile(), project)));
-        }
-
-        @Override
-        public @NotNull Category getOther() {
-            return other;
-        }
-
-        @Override
-        public List<Category> getCategories() {
-            return categories;
         }
     }
 }

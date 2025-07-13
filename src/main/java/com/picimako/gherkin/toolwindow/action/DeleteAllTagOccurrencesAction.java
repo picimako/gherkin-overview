@@ -1,9 +1,10 @@
-//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow.action;
 
 import static com.intellij.openapi.ui.Messages.YES;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -24,7 +25,6 @@ import com.picimako.gherkin.toolwindow.TagOccurrencesRegistry;
 import com.picimako.gherkin.toolwindow.nodetype.FeatureFile;
 import com.picimako.gherkin.toolwindow.nodetype.NodeType;
 import com.picimako.gherkin.toolwindow.nodetype.Tag;
-import icons.CollaborationToolsIcons;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -36,12 +36,11 @@ import org.jetbrains.annotations.NotNull;
  *
  * @since 1.2.0
  */
-public class DeleteAllTagOccurrencesAction extends AnAction {
+public final class DeleteAllTagOccurrencesAction extends AnAction {
     private final Project project;
 
     public DeleteAllTagOccurrencesAction(Project project) {
-        //TODO: AllIcons.Actions.Gc
-        super(GherkinBundle.message("gherkin.overview.toolwindow.delete.tags"), "", CollaborationToolsIcons.Delete);
+        super(GherkinBundle.message("gherkin.overview.toolwindow.delete.tags"), "", AllIcons.General.Delete);
         this.project = project;
     }
 
