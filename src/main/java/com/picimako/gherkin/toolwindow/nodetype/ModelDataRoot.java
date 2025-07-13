@@ -159,6 +159,7 @@ public final class ModelDataRoot extends AbstractNodeType implements CategoriesH
             .findFirst();
     }
 
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private ContentRoot getContentRoot(Optional<ContentRoot> root, String moduleName) {
         return root.orElseGet(() -> {
             ContentRoot contentRoot = new ContentRoot(
