@@ -5,6 +5,11 @@
 <!-- Plugin description -->
 This JetBrains IDE plugin helps to better visualize the structure of test projects incorporating .feature files, for Cucumber and similar frameworks,
 from the perspective of Gherkin tags.
+
+The plugin can be useful in cases like the ones below:
+- to see what Gherkin tags are used throughout a project
+- to track the progress of test migrations, e.g. between modules
+- for Gherkin tags assigned an issue management related category, the plugin can provide a sort of test traceability
 <!-- Plugin description end -->
 
 The core idea is to provide a better overview of what Gherkin tags are available in a project, what Gherkin files they are contained by,
