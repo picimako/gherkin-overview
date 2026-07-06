@@ -2,14 +2,11 @@
 
 package com.picimako.gherkin.toolwindow;
 
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
+import static com.intellij.openapi.application.ReadAction.runBlocking;
 import static com.picimako.gherkin.toolwindow.TagNameUtil.determineTagOrMetaName;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -21,6 +18,10 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Stores the tag occurrence counts mapped to Gherkin and Story files' paths and tag names stored in those files.
@@ -73,10 +74,10 @@ public final class TagOccurrencesRegistry implements Disposable {
         var counts = tagOccurrences.get(file.getPath());
         if (counts == null) return;
 
-        PsiFile psiFile = ReadAction.compute(() -> PsiManager.getInstance(project).findFile(file));
+        PsiFile psiFile = computeBlocking(() -> PsiManager.getInstance(project).findFile(file));
         if (psiFile == null) return;
 
-        ReadAction.run(() -> PsiTreeUtil.processElements(psiFile, element -> {
+        runBlocking(() -> PsiTreeUtil.processElements(psiFile, element -> {
             if (!element.equals(psiFile)) { //the file itself is definitely not a tag/meta, so can be skipped
                 String tagOrMetaName = determineTagOrMetaName(element);
                 if (tagOrMetaName != null) {

@@ -2,7 +2,7 @@
 
 package com.picimako.gherkin;
 
-import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ final class TagNameUtilTest extends GherkinOverviewTestBase {
     void returnTagName() {
         PsiFile gherkinFile = configureByText("gherkin.feature", "@smoke\nFeature: A feature");
 
-        GherkinTag tag = compute(() -> PsiTreeUtil.findChildOfType(gherkinFile, GherkinTag.class));
+        GherkinTag tag = computeBlocking(() -> PsiTreeUtil.findChildOfType(gherkinFile, GherkinTag.class));
 
         assertThat(TagNameUtil.tagNameFrom(tag)).isEqualTo("smoke");
     }
@@ -79,7 +79,7 @@ final class TagNameUtilTest extends GherkinOverviewTestBase {
             "@smoke\n" +
                 "Feature: A feature");
 
-        GherkinTag tag = compute(() -> PsiTreeUtil.findChildOfType(gherkinFile, GherkinTag.class));
+        GherkinTag tag = computeBlocking(() -> PsiTreeUtil.findChildOfType(gherkinFile, GherkinTag.class));
 
         String tagName = TagNameUtil.determineTagOrMetaName(tag);
 

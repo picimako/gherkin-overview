@@ -52,7 +52,7 @@ public abstract class GherkinOverviewTestBase extends LightJavaCodeInsightFixtur
     }
 
     protected PsiFile findPsiFile(VirtualFile file) {
-        return ReadAction.compute(() -> PsiManager.getInstance(getProject()).findFile(file));
+        return ReadAction.computeBlocking(() -> PsiManager.getInstance(getProject()).findFile(file));
     }
 
     protected VirtualFile configureVirtualFile(String filename) {

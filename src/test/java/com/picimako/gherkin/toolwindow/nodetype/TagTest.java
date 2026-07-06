@@ -2,14 +2,11 @@
 
 package com.picimako.gherkin.toolwindow.nodetype;
 
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.params.provider.Arguments.argumentSet;
 
-import java.util.List;
-import java.util.stream.Stream;
-
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.picimako.gherkin.GherkinOverviewTestBase;
@@ -24,6 +21,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Unit test for {@link Tag}.
@@ -135,7 +135,7 @@ final class TagTest extends GherkinOverviewTestBase {
             s.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [Almost same name]");
         });
 
-        GherkinFeature feature = ReadAction.compute(() -> GherkinElementFactory.createFeatureFromText(getProject(), "Feature: Same name"));
+        GherkinFeature feature = computeBlocking(() -> GherkinElementFactory.createFeatureFromText(getProject(), "Feature: Same name"));
         executeCommandProcessorCommand(() -> ((GherkinFile) evenmoremore).getFeatures()[0].replace(feature), "Replace", "group.id");
 
         tag.updateDisplayNames(evenmoremore.getVirtualFile());
@@ -179,7 +179,7 @@ final class TagTest extends GherkinOverviewTestBase {
             s.assertThat(featureFiles.get(1).getDisplayName()).isEqualTo("gherkin_with_same_name.feature [nested/evenmore]");
         });
 
-        GherkinFeature feature = ReadAction.compute(() -> GherkinElementFactory.createFeatureFromText(getProject(), "Feature: Not same name"));
+        GherkinFeature feature = computeBlocking(() -> GherkinElementFactory.createFeatureFromText(getProject(), "Feature: Not same name"));
         executeCommandProcessorCommand(() -> ((GherkinFile) nested).getFeatures()[0].replace(feature), "Replace", "group.id");
 
         tag.updateDisplayNames(nested.getVirtualFile());

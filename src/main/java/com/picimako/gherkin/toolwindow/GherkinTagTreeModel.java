@@ -2,34 +2,33 @@
 
 package com.picimako.gherkin.toolwindow;
 
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static com.picimako.gherkin.GherkinUtil.isGherkinFile;
 import static com.picimako.gherkin.toolwindow.TagNameUtil.metaNameFrom;
 import static com.picimako.gherkin.toolwindow.TagNameUtil.tagNameFrom;
 import static java.util.stream.Collectors.toMap;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import javax.swing.event.TreeModelListener;
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreePath;
-
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.SmartList;
-import org.jetbrains.plugins.cucumber.psi.GherkinTag;
-
 import com.picimako.gherkin.GherkinUtil;
 import com.picimako.gherkin.JBehaveStoryService;
 import com.picimako.gherkin.toolwindow.nodetype.CategoriesHolder;
 import com.picimako.gherkin.toolwindow.nodetype.Category;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 import com.picimako.gherkin.toolwindow.nodetype.Tag;
+import org.jetbrains.plugins.cucumber.psi.GherkinTag;
+
+import javax.swing.event.TreeModelListener;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 /**
  * A base model class for the various Gherkin Tags tree model implementations.
@@ -121,7 +120,7 @@ abstract class GherkinTagTreeModel implements TreeModel, Disposable {
 
     private void persistGherkinTags(List<PsiFile> gherkinFiles) {
         for (PsiFile file : gherkinFiles) {
-            Collection<GherkinTag> gherkinTags = ReadAction.compute(() -> PsiTreeUtil.findChildrenOfType(file, GherkinTag.class));
+            Collection<GherkinTag> gherkinTags = computeBlocking(() -> PsiTreeUtil.findChildrenOfType(file, GherkinTag.class));
             for (GherkinTag gherkinTag : gherkinTags) {
                 addToContentRootAndCategory(tagNameFrom(gherkinTag), file);
             }

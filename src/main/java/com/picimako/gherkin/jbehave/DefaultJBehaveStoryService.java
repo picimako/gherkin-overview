@@ -4,19 +4,15 @@ package com.picimako.gherkin.jbehave;
 
 import static com.github.kumaraman21.intellijbehave.highlighter.StoryTokenType.META_KEY;
 import static com.github.kumaraman21.intellijbehave.highlighter.StoryTokenType.META_TEXT;
-import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
+import static com.intellij.openapi.application.ReadAction.runBlocking;
 import static com.picimako.gherkin.toolwindow.TagNameUtil.metaNameFrom;
 import static java.util.stream.Collectors.toList;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 import com.github.kumaraman21.intellijbehave.language.JBehaveIcons;
 import com.github.kumaraman21.intellijbehave.language.StoryFileType;
 import com.github.kumaraman21.intellijbehave.language.StoryLanguage;
 import com.github.kumaraman21.intellijbehave.parser.StoryFile;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -37,6 +33,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Default implementation of the {@link JBehaveStoryService} to use when the JBehave Support plugin is installed
@@ -57,7 +56,7 @@ public final class DefaultJBehaveStoryService implements JBehaveStoryService {
     @Override
     public List<PsiFile> collectStoryFilesFromProject() {
         if (FileTypeManager.getInstance().findFileTypeByLanguage(StoryLanguage.STORY_LANGUAGE) != null) {
-            return compute(() -> FileTypeIndex.getFiles(StoryFileType.STORY_FILE_TYPE, GlobalSearchScope.projectScope(project))
+            return computeBlocking(() -> FileTypeIndex.getFiles(StoryFileType.STORY_FILE_TYPE, GlobalSearchScope.projectScope(project))
                 .stream()
                 .map(file -> PsiManager.getInstance(project).findFile(file))
                 .collect(toList()));
@@ -69,7 +68,7 @@ public final class DefaultJBehaveStoryService implements JBehaveStoryService {
     public MultiMap<PsiElement, PsiElement> collectMetasFromFile(PsiFile file) {
         //meta key -> 0 or more meta text elements
         final var storyMetas = MultiMap.<PsiElement, PsiElement>create();
-        ReadAction.run(() -> PsiTreeUtil.processElements(file, LeafPsiElement.class, potentialMetaKey -> {
+        runBlocking(() -> PsiTreeUtil.processElements(file, LeafPsiElement.class, potentialMetaKey -> {
             if (isMetaKey(potentialMetaKey)) {
                 //This makes sure that Keys are always stored, since they are valid metas with or without meta texts
                 storyMetas.put(potentialMetaKey, new SmartList<>());
