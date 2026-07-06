@@ -5,24 +5,22 @@ package com.picimako.gherkin.settings;
 import static com.picimako.gherkin.toolwindow.GherkinTagToolWindowUtil.getGherkinTagsToolWindow;
 import static com.picimako.gherkin.toolwindow.GherkinTagToolWindowUtil.getToolWindowHider;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.*;
-
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.NlsContexts;
-import com.intellij.openapi.wm.ToolWindow;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.TestOnly;
-
 import com.picimako.gherkin.resources.GherkinBundle;
 import com.picimako.gherkin.toolwindow.GherkinTagOverviewPanel;
 import com.picimako.gherkin.toolwindow.GherkinTagToolWindowHider;
 import com.picimako.gherkin.toolwindow.TagCategoryRegistry;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.annotations.VisibleForTesting;
+
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A Configurable object acting as the bridge between the Gherkin Overview Settings UI components,
@@ -129,10 +127,10 @@ public final class GherkinOverviewProjectConfigurable implements Configurable {
      * so it doesn't matter if the tool window has or hasn't been opened before, the model will be rebuilt.
      */
     private void rebuildModel() {
-        ToolWindow gherkinTagsToolWindow = getGherkinTagsToolWindow(project);
+        var gherkinTagsToolWindow = getGherkinTagsToolWindow(project);
         if (gherkinTagsToolWindow != null) {
-            GherkinTagToolWindowHider hider = getToolWindowHider(gherkinTagsToolWindow);
-            GherkinTagOverviewPanel toolWindowPanel = (GherkinTagOverviewPanel) hider.getComponent(0);
+            var hider = getToolWindowHider(gherkinTagsToolWindow);
+            var toolWindowPanel = (GherkinTagOverviewPanel) hider.getComponent(0);
             if (ApplicationManager.getApplication().isUnitTestMode()) {
                 toolWindowPanel.rebuildModel();
                 hider.setContentVisibilityBasedOn((ModelDataRoot) toolWindowPanel.getTree().getModel().getRoot());

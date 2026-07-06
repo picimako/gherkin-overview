@@ -28,10 +28,6 @@ public final class CategoryAndTags implements Cloneable {
         this("", "");
     }
 
-    public CategoryAndTags(CategoryAndTags cat) {
-        this(cat.category, cat.tags);
-    }
-
     @Override
     public CategoryAndTags clone() {
         try {

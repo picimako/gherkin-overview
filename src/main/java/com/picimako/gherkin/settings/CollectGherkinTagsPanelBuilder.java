@@ -104,7 +104,7 @@ final class CollectGherkinTagsPanelBuilder {
     }
 
     private TableView<CategoryAndTags> buildTableView() {
-        final ColumnInfo<CategoryAndTags, String> tagsColumn = new ColumnInfo<>(message("g.o.settings.table.column.tags")) {
+        final var tagsColumn = new ColumnInfo<CategoryAndTags, String>(message("g.o.settings.table.column.tags")) {
             @Override
             public @Nullable String valueOf(CategoryAndTags categoryAndTags) {
                 return categoryAndTags.getTags();
@@ -126,7 +126,7 @@ final class CollectGherkinTagsPanelBuilder {
             }
         };
 
-        final ColumnInfo<CategoryAndTags, String> mappedCategoryColumn = new ColumnInfo<>(message("g.o.settings.table.column.mapped.category")) {
+        final var mappedCategoryColumn = new ColumnInfo<CategoryAndTags, String>(message("g.o.settings.table.column.mapped.category")) {
             @Override
             public String valueOf(CategoryAndTags categoryAndTag) {
                 return categoryAndTag.getCategory();
@@ -160,7 +160,7 @@ final class CollectGherkinTagsPanelBuilder {
 
         if (isStoryLanguageSupported()) {
             //This doesn't wait to be in Smart mode because this panel allows the collection of tags only when in Smart mode
-            JBehaveStoryService storyService = project.getService(JBehaveStoryService.class);
+            var storyService = project.getService(JBehaveStoryService.class);
             storyService.collectStoryFilesFromProject().stream()
                 .map(storyService::collectMetasFromFile)
                 .flatMap(metas -> metas.entrySet().stream())
