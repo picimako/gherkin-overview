@@ -24,8 +24,6 @@
                              instance="com.picimako.gherkin.settings.GherkinOverviewProjectConfigurable"
                              id="GherkinOverviewConfigurable"
                              displayName="Gherkin Overview" nonDefaultProject="true"/>
-        <projectService serviceImplementation="com.picimako.gherkin.settings.GherkinOverviewProjectState"/>
-        <applicationService serviceImplementation="com.picimako.gherkin.settings.GherkinOverviewApplicationState"/>
         <projectService serviceInterface="com.picimako.gherkin.JBehaveStoryService"
                         serviceImplementation="com.picimako.gherkin.NoopJBehaveStoryService"/>
     </extensions>

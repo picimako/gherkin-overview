@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.Service;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.project.Project;
@@ -20,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @since 0.1.0
  */
+@Service(Service.Level.PROJECT)
 @State(
     name = "Gherkin Overview Project-Level Mappings",
     storages = {@Storage(value = "GherkinOverviewProjectSettings.xml", exportable = true)}
