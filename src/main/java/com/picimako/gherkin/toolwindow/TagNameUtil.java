@@ -38,8 +38,12 @@ public final class TagNameUtil {
     @NotNull
     public static String metaNameFrom(@NotNull PsiElement metaKeyElement, @Nullable Collection<PsiElement> metaTextElement) {
         return metaTextElement != null && !metaTextElement.isEmpty()
-            ? metaKeyElement.getText().substring(1) + ":" + String.join(" ", map(metaTextElement, PsiElement::getText))
-            : metaKeyElement.getText().substring(1);
+            ? stripAtChar(metaKeyElement) + ":" + String.join(" ", map(metaTextElement, PsiElement::getText))
+            : stripAtChar(metaKeyElement);
+    }
+
+    private static String stripAtChar(PsiElement element) {
+        return element.getText().substring(1);
     }
 
     /**

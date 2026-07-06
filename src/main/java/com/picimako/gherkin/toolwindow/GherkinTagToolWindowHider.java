@@ -11,9 +11,7 @@ import javax.swing.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.components.JBPanelWithEmptyText;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.TestOnly;
 
-import com.picimako.gherkin.resources.GherkinBundle;
 import com.picimako.gherkin.toolwindow.nodetype.Category;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 
@@ -33,11 +31,6 @@ public final class GherkinTagToolWindowHider extends JBPanelWithEmptyText {
         this.project = project;
         getEmptyText().setText(hiderMessage);
         add(gherkinTagOverview, BorderLayout.CENTER);
-    }
-
-    @TestOnly
-    public GherkinTagToolWindowHider(@NotNull JComponent gherkinTagOverview, @NotNull Project project) {
-        this(gherkinTagOverview, project, GherkinBundle.message("g.o.toolwindow.no.tag.in.project"));
     }
 
     /**

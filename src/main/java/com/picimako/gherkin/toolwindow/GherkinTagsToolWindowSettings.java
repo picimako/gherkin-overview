@@ -9,7 +9,6 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Stores the project specific settings for the Gherkin Tags tool window.
@@ -42,7 +41,7 @@ public final class GherkinTagsToolWindowSettings implements PersistentStateCompo
     }
 
     @Override
-    public @Nullable GherkinTagsToolWindowSettings getState() {
+    public GherkinTagsToolWindowSettings getState() {
         return this;
     }
 

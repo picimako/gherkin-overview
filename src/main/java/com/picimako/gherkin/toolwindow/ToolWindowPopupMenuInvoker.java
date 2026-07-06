@@ -5,7 +5,6 @@ package com.picimako.gherkin.toolwindow;
 import static com.picimako.gherkin.toolwindow.TreeNodeTypeIdentifier.identifyTreeNodeTypeForClickLocation;
 
 import com.intellij.openapi.actionSystem.ActionPopupMenu;
-import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -15,12 +14,7 @@ import java.util.Map;
  * This class takes in the {@link GherkinTagTree} instance and a set of {@link ActionPopupMenu}s identified by their node
  * types, and for any selected node, it displays the proper action popup menu.
  */
-@RequiredArgsConstructor
-final class ToolWindowPopupMenuInvoker {
-    @NotNull
-    private final GherkinTagTree tree;
-    @NotNull
-    private final Map<String, ActionPopupMenu> actionPopupMenus;
+record ToolWindowPopupMenuInvoker(@NotNull GherkinTagTree tree, @NotNull Map<String, ActionPopupMenu> actionPopupMenus) {
 
     //Invokes the context menu only when it is initiated on the proper node type
     void invokePopup(Component comp, int x, int y) {

@@ -10,10 +10,8 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiTreeUtil;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.jetbrains.annotations.NotNull;
@@ -38,9 +36,12 @@ public final class TagOccurrencesRegistry implements Disposable {
     /**
      * FeatureFile path -> &lt;tag name, count>
      */
-    @Getter
-    @TestOnly //the getter is test-only, and not the field itself
     private Map<String, Map<String, MutableInt>> tagOccurrences = new HashMap<>();
+
+    @TestOnly
+    public Map<String, Map<String, MutableInt>> getTagOccurrences() {
+        return tagOccurrences;
+    }
 
     /**
      * Initializes the map according to the number of Gherkin and Story files in the project to minimize the allocation size.
@@ -74,7 +75,7 @@ public final class TagOccurrencesRegistry implements Disposable {
         var counts = tagOccurrences.get(file.getPath());
         if (counts == null) return;
 
-        PsiFile psiFile = computeBlocking(() -> PsiManager.getInstance(project).findFile(file));
+        var psiFile = computeBlocking(() -> PsiManager.getInstance(project).findFile(file));
         if (psiFile == null) return;
 
         runBlocking(() -> PsiTreeUtil.processElements(psiFile, element -> {

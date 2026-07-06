@@ -19,14 +19,14 @@ public final class GherkinTagToolWindowUtil {
 
     /**
      * Returns the Gherkin tag tool window for the current project,
-     * or returns null, and logs an error if the tool window is not registered.
+     * or returns null and logs an error if the tool window is not registered.
      *
      * @param project the current project
      * @return the tool window
      */
     @Nullable
     public static ToolWindow getGherkinTagsToolWindow(@NotNull Project project) {
-        ToolWindow gherkinTagsToolWindow = ToolWindowManager.getInstance(project).getToolWindow(TOOL_WINDOW_ID);
+        var gherkinTagsToolWindow = ToolWindowManager.getInstance(project).getToolWindow(TOOL_WINDOW_ID);
         if (gherkinTagsToolWindow == null) {
             LOG.warn("There is no tool window registered with the id: [" + TOOL_WINDOW_ID + "]");
             return null;

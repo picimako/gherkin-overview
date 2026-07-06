@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
  * Listens to mouse events, so that in case of the proper button combinations, the Gherkin file selected in the tool
  * window would open.
  * <p>
- * Currently the open action is bound to the double-click event.
+ * Currently, the open action is bound to the double-click event.
  */
 @RequiredArgsConstructor
 final class MouseListeningGherkinFileOpener extends DoubleClickListener {
@@ -25,7 +25,7 @@ final class MouseListeningGherkinFileOpener extends DoubleClickListener {
 
     @Override
     protected boolean onDoubleClick(@NotNull MouseEvent event) {
-        if (isGherkinFileAtClickLocation(tree, event.getX(), event.getY())) {
+        if (isGherkinFileAtClickLocation(event.getX(), event.getY())) {
             FileOpener.openFile(((FeatureFile) tree.getLastSelectedPathComponent()).getFile(), project);
             return true;
         }
@@ -35,12 +35,11 @@ final class MouseListeningGherkinFileOpener extends DoubleClickListener {
     /**
      * Gets whether the currently selected node (after selecting the node) in the tool window is a FeatureFile.
      *
-     * @param tree the tree component in the tool window
      * @param x    the x coordinate where the click happened in the tree
      * @param y    the y coordinate where the click happened in the tree
      * @return true if the selected item is a FeatureFile, false otherwise
      */
-    private boolean isGherkinFileAtClickLocation(GherkinTagTree tree, int x, int y) {
+    private boolean isGherkinFileAtClickLocation(int x, int y) {
         TreePath path = tree.getPathForLocation(x, y);
         if (path != null) {
             tree.setSelectionPath(path);

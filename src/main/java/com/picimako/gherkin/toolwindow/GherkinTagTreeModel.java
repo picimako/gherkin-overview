@@ -25,7 +25,6 @@ import org.jetbrains.plugins.cucumber.psi.GherkinTag;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -95,14 +94,14 @@ abstract class GherkinTagTreeModel implements TreeModel, Disposable {
                 data.initData();
             }
 
-            final List<PsiFile> gherkinFiles = new SmartList<>();
-            final List<PsiFile> storyFiles = new SmartList<>();
+            final var gherkinFiles = new SmartList<PsiFile>();
+            final var storyFiles = new SmartList<PsiFile>();
             //NOTE: Handling the whole logic in one stream() call chain may not return and process all Gherkin files in the project, hence the separation
             //NOTE2: Reading the Gherkin and Story files in separate read actions is in place to ensure that all files are read consistently.
             gherkinFiles.addAll(GherkinUtil.collectGherkinFilesFromProject(project));
             storyFiles.addAll(storyService.collectStoryFilesFromProject());
 
-            ProjectBDDTypeService service = project.getService(ProjectBDDTypeService.class);
+            var service = project.getService(ProjectBDDTypeService.class);
             service.isProjectContainGherkinFile = !gherkinFiles.isEmpty();
             service.isProjectContainJBehaveStoryFile = !storyFiles.isEmpty();
 
@@ -119,16 +118,16 @@ abstract class GherkinTagTreeModel implements TreeModel, Disposable {
     }
 
     private void persistGherkinTags(List<PsiFile> gherkinFiles) {
-        for (PsiFile file : gherkinFiles) {
-            Collection<GherkinTag> gherkinTags = computeBlocking(() -> PsiTreeUtil.findChildrenOfType(file, GherkinTag.class));
-            for (GherkinTag gherkinTag : gherkinTags) {
+        for (var file : gherkinFiles) {
+            var gherkinTags = computeBlocking(() -> PsiTreeUtil.findChildrenOfType(file, GherkinTag.class));
+            for (var gherkinTag : gherkinTags) {
                 addToContentRootAndCategory(tagNameFrom(gherkinTag), file);
             }
         }
     }
 
     private void persistStoryMetas(List<PsiFile> storyFiles) {
-        for (PsiFile file : storyFiles) {
+        for (var file : storyFiles) {
             for (var meta : storyService.collectMetasFromFile(file).entrySet()) {
                 if (meta.getValue().isEmpty()) {
                     addToContentRootAndCategory(metaNameFrom(meta.getKey(), null), file);
