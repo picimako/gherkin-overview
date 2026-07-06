@@ -12,7 +12,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.cucumber.psi.GherkinTag;
 
-import com.picimako.gherkin.DefaultJBehaveStoryService;
+import com.picimako.gherkin.jbehave.DefaultJBehaveStoryService;
 
 /**
  * Utility for handling Gherkin Tags and Story metas in tests.

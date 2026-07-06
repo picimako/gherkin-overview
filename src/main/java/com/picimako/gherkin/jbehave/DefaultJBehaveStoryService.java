@@ -1,6 +1,6 @@
 //Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package com.picimako.gherkin;
+package com.picimako.gherkin.jbehave;
 
 import static com.github.kumaraman21.intellijbehave.highlighter.StoryTokenType.META_KEY;
 import static com.github.kumaraman21.intellijbehave.highlighter.StoryTokenType.META_TEXT;
@@ -30,6 +30,8 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.MultiMap;
+import com.picimako.gherkin.JBehaveStoryService;
+import com.picimako.gherkin.NoopJBehaveStoryService;
 import com.picimako.gherkin.toolwindow.TagNameUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

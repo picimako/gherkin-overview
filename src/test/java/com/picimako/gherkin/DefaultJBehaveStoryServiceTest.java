@@ -5,6 +5,7 @@ package com.picimako.gherkin;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.psi.PsiElement;
+import com.picimako.gherkin.jbehave.DefaultJBehaveStoryService;
 import com.picimako.gherkin.toolwindow.BDDTestSupport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

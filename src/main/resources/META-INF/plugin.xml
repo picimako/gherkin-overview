@@ -1,4 +1,4 @@
-<idea-plugin require-restart="true">
+<idea-plugin require-restart="true" package="com.picimako.gherkin">
     <id>gherkin-overview</id>
     <name>Gherkin Overview</name>
     <vendor url="https://github.com/picimako/gherkin-overview">Tamás Balog</vendor>
@@ -8,10 +8,16 @@
 
     <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
-    <depends>com.intellij.modules.platform</depends>
-    <depends>gherkin</depends>
-    <depends optional="true" config-file="gherkin-overview-withJBehave.xml">jbehave-support-plugin</depends>
-    
+    <content>
+        <!--suppress PluginXmlValidity -->
+        <module name="gherkin.overview.jbehave"/>
+    </content>
+
+    <dependencies>
+        <plugin id="com.intellij.modules.platform"/>
+        <plugin id="gherkin"/>
+    </dependencies>
+
     <extensions defaultExtensionNs="com.intellij">
 
         <!-- Tool window -->

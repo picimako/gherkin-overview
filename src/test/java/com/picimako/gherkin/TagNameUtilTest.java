@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.picimako.gherkin.jbehave.DefaultJBehaveStoryService;
 import com.picimako.gherkin.toolwindow.TagNameUtil;
 import org.jetbrains.plugins.cucumber.psi.GherkinTag;
 import org.junit.jupiter.api.BeforeEach;
