@@ -13,6 +13,7 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.PsiTreeChangeEventImpl;
 import com.picimako.gherkin.GherkinOverviewTestBase;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -105,10 +106,10 @@ final class GherkinPsiChangeListenerTest extends GherkinOverviewTestBase {
         verify(tree).updateUI();
     }
 
-    private void firePsiEvent(PsiFile gherkinFile, GherkinTagTree tree) {
+    private void firePsiEvent(@Nullable PsiFile gherkinFile, GherkinTagTree tree) {
         var listener = new GherkinPsiChangeListener(tree, getProject());
         var event = new PsiTreeChangeEventImpl(PsiManager.getInstance(getProject()));
-        event.setFile(gherkinFile);
+        if (gherkinFile != null) event.setFile(gherkinFile);
 
         listener.childrenChanged(event);
     }
