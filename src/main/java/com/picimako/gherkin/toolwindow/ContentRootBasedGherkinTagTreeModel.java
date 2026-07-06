@@ -50,47 +50,35 @@ final class ContentRootBasedGherkinTagTreeModel extends GherkinTagTreeModel {
 
     @Override
     public Object getChild(Object parent, int index) {
-        Object child = null;
-        if (parent instanceof ModelDataRoot) {
-            child = data.getContentRootsByLayout().get(index);
-        } else if (parent instanceof ContentRoot) {
-            child = asContentRoot(parent).getCategories().get(index);
-        } else if (parent instanceof Category) {
-            child = asCategory(parent).getTags().get(index);
-        } else if (parent instanceof Tag) {
-            child = asTag(parent).getFeatureFiles().get(index);
-        }
-        return child;
+        return switch (parent) {
+            case ModelDataRoot __ -> data.getContentRootsByLayout().get(index);
+            case ContentRoot __ -> asContentRoot(parent).getCategories().get(index);
+            case Category __ -> asCategory(parent).getTags().get(index);
+            case Tag __ -> asTag(parent).getFeatureFiles().get(index);
+            case null, default -> null;
+        };
     }
 
     @Override
     public int getChildCount(Object parent) {
-        int count = 0;
-        if (parent instanceof ModelDataRoot) {
-            count = data.getContentRootsByLayout().size();
-        } else if (parent instanceof ContentRoot) {
-            count = asContentRoot(parent).getCategories().size();
-        } else if (parent instanceof Category) {
-            count = asCategory(parent).getTags().size();
-        } else if (parent instanceof Tag) {
-            count = asTag(parent).getFeatureFiles().size();
-        }
-        return count;
+        return switch (parent) {
+            case ModelDataRoot __ -> data.getContentRootsByLayout().size();
+            case ContentRoot __ -> asContentRoot(parent).getCategories().size();
+            case Category __ -> asCategory(parent).getTags().size();
+            case Tag __ -> asTag(parent).getFeatureFiles().size();
+            case null, default -> 0;
+        };
     }
 
     @Override
     public boolean isLeaf(Object node) {
-        boolean isLeaf = data.getContentRootsByLayout().isEmpty();
-        if (node instanceof ContentRoot) {
-            isLeaf = asContentRoot(node).getCategories().isEmpty();
-        } else if (node instanceof Category) {
-            isLeaf = !asCategory(node).hasTag();
-        } else if (node instanceof Tag) {
-            isLeaf = !asTag(node).hasFeatureFile();
-        } else if (node instanceof FeatureFile) {
-            isLeaf = true;
-        }
-        return isLeaf;
+        return switch (node) {
+            case ContentRoot __ -> asContentRoot(node).getCategories().isEmpty();
+            case Category __ -> !asCategory(node).hasTag();
+            case Tag __ -> !asTag(node).hasFeatureFile();
+            case FeatureFile __ -> true;
+            case null, default -> data.getContentRootsByLayout().isEmpty();
+        };
     }
 
     @Override
