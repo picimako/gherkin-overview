@@ -10,7 +10,6 @@ import static com.picimako.gherkin.toolwindow.nodetype.ContentRoot.Type.CONTENT_
 import static com.picimako.gherkin.toolwindow.nodetype.ContentRoot.Type.MODULE;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
@@ -126,7 +125,7 @@ public final class ModelDataRoot extends AbstractNodeType implements CategoriesH
      */
     @Nullable
     public ContentRoot findContentRootOrRootless(PsiFile bddFile) {
-        Module contentRootForFile = ModuleUtilCore.findModuleForFile(bddFile);
+        var contentRootForFile = ModuleUtilCore.findModuleForFile(bddFile);
         if (bddFile.getVirtualFile().isValid()) {
             return contentRootForFile == null
                 ? getContentRoot(getRootless(), ROOTLESS_CONTENT_ROOT_NAME)  //if file doesn't belong to any content root
@@ -134,7 +133,7 @@ public final class ModelDataRoot extends AbstractNodeType implements CategoriesH
         }
 
         //If Gherkin or Story file is not valid, thus has just been deleted
-        for (ContentRoot contentRoot : contentRoots) {
+        for (var contentRoot : contentRoots) {
             if (contentRoot.hasFileMapped(bddFile.getVirtualFile())) {
                 return contentRoot;
             }
@@ -162,7 +161,7 @@ public final class ModelDataRoot extends AbstractNodeType implements CategoriesH
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private ContentRoot getContentRoot(Optional<ContentRoot> root, String moduleName) {
         return root.orElseGet(() -> {
-            ContentRoot contentRoot = new ContentRoot(
+            var contentRoot = new ContentRoot(
                 moduleName,
                 GherkinTagsToolWindowSettings.getInstance(project).layout == GROUP_BY_MODULES ? MODULE : CONTENT_ROOT,
                 project);

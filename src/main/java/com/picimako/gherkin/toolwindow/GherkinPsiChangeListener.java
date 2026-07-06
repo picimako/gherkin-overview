@@ -6,16 +6,14 @@ import static com.picimako.gherkin.toolwindow.GherkinTagToolWindowUtil.getGherki
 import static com.picimako.gherkin.toolwindow.GherkinTagToolWindowUtil.getToolWindowHider;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiTreeChangeAdapter;
 import com.intellij.psi.PsiTreeChangeEvent;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.plugins.cucumber.psi.GherkinFile;
-
 import com.picimako.gherkin.BDDUtil;
 import com.picimako.gherkin.JBehaveStoryService;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.plugins.cucumber.psi.GherkinFile;
 
 /**
  * Handles PSI changes in Gherkin files.
@@ -71,7 +69,7 @@ final class GherkinPsiChangeListener extends PsiTreeChangeAdapter {
      * been deleted.
      */
     private void updateGherkinTree(PsiTreeChangeEvent event) {
-        PsiFile file = event.getFile();
+        var file = event.getFile();
         //file is null when the file has just been deleted
         if (file != null && BDDUtil.isABDDFile(file)) {
             updateModelAndToolWindow(file);
@@ -88,11 +86,11 @@ final class GherkinPsiChangeListener extends PsiTreeChangeAdapter {
      * Model is updated only if the Gherkin tag tool window is actually available.
      */
     private void updateModelAndToolWindow(PsiFile file) {
-        ToolWindow gherkinTagsToolWindow = getGherkinTagsToolWindow(project);
+        var gherkinTagsToolWindow = getGherkinTagsToolWindow(project);
         if (gherkinTagsToolWindow != null) {
             ((GherkinTagTreeModel) tree.getModel()).updateModelForFile(file);
 
-            ModelDataRoot modelRoot = (ModelDataRoot) tree.getModel().getRoot();
+            var modelRoot = (ModelDataRoot) tree.getModel().getRoot();
             modelRoot.sort();
             tree.updateUI();
 
