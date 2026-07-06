@@ -2,6 +2,7 @@
 
 package com.picimako.gherkin.toolwindow.action;
 
+import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
 import static com.intellij.openapi.ui.Messages.YES;
 import static com.intellij.util.containers.ContainerUtil.map;
 import static com.picimako.gherkin.resources.GherkinBundle.message;
@@ -12,10 +13,8 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.picimako.gherkin.BDDUtil;
@@ -50,31 +49,34 @@ public final class DeleteAllTagOccurrencesAction extends AnAction {
         var tree = (GherkinTagTree) e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
 
         if (tree != null && isGherkinTag(tree.getLastSelectedPathComponent()) && isUserSureToDeleteAllOccurrencesOfTag(project)) {
-            var tagOccurrencesRegistry = TagOccurrencesRegistry.getInstance(project);
             Tag selectedTagNode = NodeType.asTag(tree.getLastSelectedPathComponent());
-
-            boolean isStoryLanguageSupported = BDDUtil.isStoryLanguageSupported();
-            var service = project.getService(JBehaveStoryService.class);
 
             //Doing 'for (var featureFile : selectedTagNode.getFeatureFiles()) {}' results in concurrent modification exception
             // because there are listeners in the background updating the tree model based on PSI modification
-            WriteCommandAction.runWriteCommandAction(project, () -> {
+            runWriteCommandAction(project, () -> {
                 var bddFiles = map(selectedTagNode.getFeatureFiles(), FeatureFile::getFile);
-                for (var bddFile : bddFiles) {
-                    PsiElement[] tagsToDelete = PsiTreeUtil.collectElements(PsiManager.getInstance(project).findFile(bddFile), element -> {
-                        String tagName = TagNameUtil.determineTagOrMetaName(element);
-                        if (tagName != null) { //either a Gherkin tag or a Meta Key
-                            return tagName.equals(selectedTagNode.getDisplayName());
-                        } else if (isStoryLanguageSupported) {
-                            return service.isMetaTextForMetaKeyWithName(element, selectedTagNode.getDisplayName());
-                        }
-                        return false;
-                    });
-                    //Delete the tags/metas in a single command action, so that it is easier to redo them
-                    for (var tag : tagsToDelete) tag.delete();
 
-                    //Update the occurrence counts once processing the file has finished
-                    tagOccurrencesRegistry.updateOccurrenceCounts(bddFile);
+                if (!bddFiles.isEmpty()) {
+                    boolean isStoryLanguageSupported = BDDUtil.isStoryLanguageSupported();
+                    var storyService = project.getService(JBehaveStoryService.class);
+                    var tagOccurrencesRegistry = TagOccurrencesRegistry.getInstance(project);
+
+                    for (var bddFile : bddFiles) {
+                        var tagsToDelete = PsiTreeUtil.collectElements(PsiManager.getInstance(project).findFile(bddFile), element -> {
+                            String tagName = TagNameUtil.determineTagOrMetaName(element);
+                            if (tagName != null) { //either a Gherkin tag or a Meta Key
+                                return tagName.equals(selectedTagNode.getDisplayName());
+                            } else if (isStoryLanguageSupported) {
+                                return storyService.isMetaTextForMetaKeyWithName(element, selectedTagNode.getDisplayName());
+                            }
+                            return false;
+                        });
+                        //Delete the tags/metas in a single command action, so that it is easier to redo them
+                        for (var tag : tagsToDelete) tag.delete();
+
+                        //Update the occurrence counts once processing the file has finished
+                        tagOccurrencesRegistry.updateOccurrenceCounts(bddFile);
+                    }
                 }
             });
             tree.updateUI();
