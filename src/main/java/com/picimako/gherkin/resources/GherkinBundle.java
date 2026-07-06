@@ -26,14 +26,4 @@ public class GherkinBundle extends DynamicBundle {
     public static @Nls String message(@NotNull @PropertyKey(resourceBundle = GHERKIN_BUNDLE) String key, Object @NotNull ... params) {
         return INSTANCE.getMessage(key, params);
     }
-
-    /**
-     * Retrieves a plugin settings specific message for the provided id.
-     *
-     * @param id the suffix of the message key
-     * @return the actual message
-     */
-    public static String settings(@NonNls String id) {
-        return message("gherkin.overview.settings." + id);
-    }
 }

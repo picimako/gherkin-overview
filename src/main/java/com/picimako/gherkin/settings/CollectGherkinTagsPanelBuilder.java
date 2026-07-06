@@ -5,6 +5,7 @@ package com.picimako.gherkin.settings;
 import static com.intellij.util.containers.ContainerUtil.map;
 import static com.picimako.gherkin.BDDUtil.isStoryLanguageSupported;
 import static com.picimako.gherkin.GherkinUtil.collectGherkinFilesFromProject;
+import static com.picimako.gherkin.resources.GherkinBundle.message;
 import static com.picimako.gherkin.toolwindow.TagNameUtil.metaNameFrom;
 import static com.picimako.gherkin.toolwindow.TagNameUtil.tagNameFrom;
 
@@ -23,7 +24,6 @@ import com.intellij.util.ui.ElementProducer;
 import com.intellij.util.ui.FormBuilder;
 import com.intellij.util.ui.ListTableModel;
 import com.picimako.gherkin.JBehaveStoryService;
-import com.picimako.gherkin.resources.GherkinBundle;
 import com.picimako.gherkin.toolwindow.TagCategoryRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -52,8 +52,8 @@ import java.util.List;
 final class CollectGherkinTagsPanelBuilder {
 
     private final Project project;
-    private final JButton collectGherkinTagsButton = new JButton(GherkinBundle.settings("collect.mappings.button.text"));
-    private final JBLabel cannotCollectWhileIDEIsIndexingLabel = new JBLabel(GherkinBundle.settings("collect.mappings.cannot.collect"));
+    private final JButton collectGherkinTagsButton = new JButton(message("gherkin.overview.settings.collect.mappings.button.text"));
+    private final JBLabel cannotCollectWhileIDEIsIndexingLabel = new JBLabel(message("gherkin.overview.settings.collect.mappings.cannot.collect"));
     private JPanel collectedMappingsPanel;
     private ListTableModel<CategoryAndTags> tableModel;
 
@@ -104,7 +104,7 @@ final class CollectGherkinTagsPanelBuilder {
     }
 
     private TableView<CategoryAndTags> buildTableView() {
-        final ColumnInfo<CategoryAndTags, String> tagsColumn = new ColumnInfo<>(GherkinBundle.settings("table.column.tags")) {
+        final ColumnInfo<CategoryAndTags, String> tagsColumn = new ColumnInfo<>(message("gherkin.overview.settings.table.column.tags")) {
             @Override
             public @Nullable String valueOf(CategoryAndTags categoryAndTags) {
                 return categoryAndTags.getTags();
@@ -126,7 +126,7 @@ final class CollectGherkinTagsPanelBuilder {
             }
         };
 
-        final ColumnInfo<CategoryAndTags, String> mappedCategoryColumn = new ColumnInfo<>(GherkinBundle.settings("table.column.mapped.category")) {
+        final ColumnInfo<CategoryAndTags, String> mappedCategoryColumn = new ColumnInfo<>(message("gherkin.overview.settings.table.column.mapped.category")) {
             @Override
             public String valueOf(CategoryAndTags categoryAndTag) {
                 return categoryAndTag.getCategory();
