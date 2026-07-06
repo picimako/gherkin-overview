@@ -25,6 +25,7 @@
                              id="GherkinOverviewConfigurable"
                              displayName="Gherkin Overview" nonDefaultProject="true"/>
         <projectService serviceInterface="com.picimako.gherkin.JBehaveStoryService"
-                        serviceImplementation="com.picimako.gherkin.NoopJBehaveStoryService"/>
+                        serviceImplementation="com.picimako.gherkin.NoopJBehaveStoryService"
+                        open="true"/>
     </extensions>
 </idea-plugin>
