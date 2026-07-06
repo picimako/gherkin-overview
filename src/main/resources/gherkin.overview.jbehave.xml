@@ -6,5 +6,5 @@
     </dependencies>
 
     <!-- This seems to be resolved relative to META-INF -->
-    <xi:include href="gherkin.overview.jbehave-overrides.xml"/>
+    <xi:include href="/gherkin.overview.jbehave-overrides.xml"/>
 </idea-plugin>
