@@ -259,7 +259,7 @@ final class DeleteAllTagOccurrencesActionTest extends GherkinOverviewTestBase {
         var model = new ProjectSpecificGherkinTagTreeModel(getProject());
         model.buildModel();
         tree = new GherkinTagTree(model, getProject());
-        tree.setSelectionPath(new TreePath(((ModelDataRoot) tree.getModel().getRoot()).getOther().get(tagName).get()));
+        invokeAndWait(() -> tree.setSelectionPath(new TreePath(((ModelDataRoot) tree.getModel().getRoot()).getOther().get(tagName).get())));
     }
 
     private AnActionEvent doTestActionEvent() {
