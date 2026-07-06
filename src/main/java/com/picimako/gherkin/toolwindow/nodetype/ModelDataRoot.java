@@ -1,31 +1,29 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow.nodetype;
 
+import static com.intellij.util.containers.ContainerUtil.filter;
+import static com.picimako.gherkin.resources.GherkinBundle.message;
 import static com.picimako.gherkin.toolwindow.LayoutType.GROUP_BY_MODULES;
 import static com.picimako.gherkin.toolwindow.nodetype.Category.OTHER_CATEGORY_NAME;
 import static com.picimako.gherkin.toolwindow.nodetype.ContentRoot.Type.CONTENT_ROOT;
 import static com.picimako.gherkin.toolwindow.nodetype.ContentRoot.Type.MODULE;
-import static java.util.stream.Collectors.toList;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.SmartList;
+import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
+import com.picimako.gherkin.toolwindow.LayoutType;
+import com.picimako.gherkin.toolwindow.ProjectBDDTypeService;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.picimako.gherkin.resources.GherkinBundle;
-import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
-import com.picimako.gherkin.toolwindow.LayoutType;
-import com.picimako.gherkin.toolwindow.ProjectBDDTypeService;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Represents the root element of the tree in the Gherkin Tags tool window.
@@ -50,7 +48,7 @@ public final class ModelDataRoot extends AbstractNodeType implements CategoriesH
     private List<ContentRoot> contentRoots;
 
     public ModelDataRoot(Project project) {
-        super(GherkinBundle.message("gherkin.overview.toolwindow.root.name.tags"), project);
+        super(message("g.o.toolwindow.root.name.tags"), project);
         initData();
     }
 
@@ -61,11 +59,11 @@ public final class ModelDataRoot extends AbstractNodeType implements CategoriesH
     public void updateDisplayName() {
         var service = project.getService(ProjectBDDTypeService.class);
         if (service.hasOnlyJBehaveStoryFiles()) {
-            displayName = GherkinBundle.message("gherkin.overview.toolwindow.root.name.metas");
+            displayName = message("g.o.toolwindow.root.name.metas");
         } else if (service.hasBothGherkinAndStoryFiles()) {
-            displayName = GherkinBundle.message("gherkin.overview.toolwindow.root.name.tags.and.metas");
+            displayName = message("g.o.toolwindow.root.name.tags.and.metas");
         } else {
-            displayName = GherkinBundle.message("gherkin.overview.toolwindow.root.name.tags");
+            displayName = message("g.o.toolwindow.root.name.tags");
         }
     }
 
@@ -105,11 +103,12 @@ public final class ModelDataRoot extends AbstractNodeType implements CategoriesH
      * in the tool window.
      */
     public List<ContentRoot> getContentRootsByLayout() {
-        return contentRoots.stream()
-            .filter(contentRoot -> GherkinTagsToolWindowSettings.getInstance(project).layout == GROUP_BY_MODULES
+        return filter(
+            contentRoots,
+            contentRoot -> GherkinTagsToolWindowSettings.getInstance(project).layout == GROUP_BY_MODULES
                 ? contentRoot.isModule()
-                : contentRoot.isContentRoot())
-            .collect(toList());
+                : contentRoot.isContentRoot()
+        );
     }
 
     /**
@@ -126,7 +125,7 @@ public final class ModelDataRoot extends AbstractNodeType implements CategoriesH
      */
     @Nullable
     public ContentRoot findContentRootOrRootless(PsiFile bddFile) {
-        Module contentRootForFile = ModuleUtilCore.findModuleForFile(bddFile);
+        var contentRootForFile = ModuleUtilCore.findModuleForFile(bddFile);
         if (bddFile.getVirtualFile().isValid()) {
             return contentRootForFile == null
                 ? getContentRoot(getRootless(), ROOTLESS_CONTENT_ROOT_NAME)  //if file doesn't belong to any content root
@@ -134,7 +133,7 @@ public final class ModelDataRoot extends AbstractNodeType implements CategoriesH
         }
 
         //If Gherkin or Story file is not valid, thus has just been deleted
-        for (ContentRoot contentRoot : contentRoots) {
+        for (var contentRoot : contentRoots) {
             if (contentRoot.hasFileMapped(bddFile.getVirtualFile())) {
                 return contentRoot;
             }
@@ -162,7 +161,7 @@ public final class ModelDataRoot extends AbstractNodeType implements CategoriesH
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private ContentRoot getContentRoot(Optional<ContentRoot> root, String moduleName) {
         return root.orElseGet(() -> {
-            ContentRoot contentRoot = new ContentRoot(
+            var contentRoot = new ContentRoot(
                 moduleName,
                 GherkinTagsToolWindowSettings.getInstance(project).layout == GROUP_BY_MODULES ? MODULE : CONTENT_ROOT,
                 project);
@@ -175,7 +174,7 @@ public final class ModelDataRoot extends AbstractNodeType implements CategoriesH
      * Returns the module type content roots.
      */
     public List<ContentRoot> getModules() {
-        return contentRoots.stream().filter(ContentRoot::isModule).collect(toList());
+        return filter(contentRoots, ContentRoot::isModule);
     }
 
     //categories
@@ -212,16 +211,16 @@ public final class ModelDataRoot extends AbstractNodeType implements CategoriesH
         var service = project.getService(ProjectBDDTypeService.class);
         if (service.hasOnlyJBehaveStoryFiles()) {
             return getToString(
-                () -> GherkinBundle.message("gherkin.overview.toolwindow.statistics.root.simplified.story", displayName, tagCount(), bddFileCount()),
-                () -> GherkinBundle.message("gherkin.overview.toolwindow.statistics.root.detailed.story", displayName, tagCount(), bddFileCount()));
+                () -> message("g.o.toolwindow.stats.root.simplified.story", displayName, tagCount(), bddFileCount()),
+                () -> message("g.o.toolwindow.stats.root.detailed.story", displayName, tagCount(), bddFileCount()));
         } else if (service.hasBothGherkinAndStoryFiles()) {
             return getToString(
-                () -> GherkinBundle.message("gherkin.overview.toolwindow.statistics.root.simplified.both", displayName, tagCount(), bddFileCount()),
-                () -> GherkinBundle.message("gherkin.overview.toolwindow.statistics.root.detailed.both", displayName, tagCount(), bddFileCount()));
+                () -> message("g.o.toolwindow.stats.root.simplified.both", displayName, tagCount(), bddFileCount()),
+                () -> message("g.o.toolwindow.stats.root.detailed.both", displayName, tagCount(), bddFileCount()));
         } else {
             return getToString(
-                () -> GherkinBundle.message("gherkin.overview.toolwindow.statistics.root.simplified.gherkin", displayName, tagCount(), bddFileCount()),
-                () -> GherkinBundle.message("gherkin.overview.toolwindow.statistics.root.detailed.gherkin", displayName, tagCount(), bddFileCount()));
+                () -> message("g.o.toolwindow.stats.root.simplified.gherkin", displayName, tagCount(), bddFileCount()),
+                () -> message("g.o.toolwindow.stats.root.detailed.gherkin", displayName, tagCount(), bddFileCount()));
         }
     }
 

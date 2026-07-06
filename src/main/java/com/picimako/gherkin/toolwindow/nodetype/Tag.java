@@ -1,26 +1,27 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow.nodetype;
 
-import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
+import static com.intellij.util.containers.ContainerUtil.exists;
+import static com.intellij.util.containers.ContainerUtil.filter;
+import static com.intellij.util.containers.ContainerUtil.map;
 import static com.picimako.gherkin.GherkinUtil.isGherkinFile;
 import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.toList;
-
-import java.util.List;
-import java.util.Objects;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.SmartList;
+import com.picimako.gherkin.resources.GherkinBundle;
+import com.picimako.gherkin.toolwindow.TagOccurrencesRegistry;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.plugins.cucumber.psi.GherkinFile;
 
-import com.picimako.gherkin.resources.GherkinBundle;
-import com.picimako.gherkin.toolwindow.TagOccurrencesRegistry;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a Gherkin Tag in the tool window.
@@ -53,7 +54,7 @@ public final class Tag extends AbstractNodeType {
      * @return true if the file is assigned, false otherwise
      */
     public boolean contains(VirtualFile bddFile) {
-        return featureFiles.stream().anyMatch(featureFile -> Objects.equals(featureFile.getFile(), bddFile));
+        return exists(featureFiles, featureFile -> Objects.equals(featureFile.getFile(), bddFile));
     }
 
     /**
@@ -125,7 +126,7 @@ public final class Tag extends AbstractNodeType {
      */
     private void updateDisplayNamesOf(List<FeatureFile> featureFilesWithTheSameName, @NotNull VirtualFile file) {
         if (isGherkinFile(file)) {
-            var distinctFeatureNames = compute(() -> featureFilesWithTheSameName.stream()
+            var distinctFeatureNames = computeBlocking(() -> featureFilesWithTheSameName.stream()
                 .map(featureFile -> PsiManager.getInstance(project).findFile(featureFile.getFile()))
                 .filter(Objects::nonNull)
                 .map(psiFile -> ((GherkinFile) psiFile).getFeatures())
@@ -147,7 +148,7 @@ public final class Tag extends AbstractNodeType {
     }
 
     private List<FeatureFile> getFeatureFilesWithTheNameOf(VirtualFile file) {
-        return featureFiles.stream().filter(featureFile -> featureFile.hasFileName(file.getName())).collect(toList());
+        return filter(featureFiles, featureFile -> featureFile.hasFileName(file.getName()));
     }
 
     /**
@@ -164,7 +165,7 @@ public final class Tag extends AbstractNodeType {
     public String toString() {
         return getToString(
             () -> displayName + " (" + occurrenceCount() + ")",
-            () -> GherkinBundle.message("gherkin.overview.toolwindow.statistics.tag.detailed", displayName, occurrenceCount(), featureFiles.size()));
+            () -> GherkinBundle.message("g.o.toolwindow.stats.tag.detailed", displayName, occurrenceCount(), featureFiles.size()));
     }
 
     /**
@@ -181,7 +182,7 @@ public final class Tag extends AbstractNodeType {
 
     @TestOnly
     public List<VirtualFile> getGherkinFiles() {
-        return featureFiles.stream().map(FeatureFile::getFile).collect(toList());
+        return map(featureFiles, FeatureFile::getFile);
     }
 
     @Override

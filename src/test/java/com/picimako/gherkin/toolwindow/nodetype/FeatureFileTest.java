@@ -1,4 +1,4 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow.nodetype;
 
@@ -8,7 +8,7 @@ import static org.junit.jupiter.params.provider.Arguments.argumentSet;
 import java.util.stream.Stream;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import com.picimako.gherkin.MediumBasePlatformTestCase;
+import com.picimako.gherkin.GherkinOverviewTestBase;
 import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
 import com.picimako.gherkin.toolwindow.StatisticsType;
 import com.picimako.gherkin.toolwindow.TagOccurrencesRegistry;
@@ -20,7 +20,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 /**
  * Unit test for {@link FeatureFile}.
  */
-final class FeatureFileTest extends MediumBasePlatformTestCase {
+final class FeatureFileTest extends GherkinOverviewTestBase {
 
     private FeatureFile featureFile;
 

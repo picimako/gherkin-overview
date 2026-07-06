@@ -1,35 +1,33 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow;
 
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static com.picimako.gherkin.GherkinUtil.isGherkinFile;
 import static com.picimako.gherkin.toolwindow.TagNameUtil.metaNameFrom;
 import static com.picimako.gherkin.toolwindow.TagNameUtil.tagNameFrom;
 import static java.util.stream.Collectors.toMap;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import javax.swing.event.TreeModelListener;
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreePath;
-
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.SmartList;
-import org.jetbrains.plugins.cucumber.psi.GherkinTag;
-
 import com.picimako.gherkin.GherkinUtil;
 import com.picimako.gherkin.JBehaveStoryService;
 import com.picimako.gherkin.toolwindow.nodetype.CategoriesHolder;
 import com.picimako.gherkin.toolwindow.nodetype.Category;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 import com.picimako.gherkin.toolwindow.nodetype.Tag;
+import org.jetbrains.plugins.cucumber.psi.GherkinTag;
+
+import javax.swing.event.TreeModelListener;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 /**
  * A base model class for the various Gherkin Tags tree model implementations.
@@ -96,14 +94,14 @@ abstract class GherkinTagTreeModel implements TreeModel, Disposable {
                 data.initData();
             }
 
-            final List<PsiFile> gherkinFiles = new SmartList<>();
-            final List<PsiFile> storyFiles = new SmartList<>();
+            final var gherkinFiles = new SmartList<PsiFile>();
+            final var storyFiles = new SmartList<PsiFile>();
             //NOTE: Handling the whole logic in one stream() call chain may not return and process all Gherkin files in the project, hence the separation
             //NOTE2: Reading the Gherkin and Story files in separate read actions is in place to ensure that all files are read consistently.
             gherkinFiles.addAll(GherkinUtil.collectGherkinFilesFromProject(project));
             storyFiles.addAll(storyService.collectStoryFilesFromProject());
 
-            ProjectBDDTypeService service = project.getService(ProjectBDDTypeService.class);
+            var service = project.getService(ProjectBDDTypeService.class);
             service.isProjectContainGherkinFile = !gherkinFiles.isEmpty();
             service.isProjectContainJBehaveStoryFile = !storyFiles.isEmpty();
 
@@ -120,16 +118,16 @@ abstract class GherkinTagTreeModel implements TreeModel, Disposable {
     }
 
     private void persistGherkinTags(List<PsiFile> gherkinFiles) {
-        for (PsiFile file : gherkinFiles) {
-            Collection<GherkinTag> gherkinTags = ReadAction.compute(() -> PsiTreeUtil.findChildrenOfType(file, GherkinTag.class));
-            for (GherkinTag gherkinTag : gherkinTags) {
+        for (var file : gherkinFiles) {
+            var gherkinTags = computeBlocking(() -> PsiTreeUtil.findChildrenOfType(file, GherkinTag.class));
+            for (var gherkinTag : gherkinTags) {
                 addToContentRootAndCategory(tagNameFrom(gherkinTag), file);
             }
         }
     }
 
     private void persistStoryMetas(List<PsiFile> storyFiles) {
-        for (PsiFile file : storyFiles) {
+        for (var file : storyFiles) {
             for (var meta : storyService.collectMetasFromFile(file).entrySet()) {
                 if (meta.getValue().isEmpty()) {
                     addToContentRootAndCategory(metaNameFrom(meta.getKey(), null), file);

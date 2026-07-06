@@ -1,4 +1,4 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow.nodetype;
 
@@ -83,8 +83,8 @@ public final class ContentRoot extends AbstractNodeType implements CategoriesHol
     @Override
     public String toString() {
         return getToString(
-            () -> GherkinBundle.message("gherkin.overview.toolwindow.statistics.module.simplified", displayName, tagCount(), gherkinFileCount()),
-            () -> GherkinBundle.message("gherkin.overview.toolwindow.statistics.module.detailed", displayName, tagCount(), gherkinFileCount()));
+            () -> GherkinBundle.message("g.o.toolwindow.stats.module.simplified", displayName, tagCount(), gherkinFileCount()),
+            () -> GherkinBundle.message("g.o.toolwindow.stats.module.detailed", displayName, tagCount(), gherkinFileCount()));
     }
 
     /**

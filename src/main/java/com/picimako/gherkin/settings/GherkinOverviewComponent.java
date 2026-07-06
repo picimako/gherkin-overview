@@ -1,9 +1,8 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.settings;
 
-import java.util.List;
-import javax.swing.*;
+import static com.picimako.gherkin.resources.GherkinBundle.message;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.ActionUpdateThread;
@@ -15,12 +14,13 @@ import com.intellij.ui.ContextHelpLabel;
 import com.intellij.ui.TitledSeparator;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.util.ui.FormBuilder;
+import com.picimako.gherkin.BDDUtil;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.picimako.gherkin.BDDUtil;
-import com.picimako.gherkin.resources.GherkinBundle;
+import javax.swing.*;
+import java.util.List;
 
 /**
  * Assembles and handles the UI panel for the settings of this plugin.
@@ -32,7 +32,7 @@ final class GherkinOverviewComponent {
     @Getter
     private final JPanel settingsPanel;
     private final GherkinMappingsTable applicationLevelMappingsTable = new GherkinMappingsTable();
-    private final JBCheckBox useProjectLevelMappingsCheckbox = new JBCheckBox(GherkinBundle.settings("use.project.level.mappings"));
+    private final JBCheckBox useProjectLevelMappingsCheckbox = new JBCheckBox(message("g.o.settings.use.project.level.mappings"));
     private final GherkinMappingsTable projectLevelMappingsTable = new GherkinMappingsTable().init();
 
     private final Project project;
@@ -53,7 +53,7 @@ final class GherkinOverviewComponent {
         applicationLevelMappingsTable.withExtraActions(() ->
             new AnActionButton[]{
                 //Reset to defaults
-                new ExtraActionButton(GherkinBundle.settings("reset.mappings.name"), GherkinBundle.settings("reset.mappings.description"),
+                new ExtraActionButton(message("g.o.settings.reset.mappings.name"), message("g.o.settings.reset.mappings.description"),
                     AllIcons.General.Reset,
                     () -> applicationLevelMappingsTable.setValues(DefaultMappingsLoader.loadDefaultApplicationLevelMappings()))
             }).init();
@@ -108,18 +108,18 @@ final class GherkinOverviewComponent {
      */
     private JPanel buildSettingsPanel() {
         return FormBuilder.createFormBuilder()
-            .addComponent(new TitledSeparator(GherkinBundle.settings("application.level.mappings.title")))
+            .addComponent(new TitledSeparator(message("g.o.settings.application.level.mappings.title")))
             .addComponent(applicationLevelMappingsTable.getComponent(), 2)
             .addVerticalGap(10)
 
-            .addComponent(new TitledSeparator(GherkinBundle.settings("project.level.mappings.title")))
+            .addComponent(new TitledSeparator(message("g.o.settings.project.level.mappings.title")))
             .addComponent(useProjectLevelMappingsCheckbox, 2)
             .addVerticalGap(5)
             .addComponent(projectLevelMappingsTable.getComponent(), 2)
             .addVerticalGap(8)
             .addComponent(contextHelpLabel())
 
-            .addComponent(new TitledSeparator(GherkinBundle.settings("tags.in.current.project")))
+            .addComponent(new TitledSeparator(message("g.o.settings.tags.in.current.project")))
             .addVerticalGap(2)
             .addComponent(new CollectGherkinTagsPanelBuilder(project).buildPanel())
 
@@ -129,9 +129,9 @@ final class GherkinOverviewComponent {
 
     private ContextHelpLabel contextHelpLabel() {
         var rootPathsHelpLabel = new ContextHelpLabel("",
-            GherkinBundle.settings(BDDUtil.isStoryLanguageSupported()
-                ? "mappings.help.description.gherkin.and.jbehave"
-                : "mappings.help.description.gherkin"));
+            BDDUtil.isStoryLanguageSupported()
+            ? message("g.o.settings.mappings.help.description.gherkin.and.jbehave")
+            : message("g.o.settings.mappings.help.description.gherkin"));
         rootPathsHelpLabel.setIcon(AllIcons.General.ContextHelp);
         return rootPathsHelpLabel;
     }

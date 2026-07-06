@@ -1,18 +1,17 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow;
 
 import static com.github.kumaraman21.intellijbehave.highlighter.StoryTokenType.META_KEY;
+import static com.intellij.openapi.application.ReadAction.runBlocking;
 
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.LeafPsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.picimako.gherkin.jbehave.DefaultJBehaveStoryService;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.cucumber.psi.GherkinTag;
-
-import com.picimako.gherkin.DefaultJBehaveStoryService;
 
 /**
  * Utility for handling Gherkin Tags and Story metas in tests.
@@ -29,7 +28,7 @@ public final class BDDTestSupport {
     @Nullable
     public static GherkinTag getFirstGherkinTagForName(PsiFile psiFile, String tagName) {
         GherkinTag[] tag = new GherkinTag[1];
-        ReadAction.run(() -> PsiTreeUtil.processElements(psiFile, GherkinTag.class, element -> {
+        runBlocking(() -> PsiTreeUtil.processElements(psiFile, GherkinTag.class, element -> {
             if (tagName.equals(element.getName())) {
                 tag[0] = element;
                 return false;
@@ -50,7 +49,7 @@ public final class BDDTestSupport {
     @Nullable
     public static PsiElement getFirstMetaKeyForName(PsiFile psiFile, String metaKeyName) {
         PsiElement[] metaKey = new PsiElement[1];
-        ReadAction.run(() -> PsiTreeUtil.processElements(psiFile, LeafPsiElement.class, potentialMetaKey -> {
+        runBlocking(() -> PsiTreeUtil.processElements(psiFile, LeafPsiElement.class, potentialMetaKey -> {
             if (new DefaultJBehaveStoryService(psiFile.getProject()).is(potentialMetaKey, META_KEY) && metaKeyName.equals(potentialMetaKey.getText())) {
                 metaKey[0] = potentialMetaKey;
                 return false;

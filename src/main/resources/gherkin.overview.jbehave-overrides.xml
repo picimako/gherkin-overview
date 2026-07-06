@@ -1,8 +1,8 @@
-<idea-plugin require-restart="true">
+<idea-plugin>
     <extensions defaultExtensionNs="com.intellij">
         <!-- This implementation overrides the default NoopJBehaveStoryService -->
         <projectService serviceInterface="com.picimako.gherkin.JBehaveStoryService"
-                        serviceImplementation="com.picimako.gherkin.DefaultJBehaveStoryService"
+                        serviceImplementation="com.picimako.gherkin.jbehave.DefaultJBehaveStoryService"
                         overrides="true"/>
     </extensions>
 </idea-plugin>

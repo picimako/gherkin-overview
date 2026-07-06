@@ -1,4 +1,4 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.settings;
 
@@ -9,7 +9,7 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import java.util.List;
 import java.util.Optional;
 
-import com.picimako.gherkin.MediumBasePlatformTestCase;
+import com.picimako.gherkin.GherkinOverviewTestBase;
 import com.picimako.gherkin.ToolWindowTestSupport;
 import com.picimako.gherkin.toolwindow.GherkinTagOverviewPanel;
 import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit test for {@link GherkinOverviewProjectConfigurable}.
  */
-final class GherkinOverviewProjectConfigurableTest extends MediumBasePlatformTestCase {
+final class GherkinOverviewProjectConfigurableTest extends GherkinOverviewTestBase {
 
     private GherkinOverviewProjectConfigurable configurable;
 

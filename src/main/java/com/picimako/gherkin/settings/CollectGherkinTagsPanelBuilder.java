@@ -1,18 +1,13 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.settings;
 
+import static com.intellij.util.containers.ContainerUtil.map;
 import static com.picimako.gherkin.BDDUtil.isStoryLanguageSupported;
 import static com.picimako.gherkin.GherkinUtil.collectGherkinFilesFromProject;
+import static com.picimako.gherkin.resources.GherkinBundle.message;
 import static com.picimako.gherkin.toolwindow.TagNameUtil.metaNameFrom;
 import static com.picimako.gherkin.toolwindow.TagNameUtil.tagNameFrom;
-import static java.util.stream.Collectors.toList;
-
-import java.awt.*;
-import java.util.Collections;
-import java.util.List;
-import javax.swing.*;
-import javax.swing.table.TableCellEditor;
 
 import com.intellij.execution.util.StringWithNewLinesCellEditor;
 import com.intellij.icons.AllIcons;
@@ -28,13 +23,17 @@ import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ElementProducer;
 import com.intellij.util.ui.FormBuilder;
 import com.intellij.util.ui.ListTableModel;
+import com.picimako.gherkin.JBehaveStoryService;
+import com.picimako.gherkin.toolwindow.TagCategoryRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.cucumber.psi.GherkinTag;
 
-import com.picimako.gherkin.JBehaveStoryService;
-import com.picimako.gherkin.resources.GherkinBundle;
-import com.picimako.gherkin.toolwindow.TagCategoryRegistry;
+import javax.swing.*;
+import javax.swing.table.TableCellEditor;
+import java.awt.*;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Builds a panel in which tags and their mappings to categories can be collected from the current project.
@@ -53,8 +52,8 @@ import com.picimako.gherkin.toolwindow.TagCategoryRegistry;
 final class CollectGherkinTagsPanelBuilder {
 
     private final Project project;
-    private final JButton collectGherkinTagsButton = new JButton(GherkinBundle.settings("collect.mappings.button.text"));
-    private final JBLabel cannotCollectWhileIDEIsIndexingLabel = new JBLabel(GherkinBundle.settings("collect.mappings.cannot.collect"));
+    private final JButton collectGherkinTagsButton = new JButton(message("g.o.settings.collect.mappings.button.text"));
+    private final JBLabel cannotCollectWhileIDEIsIndexingLabel = new JBLabel(message("g.o.settings.collect.mappings.cannot.collect"));
     private JPanel collectedMappingsPanel;
     private ListTableModel<CategoryAndTags> tableModel;
 
@@ -105,7 +104,7 @@ final class CollectGherkinTagsPanelBuilder {
     }
 
     private TableView<CategoryAndTags> buildTableView() {
-        final ColumnInfo<CategoryAndTags, String> tagsColumn = new ColumnInfo<>(GherkinBundle.settings("table.column.tags")) {
+        final var tagsColumn = new ColumnInfo<CategoryAndTags, String>(message("g.o.settings.table.column.tags")) {
             @Override
             public @Nullable String valueOf(CategoryAndTags categoryAndTags) {
                 return categoryAndTags.getTags();
@@ -127,7 +126,7 @@ final class CollectGherkinTagsPanelBuilder {
             }
         };
 
-        final ColumnInfo<CategoryAndTags, String> mappedCategoryColumn = new ColumnInfo<>(GherkinBundle.settings("table.column.mapped.category")) {
+        final var mappedCategoryColumn = new ColumnInfo<CategoryAndTags, String>(message("g.o.settings.table.column.mapped.category")) {
             @Override
             public String valueOf(CategoryAndTags categoryAndTag) {
                 return categoryAndTag.getCategory();
@@ -161,7 +160,7 @@ final class CollectGherkinTagsPanelBuilder {
 
         if (isStoryLanguageSupported()) {
             //This doesn't wait to be in Smart mode because this panel allows the collection of tags only when in Smart mode
-            JBehaveStoryService storyService = project.getService(JBehaveStoryService.class);
+            var storyService = project.getService(JBehaveStoryService.class);
             storyService.collectStoryFilesFromProject().stream()
                 .map(storyService::collectMetasFromFile)
                 .flatMap(metas -> metas.entrySet().stream())
@@ -175,9 +174,10 @@ final class CollectGherkinTagsPanelBuilder {
             //Sort the list of tags alphabetically for each category
             rawMappings.keySet().forEach(category -> Collections.sort((List<String>) rawMappings.get(category)));
             //Join the list tags by comma for each category
-            return rawMappings.entrySet().stream()
-                .map(entry -> new CategoryAndTags(entry.getKey(), String.join(",", entry.getValue())))
-                .collect(toList());
+            return map(
+                rawMappings.entrySet(),
+                entry -> new CategoryAndTags(entry.getKey(), String.join(",", entry.getValue()))
+            );
         }
         return Collections.emptyList();
     }

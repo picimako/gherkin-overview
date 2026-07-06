@@ -1,15 +1,13 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow.action;
 
-import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
+import static com.picimako.gherkin.resources.GherkinBundle.message;
 import static com.picimako.gherkin.toolwindow.GherkinTagToolWindowUtil.getGherkinTagOverViewPanel;
 import static com.picimako.gherkin.toolwindow.GherkinTagToolWindowUtil.getGherkinTagsToolWindow;
 import static com.picimako.gherkin.toolwindow.LayoutType.NO_GROUPING;
 import static com.picimako.gherkin.toolwindow.TagNameUtil.tagNameFrom;
-
-import javax.swing.tree.TreePath;
-import java.util.Optional;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.lang.ASTNode;
@@ -23,7 +21,6 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.AnActionButton;
-import com.picimako.gherkin.resources.GherkinBundle;
 import com.picimako.gherkin.toolwindow.GherkinTagTree;
 import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
 import com.picimako.gherkin.toolwindow.TagCategoryRegistry;
@@ -36,6 +33,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.cucumber.psi.GherkinTag;
 import org.jetbrains.plugins.cucumber.psi.GherkinTokenTypes;
 
+import javax.swing.tree.TreePath;
+import java.util.Optional;
+
 /**
  * This action, similar to the Project View's 'Select Opened File' tool bar action, locates and selects the Tag node
  * of a Gherkin Tag that is under the caret in the currently selected text editor.
@@ -46,8 +46,8 @@ public final class SelectFocusedTagAction extends AnActionButton {
 
     public SelectFocusedTagAction() {
         super(
-            GherkinBundle.message("gherkin.overview.toolwindow.select.focused.tag.tooltip"),
-            GherkinBundle.message("gherkin.overview.toolwindow.select.focused.tag.description"),
+            message("g.o.toolwindow.select.focused.tag.tooltip"),
+            message("g.o.toolwindow.select.focused.tag.description"),
             AllIcons.General.Locate);
     }
 
@@ -57,7 +57,7 @@ public final class SelectFocusedTagAction extends AnActionButton {
         var editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
         var psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
 
-        var elementAtCaret = compute(() -> psiFile.findElementAt(editor.getCaretModel().getOffset()));
+        var elementAtCaret = computeBlocking(() -> psiFile.findElementAt(editor.getCaretModel().getOffset()));
         locateAndSelectGherkinTag(project, psiFile, elementAtCaret);
     }
 
@@ -93,7 +93,7 @@ public final class SelectFocusedTagAction extends AnActionButton {
                 if (editor.getCaretModel().getCaretCount() != 1) return null;
 
                 var psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-                return psiFile != null ? compute(() -> psiFile.findElementAt(editor.getCaretModel().getOffset())) : null;
+                return psiFile != null ? computeBlocking(() -> psiFile.findElementAt(editor.getCaretModel().getOffset())) : null;
             })
             .map(PsiElement::getNode)
             .map(ASTNode::getElementType)
@@ -131,7 +131,7 @@ public final class SelectFocusedTagAction extends AnActionButton {
          * Locates and selects the Gherkin Tag when the tool window has no grouping set.
          */
         private void locateAndSelectGherkinTagInProject() {
-            String tagName = tagNameFrom(compute(() -> (GherkinTag) elementAtCaret.getParent()));
+            String tagName = tagNameFrom(computeBlocking(() -> (GherkinTag) elementAtCaret.getParent()));
 
             //Find the category node for the category of the selected Gherkin tag, or use the fallback category 'Other'
             var categoryNode = Optional.ofNullable(TagCategoryRegistry.getInstance(project).categoryOf(tagName))

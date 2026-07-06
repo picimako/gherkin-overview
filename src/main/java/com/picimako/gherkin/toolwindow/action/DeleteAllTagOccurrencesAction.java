@@ -1,8 +1,11 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow.action;
 
+import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
 import static com.intellij.openapi.ui.Messages.YES;
+import static com.intellij.util.containers.ContainerUtil.map;
+import static com.picimako.gherkin.resources.GherkinBundle.message;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.ActionUpdateThread;
@@ -10,15 +13,12 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.picimako.gherkin.BDDUtil;
 import com.picimako.gherkin.JBehaveStoryService;
-import com.picimako.gherkin.resources.GherkinBundle;
 import com.picimako.gherkin.toolwindow.GherkinTagTree;
 import com.picimako.gherkin.toolwindow.TagNameUtil;
 import com.picimako.gherkin.toolwindow.TagOccurrencesRegistry;
@@ -40,7 +40,7 @@ public final class DeleteAllTagOccurrencesAction extends AnAction {
     private final Project project;
 
     public DeleteAllTagOccurrencesAction(Project project) {
-        super(GherkinBundle.message("gherkin.overview.toolwindow.delete.tags"), "", AllIcons.General.Delete);
+        super(message("g.o.toolwindow.delete.tags"), "", AllIcons.General.Delete);
         this.project = project;
     }
 
@@ -49,31 +49,34 @@ public final class DeleteAllTagOccurrencesAction extends AnAction {
         var tree = (GherkinTagTree) e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
 
         if (tree != null && isGherkinTag(tree.getLastSelectedPathComponent()) && isUserSureToDeleteAllOccurrencesOfTag(project)) {
-            var tagOccurrencesRegistry = TagOccurrencesRegistry.getInstance(project);
             Tag selectedTagNode = NodeType.asTag(tree.getLastSelectedPathComponent());
-
-            boolean isStoryLanguageSupported = BDDUtil.isStoryLanguageSupported();
-            var service = project.getService(JBehaveStoryService.class);
 
             //Doing 'for (var featureFile : selectedTagNode.getFeatureFiles()) {}' results in concurrent modification exception
             // because there are listeners in the background updating the tree model based on PSI modification
-            WriteCommandAction.runWriteCommandAction(project, () -> {
-                var bddFiles = selectedTagNode.getFeatureFiles().stream().map(FeatureFile::getFile).toList();
-                for (var bddFile : bddFiles) {
-                    PsiElement[] tagsToDelete = PsiTreeUtil.collectElements(PsiManager.getInstance(project).findFile(bddFile), element -> {
-                        String tagName = TagNameUtil.determineTagOrMetaName(element);
-                        if (tagName != null) { //either a Gherkin tag or a Meta Key
-                            return tagName.equals(selectedTagNode.getDisplayName());
-                        } else if (isStoryLanguageSupported) {
-                            return service.isMetaTextForMetaKeyWithName(element, selectedTagNode.getDisplayName());
-                        }
-                        return false;
-                    });
-                    //Delete the tags/metas in a single command action, so that it is easier to redo them
-                    for (var tag : tagsToDelete) tag.delete();
+            runWriteCommandAction(project, () -> {
+                var bddFiles = map(selectedTagNode.getFeatureFiles(), FeatureFile::getFile);
 
-                    //Update the occurrence counts once processing the file has finished
-                    tagOccurrencesRegistry.updateOccurrenceCounts(bddFile);
+                if (!bddFiles.isEmpty()) {
+                    boolean isStoryLanguageSupported = BDDUtil.isStoryLanguageSupported();
+                    var storyService = project.getService(JBehaveStoryService.class);
+                    var tagOccurrencesRegistry = TagOccurrencesRegistry.getInstance(project);
+
+                    for (var bddFile : bddFiles) {
+                        var tagsToDelete = PsiTreeUtil.collectElements(PsiManager.getInstance(project).findFile(bddFile), element -> {
+                            String tagName = TagNameUtil.determineTagOrMetaName(element);
+                            if (tagName != null) { //either a Gherkin tag or a Meta Key
+                                return tagName.equals(selectedTagNode.getDisplayName());
+                            } else if (isStoryLanguageSupported) {
+                                return storyService.isMetaTextForMetaKeyWithName(element, selectedTagNode.getDisplayName());
+                            }
+                            return false;
+                        });
+                        //Delete the tags/metas in a single command action, so that it is easier to redo them
+                        for (var tag : tagsToDelete) tag.delete();
+
+                        //Update the occurrence counts once processing the file has finished
+                        tagOccurrencesRegistry.updateOccurrenceCounts(bddFile);
+                    }
                 }
             });
             tree.updateUI();
@@ -94,7 +97,7 @@ public final class DeleteAllTagOccurrencesAction extends AnAction {
     private boolean isUserSureToDeleteAllOccurrencesOfTag(Project project) {
         return ApplicationManager.getApplication().isUnitTestMode()
             || Messages.showYesNoDialog(project,
-            GherkinBundle.message("gherkin.overview.toolwindow.delete.are.you.sure"), GherkinBundle.message("gherkin.overview.toolwindow.delete.tags"),
+            message("g.o.toolwindow.delete.are.you.sure"), message("g.o.toolwindow.delete.tags"),
             Messages.getQuestionIcon()) == YES;
     }
 

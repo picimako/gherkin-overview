@@ -1,8 +1,8 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow;
 
-import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static com.picimako.gherkin.toolwindow.BDDTestSupport.getFirstGherkinTagForName;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -165,7 +165,7 @@ final class GherkinTagTreeModelTest extends GherkinTagTreeModelTestBase {
     @Test
     void updateTreeModelWhenGherkinTagIsReplaced() {
         GherkinTag tag = getFirstGherkinTagForName(psiTheGherkin, "@sitemap");
-        var topLevelElements = compute(() -> GherkinElementFactory.getTopLevelElements(getProject(), "@WIP\nFeature: Wip feature\n"));
+        var topLevelElements = computeBlocking(() -> GherkinElementFactory.getTopLevelElements(getProject(), "@WIP\nFeature: Wip feature\n"));
         executeCommandProcessorCommand(() -> tag.replace(topLevelElements[0]), "Replace", "group.id");
         model.updateModelForFile(psiTheGherkin);
 
@@ -220,7 +220,7 @@ final class GherkinTagTreeModelTest extends GherkinTagTreeModelTestBase {
         TagCategoryRegistry.getInstance(getProject())
             .putMappingsFrom(singletonList(new CategoryAndTags("Trello", "#^[A-Z]+-[0-9]+$")));
 
-        var topLevelElements = compute(() -> GherkinElementFactory.getTopLevelElements(getProject(), "@TRELLO-9999\nFeature: Wip feature\n"));
+        var topLevelElements = computeBlocking(() -> GherkinElementFactory.getTopLevelElements(getProject(), "@TRELLO-9999\nFeature: Wip feature\n"));
         executeCommandProcessorCommand(() -> tag.replace(topLevelElements[0]), "Replace", "group.id");
         model.updateModelForFile(psiTheGherkin);
 
@@ -246,7 +246,7 @@ final class GherkinTagTreeModelTest extends GherkinTagTreeModelTestBase {
             .extracting(AbstractNodeType::getDisplayName)
             .containsExactlyInAnyOrder("gherkin_with_same_name.feature [Almost same name]", "gherkin_with_same_name.feature [Same name]");
 
-        GherkinFeature feature = compute(() -> GherkinElementFactory.createFeatureFromText(getProject(), "Feature: Same name"));
+        GherkinFeature feature = computeBlocking(() -> GherkinElementFactory.createFeatureFromText(getProject(), "Feature: Same name"));
         executeCommandProcessorCommand(() -> ((GherkinFile) evenmoremore).getFeatures()[0].replace(feature), "Replace", "group.id");
 
         model.updateModelForFile(evenmoremore);

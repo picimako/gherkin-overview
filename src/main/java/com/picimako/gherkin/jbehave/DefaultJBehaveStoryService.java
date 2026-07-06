@@ -1,22 +1,18 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package com.picimako.gherkin;
+package com.picimako.gherkin.jbehave;
 
 import static com.github.kumaraman21.intellijbehave.highlighter.StoryTokenType.META_KEY;
 import static com.github.kumaraman21.intellijbehave.highlighter.StoryTokenType.META_TEXT;
-import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
+import static com.intellij.openapi.application.ReadAction.runBlocking;
+import static com.intellij.util.containers.ContainerUtil.map;
 import static com.picimako.gherkin.toolwindow.TagNameUtil.metaNameFrom;
-import static java.util.stream.Collectors.toList;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 import com.github.kumaraman21.intellijbehave.language.JBehaveIcons;
 import com.github.kumaraman21.intellijbehave.language.StoryFileType;
 import com.github.kumaraman21.intellijbehave.language.StoryLanguage;
 import com.github.kumaraman21.intellijbehave.parser.StoryFile;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -30,11 +26,16 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.MultiMap;
+import com.picimako.gherkin.JBehaveStoryService;
+import com.picimako.gherkin.NoopJBehaveStoryService;
 import com.picimako.gherkin.toolwindow.TagNameUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Default implementation of the {@link JBehaveStoryService} to use when the JBehave Support plugin is installed
@@ -46,7 +47,6 @@ import javax.swing.*;
 public final class DefaultJBehaveStoryService implements JBehaveStoryService {
     private final Project project;
 
-    //Project service
     public DefaultJBehaveStoryService(Project project) {
         this.project = project;
     }
@@ -55,10 +55,10 @@ public final class DefaultJBehaveStoryService implements JBehaveStoryService {
     @Override
     public List<PsiFile> collectStoryFilesFromProject() {
         if (FileTypeManager.getInstance().findFileTypeByLanguage(StoryLanguage.STORY_LANGUAGE) != null) {
-            return compute(() -> FileTypeIndex.getFiles(StoryFileType.STORY_FILE_TYPE, GlobalSearchScope.projectScope(project))
-                .stream()
-                .map(file -> PsiManager.getInstance(project).findFile(file))
-                .collect(toList()));
+            return computeBlocking(() -> {
+                var storyFiles = FileTypeIndex.getFiles(StoryFileType.STORY_FILE_TYPE, GlobalSearchScope.projectScope(project));
+                return map(storyFiles, file -> PsiManager.getInstance(project).findFile(file));
+            });
         }
         return Collections.emptyList();
     }
@@ -67,7 +67,7 @@ public final class DefaultJBehaveStoryService implements JBehaveStoryService {
     public MultiMap<PsiElement, PsiElement> collectMetasFromFile(PsiFile file) {
         //meta key -> 0 or more meta text elements
         final var storyMetas = MultiMap.<PsiElement, PsiElement>create();
-        ReadAction.run(() -> PsiTreeUtil.processElements(file, LeafPsiElement.class, potentialMetaKey -> {
+        runBlocking(() -> PsiTreeUtil.processElements(file, LeafPsiElement.class, potentialMetaKey -> {
             if (isMetaKey(potentialMetaKey)) {
                 //This makes sure that Keys are always stored, since they are valid metas with or without meta texts
                 storyMetas.put(potentialMetaKey, new SmartList<>());
@@ -92,7 +92,7 @@ public final class DefaultJBehaveStoryService implements JBehaveStoryService {
 
     @Override
     public Collection<PsiElement> collectMetaTextsForMetaKeyAsList(PsiElement metaKey) {
-        final List<PsiElement> metaTexts = new SmartList<>();
+        final var metaTexts = new SmartList<PsiElement>();
         for (var sibling = metaKey.getNextSibling(); sibling != null && !is(sibling, META_KEY); sibling = sibling.getNextSibling()) {
             if (is(sibling, META_TEXT)) {
                 metaTexts.add(sibling);
@@ -113,9 +113,10 @@ public final class DefaultJBehaveStoryService implements JBehaveStoryService {
 
     @Override
     public List<String> collectMetasFromFileAsList(PsiFile file) {
-        return collectMetasFromFile(file).entrySet().stream()
-            .map(meta -> metaNameFrom(meta.getKey(), meta.getValue().isEmpty() ? null : meta.getValue()))
-            .collect(toList());
+        return map(
+            collectMetasFromFile(file).entrySet(),
+            meta -> metaNameFrom(meta.getKey(), meta.getValue().isEmpty() ? null : meta.getValue())
+        );
     }
 
     @Override

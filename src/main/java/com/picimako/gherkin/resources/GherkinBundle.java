@@ -1,4 +1,4 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.resources;
 
@@ -25,15 +25,5 @@ public class GherkinBundle extends DynamicBundle {
 
     public static @Nls String message(@NotNull @PropertyKey(resourceBundle = GHERKIN_BUNDLE) String key, Object @NotNull ... params) {
         return INSTANCE.getMessage(key, params);
-    }
-
-    /**
-     * Retrieves a plugin settings specific message for the provided id.
-     *
-     * @param id the suffix of the message key
-     * @return the actual message
-     */
-    public static String settings(@NonNls String id) {
-        return message("gherkin.overview.settings." + id);
     }
 }

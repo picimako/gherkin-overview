@@ -1,0 +1,10 @@
+<idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude" package="com.picimako.gherkin.jbehave">
+    <resource-bundle>messages.GherkinBundle</resource-bundle>
+
+    <dependencies>
+        <plugin id="jbehave-support-plugin"/>
+    </dependencies>
+
+    <!-- This seems to be resolved relative to META-INF -->
+    <xi:include href="/gherkin.overview.jbehave-overrides.xml"/>
+</idea-plugin>

@@ -1,10 +1,8 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.settings;
 
-import java.awt.*;
-import java.util.function.Supplier;
-import javax.swing.table.TableCellEditor;
+import static com.picimako.gherkin.resources.GherkinBundle.message;
 
 import com.intellij.execution.util.ListTableWithButtons;
 import com.intellij.execution.util.StringWithNewLinesCellEditor;
@@ -16,7 +14,9 @@ import com.intellij.util.ui.ListTableModel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.picimako.gherkin.resources.GherkinBundle;
+import javax.swing.table.TableCellEditor;
+import java.awt.*;
+import java.util.function.Supplier;
 
 /**
  * A custom {@link ListTableWithButtons} implementation to provide a UI for Gherkin Category to Tags mappings.
@@ -48,7 +48,7 @@ final class GherkinMappingsTable extends ListTableWithButtons<CategoryAndTags> {
 
     @Override
     protected ListTableModel<CategoryAndTags> createListModel() {
-        final ColumnInfo<CategoryAndTags, String> categoryColumn = new BaseCategoryTagsColumnInfo(GherkinBundle.settings("table.column.category")) {
+        final var categoryColumn = new BaseCategoryTagsColumnInfo(message("g.o.settings.table.column.category")) {
             @Nullable
             @Override
             public String valueOf(CategoryAndTags categoryAndTag) {
@@ -64,7 +64,7 @@ final class GherkinMappingsTable extends ListTableWithButtons<CategoryAndTags> {
             }
         };
 
-        final ColumnInfo<CategoryAndTags, String> tagsColumn = new BaseCategoryTagsColumnInfo(GherkinBundle.settings("table.column.tags")) {
+        final var tagsColumn = new BaseCategoryTagsColumnInfo(message("g.o.settings.table.column.tags")) {
             @Nullable
             @Override
             public String valueOf(CategoryAndTags categoryAndTag) {

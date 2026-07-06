@@ -1,10 +1,10 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin;
 
 import static com.picimako.gherkin.GherkinUtil.isGherkinFile;
 
-import com.intellij.ide.plugins.PluginManager;
+import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.fileTypes.UnknownFileType;
@@ -40,8 +40,8 @@ public final class BDDUtil {
      */
     public static boolean isStoryLanguageSupported() {
         PluginId jbehaveSupport = PluginId.getId("jbehave-support-plugin");
-        return PluginManager.isPluginInstalled(jbehaveSupport)
-            && PluginManager.getInstance().findEnabledPlugin(jbehaveSupport) != null
+        return PluginManagerCore.isPluginInstalled(jbehaveSupport)
+            && !PluginManagerCore.isDisabled(jbehaveSupport)
             && FileTypeRegistry.getInstance().getFileTypeByExtension("story") != UnknownFileType.INSTANCE;
     }
 

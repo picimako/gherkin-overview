@@ -1,6 +1,8 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow;
+
+import static com.intellij.util.containers.ContainerUtil.exists;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
@@ -41,7 +43,7 @@ final class FileAndFolderChangeListener implements BulkFileListener {
      */
     @Override
     public void after(@NotNull List<? extends VFileEvent> events) {
-        if (events.stream().anyMatch(this::isChangeOnFolderOrBDDFile)) {
+        if (exists(events, this::isChangeOnFolderOrBDDFile)) {
             if (ApplicationManager.getApplication().isUnitTestMode())
                 rebuildModel.run();
             else ApplicationManager.getApplication().invokeLater(rebuildModel);

@@ -1,4 +1,4 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow.action;
 
@@ -259,7 +259,7 @@ final class DeleteAllTagOccurrencesActionTest extends GherkinOverviewTestBase {
         var model = new ProjectSpecificGherkinTagTreeModel(getProject());
         model.buildModel();
         tree = new GherkinTagTree(model, getProject());
-        tree.setSelectionPath(new TreePath(((ModelDataRoot) tree.getModel().getRoot()).getOther().get(tagName).get()));
+        invokeAndWait(() -> tree.setSelectionPath(new TreePath(((ModelDataRoot) tree.getModel().getRoot()).getOther().get(tagName).get())));
     }
 
     private AnActionEvent doTestActionEvent() {

@@ -1,6 +1,8 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow;
+
+import static com.intellij.util.containers.ContainerUtil.exists;
 
 import java.awt.*;
 import java.util.function.BiPredicate;
@@ -9,9 +11,7 @@ import javax.swing.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.components.JBPanelWithEmptyText;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.TestOnly;
 
-import com.picimako.gherkin.resources.GherkinBundle;
 import com.picimako.gherkin.toolwindow.nodetype.Category;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 
@@ -22,7 +22,7 @@ public final class GherkinTagToolWindowHider extends JBPanelWithEmptyText {
 
     private static final BiPredicate<ModelDataRoot, Project> IS_TAG_PRESENT_IN_PROJECT =
         (modelRoot, proj) -> GherkinTagsToolWindowSettings.getInstance(proj).layout == LayoutType.NO_GROUPING
-            ? modelRoot.getCategories().stream().anyMatch(Category::hasTag)
+            ? exists(modelRoot.getCategories(), Category::hasTag)
             : modelRoot.getContentRootsByLayout().stream().flatMap(root -> root.getCategories().stream()).anyMatch(Category::hasTag);
     private final Project project;
 
@@ -31,11 +31,6 @@ public final class GherkinTagToolWindowHider extends JBPanelWithEmptyText {
         this.project = project;
         getEmptyText().setText(hiderMessage);
         add(gherkinTagOverview, BorderLayout.CENTER);
-    }
-
-    @TestOnly
-    public GherkinTagToolWindowHider(@NotNull JComponent gherkinTagOverview, @NotNull Project project) {
-        this(gherkinTagOverview, project, GherkinBundle.message("gherkin.overview.toolwindow.no.tag.in.project"));
     }
 
     /**

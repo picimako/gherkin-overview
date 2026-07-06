@@ -1,8 +1,9 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin;
 
-import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
+import static com.intellij.util.containers.ContainerUtil.map;
 import static java.util.stream.Collectors.toList;
 
 import java.util.Collections;
@@ -36,10 +37,10 @@ public final class GherkinUtil {
     @NotNull
     public static List<PsiFile> collectGherkinFilesFromProject(@NotNull Project project) {
         if (FileTypeManager.getInstance().findFileTypeByLanguage(GherkinLanguage.INSTANCE) != null) {
-            return compute(() -> FileTypeIndex.getFiles(GherkinFileType.INSTANCE, GlobalSearchScope.projectScope(project))
-                .stream()
-                .map(file -> PsiManager.getInstance(project).findFile(file))
-                .collect(toList()));
+            return computeBlocking(() -> {
+                var gherkinFiles = FileTypeIndex.getFiles(GherkinFileType.INSTANCE, GlobalSearchScope.projectScope(project));
+                return map(gherkinFiles, file -> PsiManager.getInstance(project).findFile(file));
+            });
         }
         return Collections.emptyList();
     }
@@ -52,7 +53,7 @@ public final class GherkinUtil {
      */
     @NotNull
     public static List<String> collectGherkinTagsFromFile(PsiFile file) {
-        return compute(() ->
+        return computeBlocking(() ->
             PsiTreeUtil.findChildrenOfType(file, GherkinTag.class).stream()
                 .map(TagNameUtil::tagNameFrom)
                 .distinct()

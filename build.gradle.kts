@@ -33,17 +33,19 @@ dependencies {
     //Testing
 
     testImplementation(libs.junit)
-    testImplementation(libs.opentest4j)
-    testImplementation("org.assertj:assertj-core:3.27.3")
-    testImplementation("org.mockito:mockito-core:5.18.0")
+    testImplementation("org.assertj:assertj-core:3.27.7")
+    testImplementation("org.mockito:mockito-core:5.23.0")
+    testImplementation(libs.junitJupiterApi)
     testRuntimeOnly(libs.junitJupiterEngine)
     testImplementation(libs.junitJupiterParams)
+    testImplementation(libs.junitPlatformLauncher)
 
     intellijPlatform {
         create(providers.gradleProperty("platformType"), providers.gradleProperty("platformVersion"))
 
-        // Plugin Dependencies. Uses `platformBundledPlugins` property from the gradle.properties file for bundled IntelliJ Platform plugins.
-        bundledPlugins(providers.gradleProperty("platformBundledPlugins").map { it.split(',') })
+        bundledModules(providers.gradleProperty("platformBundledModules").map { it.split(',') })
+        testBundledPlugin("com.intellij.modules.json")
+        testBundledPlugin("com.intellij.java")
 
         // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file for plugin from JetBrains Marketplace.
         plugins(providers.gradleProperty("platformPlugins").map { it.split(',') })
@@ -51,9 +53,7 @@ dependencies {
         pluginVerifier()
         zipSigner()
         testFramework(TestFrameworkType.Platform)
-        //Required for 'LightJavaCodeInsightFixtureTestCase5'
         testFramework(TestFrameworkType.Plugin.Java)
-        //Required for the 'com.intellij.testFramework.junit5' package
         testFramework(TestFrameworkType.JUnit5)
     }
 }
@@ -92,7 +92,6 @@ intellijPlatform {
 
         ideaVersion {
             sinceBuild = providers.gradleProperty("pluginSinceBuild")
-//            untilBuild = providers.gradleProperty("pluginUntilBuild")
         }
     }
 

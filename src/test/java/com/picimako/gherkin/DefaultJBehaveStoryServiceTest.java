@@ -1,10 +1,11 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.psi.PsiElement;
+import com.picimako.gherkin.jbehave.DefaultJBehaveStoryService;
 import com.picimako.gherkin.toolwindow.BDDTestSupport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

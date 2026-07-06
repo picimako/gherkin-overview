@@ -1,7 +1,8 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin;
 
+import static com.picimako.gherkin.resources.GherkinBundle.message;
 import static com.picimako.gherkin.toolwindow.GherkinTagToolWindowUtil.getToolWindowHider;
 
 import com.intellij.openapi.project.Project;
@@ -40,7 +41,7 @@ public final class ToolWindowTestSupport {
             return Unit.INSTANCE;
         });
         Content content = toolWindow.getContentManager().getFactory()
-            .createContent(new GherkinTagToolWindowHider(panelContent, project), "", true);
+            .createContent(new GherkinTagToolWindowHider(panelContent, project, message("g.o.toolwindow.no.tag.in.project")), "", true);
         toolWindow.getContentManager().addContent(content);
     }
 

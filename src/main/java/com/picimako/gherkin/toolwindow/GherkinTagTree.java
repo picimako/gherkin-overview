@@ -1,4 +1,4 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow;
 
@@ -50,16 +50,14 @@ public final class GherkinTagTree extends JTree {
         public void customizeCellRenderer(@NotNull JTree tree, @NlsSafe Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
             super.customizeCellRenderer(tree, value, selected, expanded, leaf, row, hasFocus);
 
-            if (value instanceof ModelDataRoot) {
-                setIcon(PlatformIcons.FOLDER_ICON);
-            } else if (value instanceof ContentRoot) {
-                setIcon(asContentRoot(value).getIcon());
-            } else if (value instanceof Category) {
-                setIcon(PlatformIcons.LIBRARY_ICON);
-            } else if (value instanceof Tag) {
-                setIcon(AllIcons.Gutter.ExtAnnotation);
-            } else if (value instanceof FeatureFile) {
-                setIcon(isGherkinFile(((FeatureFile) value).getFile()) ? CucumberIcons.Cucumber : project.getService(JBehaveStoryService.class).getJBehaveIcon());
+            switch (value) {
+                case ModelDataRoot __ -> setIcon(PlatformIcons.FOLDER_ICON);
+                case ContentRoot __ -> setIcon(asContentRoot(value).getIcon());
+                case Category __ -> setIcon(PlatformIcons.LIBRARY_ICON);
+                case Tag __ -> setIcon(AllIcons.Gutter.ExtAnnotation);
+                case FeatureFile __ ->
+                    setIcon(isGherkinFile(((FeatureFile) value).getFile()) ? CucumberIcons.Cucumber : project.getService(JBehaveStoryService.class).getJBehaveIcon());
+                default -> { }
             }
         }
     }

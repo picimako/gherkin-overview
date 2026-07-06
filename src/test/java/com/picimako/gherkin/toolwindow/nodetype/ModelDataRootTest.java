@@ -1,11 +1,11 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.toolwindow.nodetype;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import com.picimako.gherkin.MediumBasePlatformTestCase;
+import com.picimako.gherkin.GherkinOverviewTestBase;
 import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
 import com.picimako.gherkin.toolwindow.LayoutType;
 import com.picimako.gherkin.toolwindow.ProjectBDDTypeService;
@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit test for {@link ModelDataRoot}.
  */
-final class ModelDataRootTest extends MediumBasePlatformTestCase {
+final class ModelDataRootTest extends GherkinOverviewTestBase {
 
     @BeforeEach
     void setUp() {

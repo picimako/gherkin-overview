@@ -1,17 +1,17 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin.settings;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.Service;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Component for storing the project level plugin settings.
@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @since 0.1.0
  */
+@Service(Service.Level.PROJECT)
 @State(
     name = "Gherkin Overview Project-Level Mappings",
     storages = {@Storage(value = "GherkinOverviewProjectSettings.xml", exportable = true)}
@@ -44,7 +45,7 @@ public final class GherkinOverviewProjectState implements PersistentStateCompone
     }
 
     @Override
-    public @Nullable GherkinOverviewProjectState getState() {
+    public GherkinOverviewProjectState getState() {
         return this;
     }
 

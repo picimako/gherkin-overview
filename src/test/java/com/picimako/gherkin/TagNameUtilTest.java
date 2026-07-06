@@ -1,14 +1,15 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.gherkin;
 
-import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.picimako.gherkin.jbehave.DefaultJBehaveStoryService;
 import com.picimako.gherkin.toolwindow.TagNameUtil;
 import org.jetbrains.plugins.cucumber.psi.GherkinTag;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +32,7 @@ final class TagNameUtilTest extends GherkinOverviewTestBase {
     void returnTagName() {
         PsiFile gherkinFile = configureByText("gherkin.feature", "@smoke\nFeature: A feature");
 
-        GherkinTag tag = compute(() -> PsiTreeUtil.findChildOfType(gherkinFile, GherkinTag.class));
+        GherkinTag tag = computeBlocking(() -> PsiTreeUtil.findChildOfType(gherkinFile, GherkinTag.class));
 
         assertThat(TagNameUtil.tagNameFrom(tag)).isEqualTo("smoke");
     }
@@ -78,7 +79,7 @@ final class TagNameUtilTest extends GherkinOverviewTestBase {
             "@smoke\n" +
                 "Feature: A feature");
 
-        GherkinTag tag = compute(() -> PsiTreeUtil.findChildOfType(gherkinFile, GherkinTag.class));
+        GherkinTag tag = computeBlocking(() -> PsiTreeUtil.findChildOfType(gherkinFile, GherkinTag.class));
 
         String tagName = TagNameUtil.determineTagOrMetaName(tag);
 
