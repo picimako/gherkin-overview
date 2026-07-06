@@ -8,11 +8,13 @@ import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.JavaSdk;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.testFramework.fixtures.DefaultLightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase5;
+import com.intellij.util.LazyInitializer.LazyValue;
 import com.intellij.util.ThrowableRunnable;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,8 +23,11 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class GherkinOverviewTestBase extends LightJavaCodeInsightFixtureTestCase5 {
 
+    private static final LazyValue<Sdk> REAL_JDK =
+        new LazyValue<>(() -> JavaSdk.getInstance().createJdk("Real JDK", System.getenv("JAVA_HOME"), false));
+
     protected GherkinOverviewTestBase() {
-        super(new DefaultLightProjectDescriptor(() -> JavaSdk.getInstance().createJdk("Real JDK", System.getenv("JAVA_HOME"), false)));
+        super(new DefaultLightProjectDescriptor(REAL_JDK::get));
     }
 
     @Override
