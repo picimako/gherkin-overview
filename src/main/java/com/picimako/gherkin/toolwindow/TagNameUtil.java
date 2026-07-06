@@ -2,16 +2,15 @@
 
 package com.picimako.gherkin.toolwindow;
 
-import static java.util.stream.Collectors.joining;
-
-import java.util.Collection;
+import static com.intellij.util.containers.ContainerUtil.map;
 
 import com.intellij.psi.PsiElement;
+import com.picimako.gherkin.JBehaveStoryService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.cucumber.psi.GherkinTag;
 
-import com.picimako.gherkin.JBehaveStoryService;
+import java.util.Collection;
 
 /**
  * Utilities for retrieving Gherkin tag and Story meta names.
@@ -39,7 +38,7 @@ public final class TagNameUtil {
     @NotNull
     public static String metaNameFrom(@NotNull PsiElement metaKeyElement, @Nullable Collection<PsiElement> metaTextElement) {
         return metaTextElement != null && !metaTextElement.isEmpty()
-            ? metaKeyElement.getText().substring(1) + ":" + metaTextElement.stream().map(PsiElement::getText).collect(joining(" "))
+            ? metaKeyElement.getText().substring(1) + ":" + String.join(" ", map(metaTextElement, PsiElement::getText))
             : metaKeyElement.getText().substring(1);
     }
 

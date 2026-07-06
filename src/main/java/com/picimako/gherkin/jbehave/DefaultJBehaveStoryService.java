@@ -6,8 +6,8 @@ import static com.github.kumaraman21.intellijbehave.highlighter.StoryTokenType.M
 import static com.github.kumaraman21.intellijbehave.highlighter.StoryTokenType.META_TEXT;
 import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static com.intellij.openapi.application.ReadAction.runBlocking;
+import static com.intellij.util.containers.ContainerUtil.map;
 import static com.picimako.gherkin.toolwindow.TagNameUtil.metaNameFrom;
-import static java.util.stream.Collectors.toList;
 
 import com.github.kumaraman21.intellijbehave.language.JBehaveIcons;
 import com.github.kumaraman21.intellijbehave.language.StoryFileType;
@@ -47,7 +47,6 @@ import java.util.List;
 public final class DefaultJBehaveStoryService implements JBehaveStoryService {
     private final Project project;
 
-    //Project service
     public DefaultJBehaveStoryService(Project project) {
         this.project = project;
     }
@@ -56,10 +55,10 @@ public final class DefaultJBehaveStoryService implements JBehaveStoryService {
     @Override
     public List<PsiFile> collectStoryFilesFromProject() {
         if (FileTypeManager.getInstance().findFileTypeByLanguage(StoryLanguage.STORY_LANGUAGE) != null) {
-            return computeBlocking(() -> FileTypeIndex.getFiles(StoryFileType.STORY_FILE_TYPE, GlobalSearchScope.projectScope(project))
-                .stream()
-                .map(file -> PsiManager.getInstance(project).findFile(file))
-                .collect(toList()));
+            return computeBlocking(() -> {
+                var storyFiles = FileTypeIndex.getFiles(StoryFileType.STORY_FILE_TYPE, GlobalSearchScope.projectScope(project));
+                return map(storyFiles, file -> PsiManager.getInstance(project).findFile(file));
+            });
         }
         return Collections.emptyList();
     }
@@ -93,7 +92,7 @@ public final class DefaultJBehaveStoryService implements JBehaveStoryService {
 
     @Override
     public Collection<PsiElement> collectMetaTextsForMetaKeyAsList(PsiElement metaKey) {
-        final List<PsiElement> metaTexts = new SmartList<>();
+        final var metaTexts = new SmartList<PsiElement>();
         for (var sibling = metaKey.getNextSibling(); sibling != null && !is(sibling, META_KEY); sibling = sibling.getNextSibling()) {
             if (is(sibling, META_TEXT)) {
                 metaTexts.add(sibling);
@@ -114,9 +113,10 @@ public final class DefaultJBehaveStoryService implements JBehaveStoryService {
 
     @Override
     public List<String> collectMetasFromFileAsList(PsiFile file) {
-        return collectMetasFromFile(file).entrySet().stream()
-            .map(meta -> metaNameFrom(meta.getKey(), meta.getValue().isEmpty() ? null : meta.getValue()))
-            .collect(toList());
+        return map(
+            collectMetasFromFile(file).entrySet(),
+            meta -> metaNameFrom(meta.getKey(), meta.getValue().isEmpty() ? null : meta.getValue())
+        );
     }
 
     @Override

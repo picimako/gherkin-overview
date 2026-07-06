@@ -2,15 +2,11 @@
 
 package com.picimako.gherkin.toolwindow.nodetype;
 
+import static com.intellij.util.containers.ContainerUtil.filter;
 import static com.picimako.gherkin.toolwindow.LayoutType.GROUP_BY_MODULES;
 import static com.picimako.gherkin.toolwindow.nodetype.Category.OTHER_CATEGORY_NAME;
 import static com.picimako.gherkin.toolwindow.nodetype.ContentRoot.Type.CONTENT_ROOT;
 import static com.picimako.gherkin.toolwindow.nodetype.ContentRoot.Type.MODULE;
-import static java.util.stream.Collectors.toList;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.intellij.openapi.module.Module;
@@ -18,14 +14,17 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.SmartList;
-import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import com.picimako.gherkin.resources.GherkinBundle;
 import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
 import com.picimako.gherkin.toolwindow.LayoutType;
 import com.picimako.gherkin.toolwindow.ProjectBDDTypeService;
+import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Represents the root element of the tree in the Gherkin Tags tool window.
@@ -105,11 +104,12 @@ public final class ModelDataRoot extends AbstractNodeType implements CategoriesH
      * in the tool window.
      */
     public List<ContentRoot> getContentRootsByLayout() {
-        return contentRoots.stream()
-            .filter(contentRoot -> GherkinTagsToolWindowSettings.getInstance(project).layout == GROUP_BY_MODULES
+        return filter(
+            contentRoots,
+            contentRoot -> GherkinTagsToolWindowSettings.getInstance(project).layout == GROUP_BY_MODULES
                 ? contentRoot.isModule()
-                : contentRoot.isContentRoot())
-            .collect(toList());
+                : contentRoot.isContentRoot()
+        );
     }
 
     /**
@@ -175,7 +175,7 @@ public final class ModelDataRoot extends AbstractNodeType implements CategoriesH
      * Returns the module type content roots.
      */
     public List<ContentRoot> getModules() {
-        return contentRoots.stream().filter(ContentRoot::isModule).collect(toList());
+        return filter(contentRoots, ContentRoot::isModule);
     }
 
     //categories

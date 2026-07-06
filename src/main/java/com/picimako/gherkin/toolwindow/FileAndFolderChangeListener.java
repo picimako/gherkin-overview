@@ -2,6 +2,8 @@
 
 package com.picimako.gherkin.toolwindow;
 
+import static com.intellij.util.containers.ContainerUtil.exists;
+
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.newvfs.BulkFileListener;
@@ -41,7 +43,7 @@ final class FileAndFolderChangeListener implements BulkFileListener {
      */
     @Override
     public void after(@NotNull List<? extends VFileEvent> events) {
-        if (events.stream().anyMatch(this::isChangeOnFolderOrBDDFile)) {
+        if (exists(events, this::isChangeOnFolderOrBDDFile)) {
             if (ApplicationManager.getApplication().isUnitTestMode())
                 rebuildModel.run();
             else ApplicationManager.getApplication().invokeLater(rebuildModel);

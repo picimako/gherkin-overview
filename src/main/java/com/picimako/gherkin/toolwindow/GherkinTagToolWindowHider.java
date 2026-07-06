@@ -2,6 +2,8 @@
 
 package com.picimako.gherkin.toolwindow;
 
+import static com.intellij.util.containers.ContainerUtil.exists;
+
 import java.awt.*;
 import java.util.function.BiPredicate;
 import javax.swing.*;
@@ -22,7 +24,7 @@ public final class GherkinTagToolWindowHider extends JBPanelWithEmptyText {
 
     private static final BiPredicate<ModelDataRoot, Project> IS_TAG_PRESENT_IN_PROJECT =
         (modelRoot, proj) -> GherkinTagsToolWindowSettings.getInstance(proj).layout == LayoutType.NO_GROUPING
-            ? modelRoot.getCategories().stream().anyMatch(Category::hasTag)
+            ? exists(modelRoot.getCategories(), Category::hasTag)
             : modelRoot.getContentRootsByLayout().stream().flatMap(root -> root.getCategories().stream()).anyMatch(Category::hasTag);
     private final Project project;
 

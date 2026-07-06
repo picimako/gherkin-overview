@@ -2,17 +2,11 @@
 
 package com.picimako.gherkin.settings;
 
+import static com.intellij.util.containers.ContainerUtil.map;
 import static com.picimako.gherkin.BDDUtil.isStoryLanguageSupported;
 import static com.picimako.gherkin.GherkinUtil.collectGherkinFilesFromProject;
 import static com.picimako.gherkin.toolwindow.TagNameUtil.metaNameFrom;
 import static com.picimako.gherkin.toolwindow.TagNameUtil.tagNameFrom;
-import static java.util.stream.Collectors.toList;
-
-import java.awt.*;
-import java.util.Collections;
-import java.util.List;
-import javax.swing.*;
-import javax.swing.table.TableCellEditor;
 
 import com.intellij.execution.util.StringWithNewLinesCellEditor;
 import com.intellij.icons.AllIcons;
@@ -28,13 +22,18 @@ import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ElementProducer;
 import com.intellij.util.ui.FormBuilder;
 import com.intellij.util.ui.ListTableModel;
+import com.picimako.gherkin.JBehaveStoryService;
+import com.picimako.gherkin.resources.GherkinBundle;
+import com.picimako.gherkin.toolwindow.TagCategoryRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.cucumber.psi.GherkinTag;
 
-import com.picimako.gherkin.JBehaveStoryService;
-import com.picimako.gherkin.resources.GherkinBundle;
-import com.picimako.gherkin.toolwindow.TagCategoryRegistry;
+import javax.swing.*;
+import javax.swing.table.TableCellEditor;
+import java.awt.*;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Builds a panel in which tags and their mappings to categories can be collected from the current project.
@@ -175,9 +174,10 @@ final class CollectGherkinTagsPanelBuilder {
             //Sort the list of tags alphabetically for each category
             rawMappings.keySet().forEach(category -> Collections.sort((List<String>) rawMappings.get(category)));
             //Join the list tags by comma for each category
-            return rawMappings.entrySet().stream()
-                .map(entry -> new CategoryAndTags(entry.getKey(), String.join(",", entry.getValue())))
-                .collect(toList());
+            return map(
+                rawMappings.entrySet(),
+                entry -> new CategoryAndTags(entry.getKey(), String.join(",", entry.getValue()))
+            );
         }
         return Collections.emptyList();
     }

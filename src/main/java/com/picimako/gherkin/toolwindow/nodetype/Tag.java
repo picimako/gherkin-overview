@@ -3,24 +3,25 @@
 package com.picimako.gherkin.toolwindow.nodetype;
 
 import static com.intellij.openapi.application.ReadAction.computeBlocking;
+import static com.intellij.util.containers.ContainerUtil.exists;
+import static com.intellij.util.containers.ContainerUtil.filter;
+import static com.intellij.util.containers.ContainerUtil.map;
 import static com.picimako.gherkin.GherkinUtil.isGherkinFile;
 import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.toList;
-
-import java.util.List;
-import java.util.Objects;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.SmartList;
+import com.picimako.gherkin.resources.GherkinBundle;
+import com.picimako.gherkin.toolwindow.TagOccurrencesRegistry;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.plugins.cucumber.psi.GherkinFile;
 
-import com.picimako.gherkin.resources.GherkinBundle;
-import com.picimako.gherkin.toolwindow.TagOccurrencesRegistry;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a Gherkin Tag in the tool window.
@@ -53,7 +54,7 @@ public final class Tag extends AbstractNodeType {
      * @return true if the file is assigned, false otherwise
      */
     public boolean contains(VirtualFile bddFile) {
-        return featureFiles.stream().anyMatch(featureFile -> Objects.equals(featureFile.getFile(), bddFile));
+        return exists(featureFiles, featureFile -> Objects.equals(featureFile.getFile(), bddFile));
     }
 
     /**
@@ -147,7 +148,7 @@ public final class Tag extends AbstractNodeType {
     }
 
     private List<FeatureFile> getFeatureFilesWithTheNameOf(VirtualFile file) {
-        return featureFiles.stream().filter(featureFile -> featureFile.hasFileName(file.getName())).collect(toList());
+        return filter(featureFiles, featureFile -> featureFile.hasFileName(file.getName()));
     }
 
     /**
@@ -181,7 +182,7 @@ public final class Tag extends AbstractNodeType {
 
     @TestOnly
     public List<VirtualFile> getGherkinFiles() {
-        return featureFiles.stream().map(FeatureFile::getFile).collect(toList());
+        return map(featureFiles, FeatureFile::getFile);
     }
 
     @Override

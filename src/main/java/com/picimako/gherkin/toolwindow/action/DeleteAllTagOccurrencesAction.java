@@ -3,6 +3,7 @@
 package com.picimako.gherkin.toolwindow.action;
 
 import static com.intellij.openapi.ui.Messages.YES;
+import static com.intellij.util.containers.ContainerUtil.map;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.ActionUpdateThread;
@@ -58,7 +59,7 @@ public final class DeleteAllTagOccurrencesAction extends AnAction {
             //Doing 'for (var featureFile : selectedTagNode.getFeatureFiles()) {}' results in concurrent modification exception
             // because there are listeners in the background updating the tree model based on PSI modification
             WriteCommandAction.runWriteCommandAction(project, () -> {
-                var bddFiles = selectedTagNode.getFeatureFiles().stream().map(FeatureFile::getFile).toList();
+                var bddFiles = map(selectedTagNode.getFeatureFiles(), FeatureFile::getFile);
                 for (var bddFile : bddFiles) {
                     PsiElement[] tagsToDelete = PsiTreeUtil.collectElements(PsiManager.getInstance(project).findFile(bddFile), element -> {
                         String tagName = TagNameUtil.determineTagOrMetaName(element);

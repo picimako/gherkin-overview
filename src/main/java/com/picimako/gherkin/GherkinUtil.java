@@ -3,6 +3,7 @@
 package com.picimako.gherkin;
 
 import static com.intellij.openapi.application.ReadAction.computeBlocking;
+import static com.intellij.util.containers.ContainerUtil.map;
 import static java.util.stream.Collectors.toList;
 
 import java.util.Collections;
@@ -36,10 +37,10 @@ public final class GherkinUtil {
     @NotNull
     public static List<PsiFile> collectGherkinFilesFromProject(@NotNull Project project) {
         if (FileTypeManager.getInstance().findFileTypeByLanguage(GherkinLanguage.INSTANCE) != null) {
-            return computeBlocking(() -> FileTypeIndex.getFiles(GherkinFileType.INSTANCE, GlobalSearchScope.projectScope(project))
-                .stream()
-                .map(file -> PsiManager.getInstance(project).findFile(file))
-                .collect(toList()));
+            return computeBlocking(() -> {
+                var gherkinFiles = FileTypeIndex.getFiles(GherkinFileType.INSTANCE, GlobalSearchScope.projectScope(project));
+                return map(gherkinFiles, file -> PsiManager.getInstance(project).findFile(file));
+            });
         }
         return Collections.emptyList();
     }
