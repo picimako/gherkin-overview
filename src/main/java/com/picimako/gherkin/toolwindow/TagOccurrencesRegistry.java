@@ -39,7 +39,7 @@ public final class TagOccurrencesRegistry implements Disposable {
      */
     @Getter
     @TestOnly //the getter is test-only, and not the field itself
-    private Map<String, Map<String, MutableInt>> tagOccurrences;
+    private Map<String, Map<String, MutableInt>> tagOccurrences = new HashMap<>();
 
     /**
      * Initializes the map according to the number of Gherkin and Story files in the project to minimize the allocation size.
