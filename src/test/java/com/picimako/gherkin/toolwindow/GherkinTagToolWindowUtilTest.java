@@ -5,14 +5,14 @@ package com.picimako.gherkin.toolwindow;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.openapi.wm.ToolWindow;
-import com.picimako.gherkin.MediumBasePlatformTestCase;
+import com.picimako.gherkin.GherkinOverviewTestBase;
 import com.picimako.gherkin.ToolWindowTestSupport;
 import org.junit.jupiter.api.Test;
 
 /**
  * Unit test for {@link GherkinTagToolWindowUtil}.
  */
-final class GherkinTagToolWindowUtilTest extends MediumBasePlatformTestCase {
+final class GherkinTagToolWindowUtilTest extends GherkinOverviewTestBase {
 
     //getGherkinTagsToolWindow
 

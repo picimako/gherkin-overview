@@ -11,13 +11,13 @@ import java.util.Map;
 import java.util.function.Function;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import com.picimako.gherkin.MediumBasePlatformTestCase;
+import com.picimako.gherkin.GherkinOverviewTestBase;
 import com.picimako.gherkin.toolwindow.nodetype.Category;
 import com.picimako.gherkin.toolwindow.nodetype.ContentRoot;
 import com.picimako.gherkin.toolwindow.nodetype.ModelDataRoot;
 import com.picimako.gherkin.toolwindow.nodetype.Tag;
 
-abstract class GherkinTagTreeModelTestBase extends MediumBasePlatformTestCase {
+abstract class GherkinTagTreeModelTestBase extends GherkinOverviewTestBase {
 
     protected abstract ModelDataRoot getRoot();
 

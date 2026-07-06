@@ -8,7 +8,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.editor.VisualPosition;
 import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.TestActionEvent;
 import com.picimako.gherkin.GherkinOverviewTestBase;
 import com.picimako.gherkin.ToolWindowTestSupport;
@@ -21,12 +20,6 @@ import org.junit.jupiter.api.Test;
  * Integration test for {@link SelectFocusedTagAction}.
  */
 final class SelectFocusedTagActionNoGroupingTest extends GherkinOverviewTestBase {
-
-    //Returning a new project descriptor, so that a new Project is created for each
-    // test method, thus having a clean data setup (i.e. Tags tool window) for each test.
-    public SelectFocusedTagActionNoGroupingTest() {
-        super(new LightProjectDescriptor());
-    }
 
     //Availability
 

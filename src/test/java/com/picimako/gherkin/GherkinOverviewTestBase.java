@@ -7,30 +7,27 @@ import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.projectRoots.JavaSdk;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import com.intellij.testFramework.LightProjectDescriptor;
+import com.intellij.testFramework.fixtures.DefaultLightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase5;
 import com.intellij.util.ThrowableRunnable;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Base test class for all plugin tests.
  */
 public abstract class GherkinOverviewTestBase extends LightJavaCodeInsightFixtureTestCase5 {
 
-    public GherkinOverviewTestBase() {
-    }
-
-    public GherkinOverviewTestBase(@Nullable LightProjectDescriptor projectDescriptor) {
-        super(projectDescriptor);
+    protected GherkinOverviewTestBase() {
+        super(new DefaultLightProjectDescriptor(() -> JavaSdk.getInstance().createJdk("Real JDK", System.getenv("JAVA_HOME"), false)));
     }
 
     @Override
     protected String getTestDataPath() {
-        return "testdata/features";
+        return "src/test/testdata";
     }
 
     protected Project getProject() {
