@@ -48,7 +48,7 @@ final class GherkinMappingsTable extends ListTableWithButtons<CategoryAndTags> {
 
     @Override
     protected ListTableModel<CategoryAndTags> createListModel() {
-        final ColumnInfo<CategoryAndTags, String> categoryColumn = new BaseCategoryTagsColumnInfo(message("gherkin.overview.settings.table.column.category")) {
+        final ColumnInfo<CategoryAndTags, String> categoryColumn = new BaseCategoryTagsColumnInfo(message("g.o.settings.table.column.category")) {
             @Nullable
             @Override
             public String valueOf(CategoryAndTags categoryAndTag) {
@@ -64,7 +64,7 @@ final class GherkinMappingsTable extends ListTableWithButtons<CategoryAndTags> {
             }
         };
 
-        final ColumnInfo<CategoryAndTags, String> tagsColumn = new BaseCategoryTagsColumnInfo(message("gherkin.overview.settings.table.column.tags")) {
+        final ColumnInfo<CategoryAndTags, String> tagsColumn = new BaseCategoryTagsColumnInfo(message("g.o.settings.table.column.tags")) {
             @Nullable
             @Override
             public String valueOf(CategoryAndTags categoryAndTag) {

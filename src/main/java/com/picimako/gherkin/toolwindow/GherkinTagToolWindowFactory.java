@@ -2,11 +2,12 @@
 
 package com.picimako.gherkin.toolwindow;
 
+import static com.picimako.gherkin.resources.GherkinBundle.message;
+
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.picimako.gherkin.BDDUtil;
-import com.picimako.gherkin.resources.GherkinBundle;
 import com.picimako.gherkin.toolwindow.action.SelectFocusedTagAction;
 import kotlin.coroutines.Continuation;
 import org.jetbrains.annotations.NotNull;
@@ -54,7 +55,7 @@ public final class GherkinTagToolWindowFactory implements ToolWindowFactory {
 
     @NotNull
     private String getHiderMessage() {
-        return BDDUtil.isStoryLanguageSupported() ? GherkinBundle.message("gherkin.overview.toolwindow.no.tag.or.meta.in.project") : GherkinBundle.message("gherkin.overview.toolwindow.no.tag.in.project");
+        return BDDUtil.isStoryLanguageSupported() ? message("g.o.toolwindow.no.tag.or.meta.in.project") : message("g.o.toolwindow.no.tag.in.project");
     }
 
     @Override

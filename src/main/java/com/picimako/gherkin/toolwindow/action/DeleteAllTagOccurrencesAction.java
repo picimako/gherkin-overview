@@ -4,6 +4,7 @@ package com.picimako.gherkin.toolwindow.action;
 
 import static com.intellij.openapi.ui.Messages.YES;
 import static com.intellij.util.containers.ContainerUtil.map;
+import static com.picimako.gherkin.resources.GherkinBundle.message;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.ActionUpdateThread;
@@ -19,7 +20,6 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.picimako.gherkin.BDDUtil;
 import com.picimako.gherkin.JBehaveStoryService;
-import com.picimako.gherkin.resources.GherkinBundle;
 import com.picimako.gherkin.toolwindow.GherkinTagTree;
 import com.picimako.gherkin.toolwindow.TagNameUtil;
 import com.picimako.gherkin.toolwindow.TagOccurrencesRegistry;
@@ -41,7 +41,7 @@ public final class DeleteAllTagOccurrencesAction extends AnAction {
     private final Project project;
 
     public DeleteAllTagOccurrencesAction(Project project) {
-        super(GherkinBundle.message("gherkin.overview.toolwindow.delete.tags"), "", AllIcons.General.Delete);
+        super(message("g.o.toolwindow.delete.tags"), "", AllIcons.General.Delete);
         this.project = project;
     }
 
@@ -95,7 +95,7 @@ public final class DeleteAllTagOccurrencesAction extends AnAction {
     private boolean isUserSureToDeleteAllOccurrencesOfTag(Project project) {
         return ApplicationManager.getApplication().isUnitTestMode()
             || Messages.showYesNoDialog(project,
-            GherkinBundle.message("gherkin.overview.toolwindow.delete.are.you.sure"), GherkinBundle.message("gherkin.overview.toolwindow.delete.tags"),
+            message("g.o.toolwindow.delete.are.you.sure"), message("g.o.toolwindow.delete.tags"),
             Messages.getQuestionIcon()) == YES;
     }
 

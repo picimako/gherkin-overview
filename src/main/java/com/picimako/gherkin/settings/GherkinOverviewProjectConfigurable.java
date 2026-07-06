@@ -48,7 +48,7 @@ public final class GherkinOverviewProjectConfigurable implements Configurable {
     @NlsContexts.ConfigurableName
     @Override
     public String getDisplayName() {
-        return GherkinBundle.message("gherkin.overview.settings.project.configurable.display.name");
+        return GherkinBundle.message("g.o.settings.project.configurable.display.name");
     }
 
     @Override

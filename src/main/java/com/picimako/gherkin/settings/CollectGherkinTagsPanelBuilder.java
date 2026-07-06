@@ -52,8 +52,8 @@ import java.util.List;
 final class CollectGherkinTagsPanelBuilder {
 
     private final Project project;
-    private final JButton collectGherkinTagsButton = new JButton(message("gherkin.overview.settings.collect.mappings.button.text"));
-    private final JBLabel cannotCollectWhileIDEIsIndexingLabel = new JBLabel(message("gherkin.overview.settings.collect.mappings.cannot.collect"));
+    private final JButton collectGherkinTagsButton = new JButton(message("g.o.settings.collect.mappings.button.text"));
+    private final JBLabel cannotCollectWhileIDEIsIndexingLabel = new JBLabel(message("g.o.settings.collect.mappings.cannot.collect"));
     private JPanel collectedMappingsPanel;
     private ListTableModel<CategoryAndTags> tableModel;
 
@@ -104,7 +104,7 @@ final class CollectGherkinTagsPanelBuilder {
     }
 
     private TableView<CategoryAndTags> buildTableView() {
-        final ColumnInfo<CategoryAndTags, String> tagsColumn = new ColumnInfo<>(message("gherkin.overview.settings.table.column.tags")) {
+        final ColumnInfo<CategoryAndTags, String> tagsColumn = new ColumnInfo<>(message("g.o.settings.table.column.tags")) {
             @Override
             public @Nullable String valueOf(CategoryAndTags categoryAndTags) {
                 return categoryAndTags.getTags();
@@ -126,7 +126,7 @@ final class CollectGherkinTagsPanelBuilder {
             }
         };
 
-        final ColumnInfo<CategoryAndTags, String> mappedCategoryColumn = new ColumnInfo<>(message("gherkin.overview.settings.table.column.mapped.category")) {
+        final ColumnInfo<CategoryAndTags, String> mappedCategoryColumn = new ColumnInfo<>(message("g.o.settings.table.column.mapped.category")) {
             @Override
             public String valueOf(CategoryAndTags categoryAndTag) {
                 return categoryAndTag.getCategory();

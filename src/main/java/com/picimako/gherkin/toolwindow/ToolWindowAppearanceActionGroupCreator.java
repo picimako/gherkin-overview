@@ -2,13 +2,14 @@
 
 package com.picimako.gherkin.toolwindow;
 
+import static com.picimako.gherkin.resources.GherkinBundle.message;
+
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.Separator;
 import com.intellij.openapi.actionSystem.ToggleAction;
-import com.picimako.gherkin.resources.GherkinBundle;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,17 +36,17 @@ final class ToolWindowAppearanceActionGroupCreator {
 
     DefaultActionGroup create() {
         DefaultActionGroup group = new DefaultActionGroup();
-        group.getTemplatePresentation().setText(GherkinBundle.message("gherkin.overview.toolwindow.statistics.button.tooltip"));
-        group.getTemplatePresentation().setDescription(GherkinBundle.message("gherkin.overview.toolwindow.statistics.button.description"));
+        group.getTemplatePresentation().setText(message("g.o.toolwindow.stats.button.tooltip"));
+        group.getTemplatePresentation().setDescription(message("g.o.toolwindow.stats.button.description"));
         group.getTemplatePresentation().setIcon(AllIcons.Actions.Show);
 
-        group.add(new Separator(GherkinBundle.message("gherkin.overview.toolwindow.statistics.separator")));
-        group.add(createStatAction(GherkinBundle.message("gherkin.overview.toolwindow.statistics.type.disabled"), StatisticsType.DISABLED));
-        group.add(createStatAction(GherkinBundle.message("gherkin.overview.toolwindow.statistics.type.simplified"), StatisticsType.SIMPLIFIED));
-        group.add(createStatAction(GherkinBundle.message("gherkin.overview.toolwindow.statistics.type.detailed"), StatisticsType.DETAILED));
+        group.add(new Separator(message("g.o.toolwindow.stats.separator")));
+        group.add(createStatAction(message("g.o.toolwindow.stats.type.disabled"), StatisticsType.DISABLED));
+        group.add(createStatAction(message("g.o.toolwindow.stats.type.simplified"), StatisticsType.SIMPLIFIED));
+        group.add(createStatAction(message("g.o.toolwindow.stats.type.detailed"), StatisticsType.DETAILED));
 
-        group.add(new Separator(GherkinBundle.message("gherkin.overview.toolwindow.layout.separator")));
-        group.add(createLayoutAction(GherkinBundle.message("gherkin.overview.toolwindow.layout.group.by.modules")));
+        group.add(new Separator(message("g.o.toolwindow.layout.separator")));
+        group.add(createLayoutAction(message("g.o.toolwindow.layout.group.by.modules")));
 
         group.setPopup(true);
         return group;

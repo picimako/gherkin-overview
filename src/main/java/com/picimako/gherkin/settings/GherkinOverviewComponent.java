@@ -32,7 +32,7 @@ final class GherkinOverviewComponent {
     @Getter
     private final JPanel settingsPanel;
     private final GherkinMappingsTable applicationLevelMappingsTable = new GherkinMappingsTable();
-    private final JBCheckBox useProjectLevelMappingsCheckbox = new JBCheckBox(message("gherkin.overview.settings.use.project.level.mappings"));
+    private final JBCheckBox useProjectLevelMappingsCheckbox = new JBCheckBox(message("g.o.settings.use.project.level.mappings"));
     private final GherkinMappingsTable projectLevelMappingsTable = new GherkinMappingsTable().init();
 
     private final Project project;
@@ -53,7 +53,7 @@ final class GherkinOverviewComponent {
         applicationLevelMappingsTable.withExtraActions(() ->
             new AnActionButton[]{
                 //Reset to defaults
-                new ExtraActionButton(message("gherkin.overview.settings.reset.mappings.name"), message("gherkin.overview.settings.reset.mappings.description"),
+                new ExtraActionButton(message("g.o.settings.reset.mappings.name"), message("g.o.settings.reset.mappings.description"),
                     AllIcons.General.Reset,
                     () -> applicationLevelMappingsTable.setValues(DefaultMappingsLoader.loadDefaultApplicationLevelMappings()))
             }).init();
@@ -108,18 +108,18 @@ final class GherkinOverviewComponent {
      */
     private JPanel buildSettingsPanel() {
         return FormBuilder.createFormBuilder()
-            .addComponent(new TitledSeparator(message("gherkin.overview.settings.application.level.mappings.title")))
+            .addComponent(new TitledSeparator(message("g.o.settings.application.level.mappings.title")))
             .addComponent(applicationLevelMappingsTable.getComponent(), 2)
             .addVerticalGap(10)
 
-            .addComponent(new TitledSeparator(message("gherkin.overview.settings.project.level.mappings.title")))
+            .addComponent(new TitledSeparator(message("g.o.settings.project.level.mappings.title")))
             .addComponent(useProjectLevelMappingsCheckbox, 2)
             .addVerticalGap(5)
             .addComponent(projectLevelMappingsTable.getComponent(), 2)
             .addVerticalGap(8)
             .addComponent(contextHelpLabel())
 
-            .addComponent(new TitledSeparator(message("gherkin.overview.settings.tags.in.current.project")))
+            .addComponent(new TitledSeparator(message("g.o.settings.tags.in.current.project")))
             .addVerticalGap(2)
             .addComponent(new CollectGherkinTagsPanelBuilder(project).buildPanel())
 
@@ -130,8 +130,8 @@ final class GherkinOverviewComponent {
     private ContextHelpLabel contextHelpLabel() {
         var rootPathsHelpLabel = new ContextHelpLabel("",
             BDDUtil.isStoryLanguageSupported()
-            ? message("gherkin.overview.settings.mappings.help.description.gherkin.and.jbehave")
-            : message("gherkin.overview.settings.mappings.help.description.gherkin"));
+            ? message("g.o.settings.mappings.help.description.gherkin.and.jbehave")
+            : message("g.o.settings.mappings.help.description.gherkin"));
         rootPathsHelpLabel.setIcon(AllIcons.General.ContextHelp);
         return rootPathsHelpLabel;
     }

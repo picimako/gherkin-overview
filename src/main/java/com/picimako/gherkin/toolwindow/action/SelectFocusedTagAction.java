@@ -3,6 +3,7 @@
 package com.picimako.gherkin.toolwindow.action;
 
 import static com.intellij.openapi.application.ReadAction.computeBlocking;
+import static com.picimako.gherkin.resources.GherkinBundle.message;
 import static com.picimako.gherkin.toolwindow.GherkinTagToolWindowUtil.getGherkinTagOverViewPanel;
 import static com.picimako.gherkin.toolwindow.GherkinTagToolWindowUtil.getGherkinTagsToolWindow;
 import static com.picimako.gherkin.toolwindow.LayoutType.NO_GROUPING;
@@ -20,7 +21,6 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.AnActionButton;
-import com.picimako.gherkin.resources.GherkinBundle;
 import com.picimako.gherkin.toolwindow.GherkinTagTree;
 import com.picimako.gherkin.toolwindow.GherkinTagsToolWindowSettings;
 import com.picimako.gherkin.toolwindow.TagCategoryRegistry;
@@ -46,8 +46,8 @@ public final class SelectFocusedTagAction extends AnActionButton {
 
     public SelectFocusedTagAction() {
         super(
-            GherkinBundle.message("gherkin.overview.toolwindow.select.focused.tag.tooltip"),
-            GherkinBundle.message("gherkin.overview.toolwindow.select.focused.tag.description"),
+            message("g.o.toolwindow.select.focused.tag.tooltip"),
+            message("g.o.toolwindow.select.focused.tag.description"),
             AllIcons.General.Locate);
     }
 
