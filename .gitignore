@@ -1,6 +1,7 @@
 build
 *.iml
 .idea/*
+!.idea/icon.svg
 .intellijPlatform
 .gradle/*
 out
